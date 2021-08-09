@@ -1,0 +1,48 @@
+@import '../../styles/index';
+
+.pointer {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  margin-right: 8px;
+  &.maintain {
+    background: @warning-color;
+  }
+
+  &.error {
+    background: @error-color;
+  }
+
+  &.offline {
+    background: #d9d9d9;
+  }
+  &.progress {
+    background: @processing-color;
+    &::after {
+      content: '';
+      background: @processing-color;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      border-radius: 50%;
+      animation: progressing 0.8s ease infinite;
+    }
+  }
+}
+
+.standardTable {
+  :global {
+    .ant-table-pagination {
+      margin-top: 24px;
+    }
+  }
+
+  .tableAlert {
+    margin-bottom: 16px;
+  }
+}
