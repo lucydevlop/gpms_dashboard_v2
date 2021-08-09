@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="theme-color" content="#000000" />
+
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+  <title>%SITE_NAME%</title>
+<!--  <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=yXIcWbrYVWd9NXi4njzvUKDZjnPkU2NF"></script>-->
+  <script language="javascript">
+
+    var agent = navigator.userAgent.toLowerCase();
+    if ( (navigator.appName === 'Netscape' && navigator.userAgent.search('Trident') !== -1) || (agent.indexOf("msie") !== -1) ) {
+      /*alert("Internet Explorer"); */
+      function aa()
+      {
+        var objWSH = new ActiveXObject("WScript.Shell");
+        var retval = objWSH.Run("C:/Windows/SysWOW64/notepad.exe",1,true);
+      }
+    }
+
+    else if (agent.indexOf("chrome") != -1) {
+      function aa()
+      {
+        /*alert("HAVE TO INSTALL."); */
+        var objWSH = new ActiveXObject("WScript.Shell");
+        var retval = objWSH.Run("C:/Windows/SysWOW64/notepad.exe",1,true);
+      }
+    }
+  </script>
+</head>
+
+<body>
+<noscript>You need to enable JavaScript to
+  run this app.</noscript>
+<div id="root"></div>
+<script>
+  window.less = {
+    async: true,
+    env: 'production'
+  };
+</script>
+</body>
+
+</html>
