@@ -1,0 +1,104 @@
+@import '../../../../../styles/index';
+.RCS-header {
+  height: @RCS-layout-header-height;
+  background: var(--component-background);
+  position: relative;
+  box-sizing: border-box;
+  text-align: left;
+  box-shadow: 4px 4px 40px 0 rgba(0, 0, 0, 0.05);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  transition: width 0.3s;
+  width: 100%;
+  flex: 0 0 auto;
+
+  &.RCS-header-isMobile {
+    left: 0;
+    width: 100% !important;
+  }
+
+  .RCS-header-foldIcon {
+    font-size: 18px;
+    margin-left: 32px;
+    color: #666;
+    cursor: pointer;
+  }
+
+  .RCS-header-rightPlace {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    min-width: 180px;
+  }
+}
+
+.RCS-header.RCS-header-vertical {
+  &.RCS-header-darkTheme {
+    box-shadow: 0px 4px 40px 0 rgba(0, 0, 0, 1) !important;
+  }
+
+  &.RCS-header-inlineLayout {
+    left: 0 !important;
+    justify-content: unset;
+    box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.05);
+    z-index: 4;
+    &.RCS-header-fixHeader {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      right: 0;
+    }
+  }
+
+  &.RCS-header-splitLayout {
+    &.RCS-header-withoutMenu {
+      width: 100% !important;
+    }
+
+    &.RCS-header-fixHeader {
+      position: fixed;
+      width: calc(100% - @RCS-layout-menu-width);
+      top: 0;
+      right: 0;
+      &.RCS-header-collapsed {
+        width: calc(100% - @RCS-layout-menu-collapsed-width);
+      }
+    }
+  }
+}
+
+.RCS-header.RCS-header-horizontal {
+  left: 0px !important;
+
+  & > .RCS-header-container {
+    max-width: @RCS-layout-content-max-width;
+    margin: auto;
+    position: relative;
+    display: flex;
+    flex: 1;
+    max-height: @RCS-layout-header-height;
+    width: 100%;
+
+    &.RCS-header-container-flowMode {
+      max-width: unset;
+    }
+
+    .RCS-header-rightPlace {
+      position: relative;
+    }
+
+    .RCS-header-headerNav {
+      flex: 1 1 0%;
+      min-width: 0;
+    }
+
+    .siteDetail {
+      justify-self: start;
+    }
+  }
+}
