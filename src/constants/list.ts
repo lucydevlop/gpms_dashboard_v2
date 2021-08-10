@@ -206,3 +206,59 @@ export const payTypeOpt: ISelectOptions[] = [
   { value: EPayType.PAID, label: '유료', color: 'black' },
   { value: EPayType.FREE, label: '무료', color: 'black' }
 ];
+
+export enum EGateActionType {
+  PCC = 'PCC',
+  GATE = 'GATE'
+}
+
+export const gateActionTypeOpt: ISelectOptions[] = [
+  { value: EGateActionType.PCC, label: 'PCC', color: 'black' },
+  { value: EGateActionType.GATE, label: 'GATE', color: 'black' }
+];
+
+export enum EGateOpenActionType {
+  NONE = 'NONE',
+  RECOGNITION = 'RECOGNITION',
+  RESTRICT = 'RESTRICT'
+}
+
+export const gateOpenActionTypeOpt: ISelectOptions[] = [
+  { value: EGateOpenActionType.NONE, label: '모두허용', color: 'black' },
+  { value: EGateOpenActionType.RECOGNITION, label: '인식차량허용', color: 'black' },
+  { value: EGateOpenActionType.RESTRICT, label: '등록차량허용', color: 'black' }
+];
+
+export enum EMessageClassType {
+  IN = 'IN',
+  OUT = 'OUT',
+  WAIT = 'WAIT'
+}
+
+export const messageClassTypeOpt: ISelectOptions[] = [
+  { value: EMessageClassType.IN, label: '입차', color: 'black' },
+  { value: EMessageClassType.OUT, label: '출차', color: 'black' },
+  { value: EMessageClassType.WAIT, label: '정산', color: 'black' }
+];
+
+export enum EMessageTypeType {
+  NONMEMBER = 'NONMEMBER',
+  MEMBER = 'MEMBER',
+  CALL = 'CALL',
+  RESTRICTE = 'RESTRICTE',
+  FAILNUMBER = 'FAILNUMBER',
+  INIT = 'INIT',
+  FULL = 'FULL',
+  VIP = 'VIP'
+}
+
+export const messageTypeTypeOpt: ISelectOptions[] = [
+  { value: EMessageTypeType.INIT, label: '리셋', color: 'black' },
+  { value: EMessageTypeType.NONMEMBER, label: '일반차량', color: 'black' },
+  { value: EMessageTypeType.MEMBER, label: '티맵회원', color: 'black' },
+  { value: EMessageTypeType.VIP, label: '정기권', color: 'black' },
+  { value: EMessageTypeType.CALL, label: '호출', color: 'black' },
+  { value: EMessageTypeType.RESTRICTE, label: '입차제한차량', color: 'black' },
+  { value: EMessageTypeType.FAILNUMBER, label: '번호인식실패', color: 'black' },
+  { value: EMessageTypeType.FULL, label: '만차', color: 'black' }
+];
