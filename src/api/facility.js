@@ -37,12 +37,20 @@ Mock.mock('/get/facilityList', () => {
   };
 });
 
-export function getFacilities(id) {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots/' + id + '/facilities');
-}
-
 export function actionFacility(id, facilityId, action) {
   return io.get(
     process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots/' + id + '/' + facilityId + '/' + action
   );
+}
+
+export function getGates() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/gate/list`);
+}
+
+export function getFacilities() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities`);
+}
+
+export function getDisplayMessages() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/facility/display/message`);
 }
