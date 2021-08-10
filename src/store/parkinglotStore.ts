@@ -106,37 +106,6 @@ class ParkinglotStore {
     this.parkinglotList = list;
   }
 
-  @action getParkinglotDetail(sn: number) {
-    this.facilities = [];
-    return getFacilities(sn)
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'ok') {
-          // console.log('setFacilitySummary', data);
-          runInAction(() => {
-            this.setFacilityList(data.facilities);
-            const summary: IFacilitySummaryObj = {
-              total: data.totalCount,
-              active: data.successCount,
-              failure: data.failedCount
-            };
-            this.setFacilitySummary(summary);
-          });
-        }
-      })
-      .catch((err) => {
-        runInAction(() => {
-          this.facilities = [];
-          const summary: IFacilitySummaryObj = {
-            total: 0,
-            active: 0,
-            failure: 0
-          };
-          this.setFacilitySummary(summary);
-        });
-      });
-  }
-
   @action setFacilityList(list: Array<IFacilityObj>): void {
     this.facilities = list;
   }
