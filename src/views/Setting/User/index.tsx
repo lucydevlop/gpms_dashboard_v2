@@ -8,16 +8,16 @@ import React, { PureComponent } from 'react';
 // import { userStore } from '@store/userStore';
 // import { Badge, Button, Tag } from 'antd';
 // import { localeStore } from '@store/localeStore';
-// import { searchUserFields } from '@views/Setting/UserSetting/SearchFields';
+// import { searchUserFields } from '@views/Setting/User/SearchFields';
 // import CreateProjectModal from '@views/Setting/ProjectSetting/Modal/CreateProjectModal';
 // import DraggableModal from '@components/DraggableModal';
 // import { IProjectObj } from '@models/project';
 // import { projectStore } from '@store/projectStore';
-// import CreateUserModal from '@views/Setting/UserSetting/Modal/CreateUserModal';
+// import CreateUserModal from '@views/Setting/User/Modal/CreateUserModal';
 // import { IAgencyObj } from '@models/agency';
 // import { conversionDate } from '@utils/conversion';
 // import { IEventObj } from '@models/event';
-// import DetailModal from '@views/Setting/UserSetting/Modal/DetailModal';
+// import DetailModal from '@views/Setting/User/Modal/DetailModal';
 //
 // interface IProps {}
 // interface IState {
@@ -31,7 +31,7 @@ import React, { PureComponent } from 'react';
 //
 // @inject('localeStore', 'projectStore', 'userStore')
 // @observer
-// class UserSetting extends PureComponent<IProps, IState> {
+// class User extends PureComponent<IProps, IState> {
 //   constructor(props: IProps) {
 //     super(props);
 //     this.state = {
@@ -264,4 +264,4 @@ import React, { PureComponent } from 'react';
 //     );
 //   }
 // }
-// export default UserSetting;
+// export default User;

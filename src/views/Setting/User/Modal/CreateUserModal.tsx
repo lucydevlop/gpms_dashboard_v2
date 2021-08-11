@@ -5,7 +5,7 @@ import React, { BaseSyntheticEvent, PureComponent } from 'react';
 // import { Button, Row } from 'antd';
 // import { IProjectObj } from '@models/project';
 // import { getFormFields } from '@utils/form';
-// import { CreateUserFields } from '@views/Setting/UserSetting/SearchFields';
+// import { CreateUserFields } from '@views/Setting/User/SearchFields';
 // import { userRoleOpt } from '@/constants/list';
 //
 // interface IProps extends FormComponentProps {
