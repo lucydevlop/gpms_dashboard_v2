@@ -32,7 +32,17 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
       fieldOption: {
         initialValue: EInoutType.IN
       },
-      ...formColProps16Config,
+      colProps: {
+        span: 12
+      },
+      formItemProps: {
+        labelCol: {
+          span: 4
+        },
+        wrapperCol: {
+          span: 15
+        }
+      },
       component: {
         type: FormType.Select,
         option: {
@@ -61,7 +71,17 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
     {
       id: 'vehicleNo',
       label: '차량번호',
-      ...formColProps6Config,
+      colProps: {
+        span: 10
+      },
+      formItemProps: {
+        labelCol: {
+          span: 8
+        },
+        wrapperCol: {
+          span: 10
+        }
+      },
       component: {
         type: FormType.Input,
         option: {
