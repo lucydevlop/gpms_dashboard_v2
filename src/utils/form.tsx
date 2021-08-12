@@ -30,6 +30,7 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { TextArea } = Input;
 const FormItem = Form.Item;
+const InputGroup = Input.Group;
 
 export interface ISelectOptions {
   value: string | number | undefined;
@@ -196,25 +197,45 @@ export const getFormFields = (
     const labelStyle = <label style={{ fontWeight: 600 }}>{label}</label>;
     if (formField.hidden) return;
     if (formField.formSubItemProps) {
+      // return (
+      //   <Col {...colProps} key={key} style={{ display: 'flex' }}>
+      //     <Col {...firstColProps}>
+      //       <FormItem label={labelStyle} {...formItemProps} style={{ marginBottom: 10 }}>
+      //         {getFieldDecorator(formField.id, fieldOption)(getFormComponent(formField.component))}
+      //       </FormItem>
+      //     </Col>
+      //     <Col>
+      //       <FormItem
+      //         // label={formField.formSubItemProps.label}
+      //         {...formField.formSubItemProps.formItemProps}
+      //         style={{ marginBottom: 10 }}
+      //       >
+      //         <InputGroup compact style={{ width: '100%' }}>
+      //           {getFieldDecorator(
+      //             formField.formSubItemProps.id,
+      //             formField.formSubItemProps.fieldOption
+      //           )(getFormComponent(formField.formSubItemProps.component))}
+      //         </InputGroup>
+      //       </FormItem>
+      //     </Col>
+      //   </Col>
+      // );
       return (
-        <Col {...colProps} key={key} style={{ display: 'flex' }}>
-          <Col {...firstColProps}>
-            <FormItem label={labelStyle} {...formItemProps} style={{ marginBottom: 10 }}>
+        <Col {...colProps} key={key} style={{}}>
+          <FormItem
+            label={labelStyle}
+            // labelAlign={'right'}
+            {...formItemProps}
+            style={{ marginBottom: 10 }}
+          >
+            <InputGroup compact style={{ width: '100%', flex: 1, display: 'flex' }}>
               {getFieldDecorator(formField.id, fieldOption)(getFormComponent(formField.component))}
-            </FormItem>
-          </Col>
-          <Col>
-            <FormItem
-              // label={formField.formSubItemProps.label}
-              {...formField.formSubItemProps.formItemProps}
-              style={{ marginBottom: 10 }}
-            >
               {getFieldDecorator(
                 formField.formSubItemProps.id,
                 formField.formSubItemProps.fieldOption
               )(getFormComponent(formField.formSubItemProps.component))}
-            </FormItem>
-          </Col>
+            </InputGroup>
+          </FormItem>
         </Col>
       );
     }
