@@ -6,14 +6,17 @@ import { delYnOpt, EDelYn, gateOpenActionTypeOpt, gateTypeOpt } from '@/constant
 import StandardTable from '@components/StandardTable';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { IFacilityObj } from '@models/facility';
-import { Divider } from 'antd';
+import { Button, Divider, Row } from 'antd';
 import zdsTips from '@utils/tips';
 import { inject, observer } from 'mobx-react';
 import { localeStore } from '@store/localeStore';
+import GateModal from '@views/Setting/Facility/tabs/modals/GateModal';
+import DraggableModal from '@components/DraggableModal';
 interface IProps {
   gates: IGateObj[];
   loading: boolean;
   onUpdate: (info: IGateObj) => void;
+  onCreate: (info: IGateObj) => void;
 }
 
 interface IState {
@@ -33,6 +36,10 @@ class GateTab extends PureComponent<IProps, IState> {
     };
   }
 
+  handleCreateClick() {
+    this.setState({ detailModal: false, createModal: true });
+  }
+
   handleBtnClick = (info: IGateObj, key: string) => {
     const { localeObj } = localeStore;
     //console.log('handleBtnClick', info);
@@ -47,6 +54,7 @@ class GateTab extends PureComponent<IProps, IState> {
   };
 
   render() {
+    const { localeObj } = localeStore;
     const columns: ColumnProps<IGateObj>[] = [
       {
         title: '사용여부',
@@ -106,6 +114,13 @@ class GateTab extends PureComponent<IProps, IState> {
         render: (text: string, record: IGateObj) => record.relaySvr
       },
       {
+        title: 'RESET URL',
+        key: 'relaySvr',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IGateObj) => record.resetSvr
+      },
+      {
         title: 'Action',
         width: 100,
         align: 'center',
@@ -136,6 +151,17 @@ class GateTab extends PureComponent<IProps, IState> {
 
     return (
       <>
+        <Row style={{ marginBottom: '1rem' }}>
+          <Button
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleCreateClick();
+            }}
+          >
+            + {localeObj['label.create'] || '신규 등록'}
+          </Button>
+        </Row>
         <StandardTable
           scroll={{ x: 'max-content' }}
           columns={columns}
@@ -145,6 +171,38 @@ class GateTab extends PureComponent<IProps, IState> {
           data={{ list: this.props.gates }}
           hidePagination
         />
+        {this.state.createModal ? (
+          <DraggableModal
+            title={localeObj['label.gate.info'] || '게이트 상세'}
+            visible={this.state.createModal}
+            onOk={(): void => {
+              this.setState({ createModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ createModal: false });
+            }}
+          >
+            <GateModal modalState={this.state.createModal} onSubmit={this.props.onCreate} />
+          </DraggableModal>
+        ) : null}
+        {this.state.detailModal ? (
+          <DraggableModal
+            title={localeObj['label.gate.info'] || '게이트 상세'}
+            visible={this.state.detailModal}
+            onOk={(): void => {
+              this.setState({ detailModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ detailModal: false });
+            }}
+          >
+            <GateModal
+              gate={this.state.selected}
+              modalState={this.state.detailModal}
+              onSubmit={this.props.onUpdate}
+            />
+          </DraggableModal>
+        ) : null}
       </>
     );
   }

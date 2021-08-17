@@ -12,6 +12,7 @@ export interface IGateObj {
   uploadCt: number;
   relaySvr: string;
   relaySvrKey?: string;
+  resetSvr?: string;
   delYn: string;
   gateGroupId?: string;
   createBy?: string;

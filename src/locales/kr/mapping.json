@@ -1,6 +1,7 @@
 {
   "menu.dashboard": "dashboard",
   "menu.inout": "입출차현황",
+  "menu.tenant": "입주사",
   "menu.users": "사용자관리",
   "menu.setting": "설정관리",
   "menu.statistics": "통계",
@@ -10,6 +11,8 @@
   "menu.parkinglot.error": "주차장장애현황",
   "menu.parkinglotcs.inout": "입출차현황",
   "menu.parkinglotcs.ticket": "정기권",
+  "menu.tenant.list": "입주사리스트",
+  "menu.tenant.tickets": "입주사할인권",
 
   "menu.setting.parkinglot": "주차장기본정보",
   "menu.setting.facility": "시설정보",

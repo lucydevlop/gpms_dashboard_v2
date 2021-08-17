@@ -7,17 +7,20 @@ import { ColumnProps, ColumnsType } from 'antd/lib/table';
 //   getColumn,
 //   getEditableColumn
 // } from '@components/EditableTable/columnHelpers';
-import { Button, Divider } from 'antd';
+import { Button, Divider, Row } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { IGateObj } from '@models/gate';
 import { conversionEnumValue } from '@utils/conversion';
-import { categoryOpt, delYnOpt, lprTypeTypeOpt } from '@/constants/list';
+import { categoryOpt, delYnOpt, EDelYn, lprTypeTypeOpt } from '@/constants/list';
 import StandardTable from '@components/StandardTable';
+import { localeStore } from '@store/localeStore';
+import zdsTips from '@utils/tips';
 
 interface IProps {
   facilities: IFacilityObj[];
   gates: IGateObj[];
   loading: boolean;
+  onUpdate: (info: IFacilityObj) => void;
 }
 
 interface IState {
@@ -35,11 +38,25 @@ class FacilityTab extends PureComponent<IProps, IState> {
     };
   }
 
+  handleCreateClick() {
+    this.setState({ detailModal: false, createModal: true });
+  }
+
   handleBtnClick = (info: IFacilityObj, key: string) => {
-    this.setState({ detailModal: true, createModal: false, selected: info });
+    const { localeObj } = localeStore;
+    //console.log('handleBtnClick', info);
+    if (key === 'delete') {
+      zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
+        info.delYn = EDelYn.Y;
+        this.props.onUpdate(info);
+      });
+    } else {
+      this.setState({ detailModal: true, createModal: false, selected: info });
+    }
   };
 
   render() {
+    const { localeObj } = localeStore;
     const columns: ColumnProps<IFacilityObj>[] = [
       {
         title: '사용여부',
@@ -164,6 +181,17 @@ class FacilityTab extends PureComponent<IProps, IState> {
     ];
     return (
       <>
+        <Row style={{ marginBottom: '1rem' }}>
+          <Button
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleCreateClick();
+            }}
+          >
+            + {localeObj['label.create'] || '신규 등록'}
+          </Button>
+        </Row>
         <StandardTable
           scroll={{ x: 'max-content' }}
           columns={columns}
