@@ -14,6 +14,8 @@ import { searchInoutFields } from '@views/Inout/FormFields/FormFields';
 import { conversionDate, conversionDateTime, conversionEnumValue } from '@utils/conversion';
 import { EInoutType, ticketTypeOpt } from '@/constants/list';
 import moment from 'moment';
+import { DownloadOutlined } from '@ant-design/icons';
+import { generateCsv } from '@utils/downloadUtil';
 
 interface IState {
   loading: boolean;
@@ -95,21 +97,72 @@ class Inout extends PureComponent<any, IState> {
   addProdRender = () => {
     const { localeObj } = localeStore;
     return (
-      <Button
-        type="primary"
-        onClick={(e: any) => {
-          e.stopPropagation();
-          this.handleCreateClick();
-        }}
-      >
-        + {localeObj['label.create'] || '신규 등록'}
-      </Button>
+      <>
+        <Button
+          type="primary"
+          onClick={(e: any) => {
+            e.stopPropagation();
+            this.handleCreateClick();
+          }}
+        >
+          + {localeObj['label.create'] || '신규 등록'}
+        </Button>
+        <Button
+          style={{ marginLeft: '1rem' }}
+          type="primary"
+          onClick={(e: any) => {
+            e.stopPropagation();
+            this.handleDownloadClick();
+          }}
+        >
+          <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
+        </Button>
+      </>
     );
   };
 
   handleCreateClick = () => {
     this.setState({ createModal: true });
   };
+
+  async handleDownloadClick() {
+    const headers = [
+      '주차상태',
+      '차량타입',
+      '회사명',
+      '차량번호',
+      '입차게이트',
+      '입차시간',
+      '출차게이트',
+      '출차시간',
+      '주차요금',
+      '할인요금',
+      '결제요금',
+      '메모'
+    ].join(',');
+
+    const downLoadData = this.state.list.map((inout) => {
+      const data: any = {};
+      data.parkType =
+        inout.parkoutSn === -1 ? '이중입차' : inout.parkoutSn !== 0 ? '차량출차' : '차량입차';
+      data.ticketType = conversionEnumValue(inout.parkcartype, ticketTypeOpt).label;
+      data.corpName = inout.ticketCorpName;
+      data.vehicleNo = inout.vehicleNo;
+      data.inGate = inout.inGateId;
+      data.inDate = conversionDateTime(inout.inDate, '{y}-{m}-{d} {h}:{i}') || '--';
+      data.outGate = inout.outGateId;
+      data.outDate = inout.outDate
+        ? conversionDateTime(inout.outDate, '{y}-{m}-{d} {h}:{i}') || '--'
+        : null;
+      data.parkfee = inout.parkfee;
+      data.discountfee = inout.discountfee;
+      data.payfee = inout.payfee;
+      data.memo = inout.memo;
+      return data;
+    });
+
+    await generateCsv(downLoadData, headers, '입출차현황');
+  }
 
   handleBtnClick = (info: IInoutObj) => {
     //console.log('handleBtnClick', info);

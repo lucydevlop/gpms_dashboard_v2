@@ -2,12 +2,18 @@ import React, { PureComponent } from 'react';
 import { IGateObj } from '@models/gate';
 import { ColumnProps } from 'antd/lib/table';
 import { conversionEnumValue } from '@utils/conversion';
-import { gateOpenActionTypeOpt, gateTypeOpt } from '@/constants/list';
+import { delYnOpt, EDelYn, gateOpenActionTypeOpt, gateTypeOpt } from '@/constants/list';
 import StandardTable from '@components/StandardTable';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { IFacilityObj } from '@models/facility';
+import { Divider } from 'antd';
+import zdsTips from '@utils/tips';
+import { inject, observer } from 'mobx-react';
+import { localeStore } from '@store/localeStore';
 interface IProps {
   gates: IGateObj[];
   loading: boolean;
+  onUpdate: (info: IGateObj) => void;
 }
 
 interface IState {
@@ -16,6 +22,8 @@ interface IState {
   selected?: IGateObj;
 }
 
+@inject('localeStore')
+@observer
 class GateTab extends PureComponent<IProps, IState> {
   constructor(props: any) {
     super(props);
@@ -25,13 +33,33 @@ class GateTab extends PureComponent<IProps, IState> {
     };
   }
 
-  handleBtnClick = (info: IGateObj) => {
+  handleBtnClick = (info: IGateObj, key: string) => {
+    const { localeObj } = localeStore;
     //console.log('handleBtnClick', info);
-    this.setState({ detailModal: true, createModal: false, selected: info });
+    if (key === 'delete') {
+      zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
+        info.delYn = EDelYn.Y;
+        this.props.onUpdate(info);
+      });
+    } else {
+      this.setState({ detailModal: true, createModal: false, selected: info });
+    }
   };
 
   render() {
     const columns: ColumnProps<IGateObj>[] = [
+      {
+        title: '사용여부',
+        key: 'delYn',
+        width: 100,
+        align: 'center',
+        filters: delYnOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.delYn.indexOf(value as string) === 0,
+        render: (text: string, record: IGateObj) => {
+          const value = conversionEnumValue(record.delYn, delYnOpt);
+          return <span style={{ color: value.color }}>{value.label}</span>;
+        }
+      },
       {
         title: '게이트 ID',
         key: 'gateId',
@@ -64,14 +92,14 @@ class GateTab extends PureComponent<IProps, IState> {
           conversionEnumValue(record.openAction as string, gateOpenActionTypeOpt).label
       },
       {
-        title: 'RELAY Svr Key',
+        title: 'RELAY SVR Key',
         key: 'relaySvrKey',
         width: 110,
         align: 'center',
         render: (text: string, record: IGateObj) => record.relaySvrKey
       },
       {
-        title: 'RELAY Svr URL',
+        title: 'RELAY SVR URL',
         key: 'relaySvr',
         width: 110,
         align: 'center',
@@ -87,10 +115,19 @@ class GateTab extends PureComponent<IProps, IState> {
             <a
               onClick={(e: any) => {
                 e.stopPropagation();
-                this.handleBtnClick(item);
+                this.handleBtnClick(item, 'edit');
               }}
             >
               <EditOutlined />
+            </a>
+            <Divider type="vertical" />
+            <a
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.handleBtnClick(item, 'delete');
+              }}
+            >
+              <DeleteOutlined />
             </a>
           </div>
         )

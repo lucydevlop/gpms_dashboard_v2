@@ -54,3 +54,9 @@ export function getFacilities() {
 export function getDisplayMessages() {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/facility/display/message`);
 }
+
+export function updateGate(data) {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/gates`, {
+    data: data
+  });
+}
