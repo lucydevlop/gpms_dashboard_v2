@@ -5,11 +5,15 @@ export enum EDelYn {
   Y = 'Y',
   N = 'N'
 }
+export const delYnOpt: ISelectOptions[] = [
+  { value: EDelYn.Y, label: '비활성', color: 'red' },
+  { value: EDelYn.N, label: '활성', color: 'blue' }
+];
+
 export enum EStatus {
   On = 'On',
   Off = 'Off'
 }
-
 export const statusOpt: ISelectOptions[] = [
   { value: EStatus.On, label: '开启', color: 'blue' },
   { value: EStatus.Off, label: '关闭', color: 'red' }
@@ -251,7 +255,6 @@ export enum EMessageTypeType {
   FULL = 'FULL',
   VIP = 'VIP'
 }
-
 export const messageTypeTypeOpt: ISelectOptions[] = [
   { value: EMessageTypeType.INIT, label: '리셋', color: 'black' },
   { value: EMessageTypeType.NONMEMBER, label: '일반차량', color: 'black' },
@@ -261,4 +264,21 @@ export const messageTypeTypeOpt: ISelectOptions[] = [
   { value: EMessageTypeType.RESTRICTE, label: '입차제한차량', color: 'black' },
   { value: EMessageTypeType.FAILNUMBER, label: '번호인식실패', color: 'black' },
   { value: EMessageTypeType.FULL, label: '만차', color: 'black' }
+];
+
+export enum ELprTypeType {
+  FRONT = 'FRONT',
+  BACK = 'BACK',
+  ASSIST = 'ASSIST',
+  INFRONT = 'INFRONT',
+  INBACK = 'INBACK',
+  OUTFRONT = 'OUTFRONT'
+}
+export const lprTypeTypeOpt: ISelectOptions[] = [
+  { value: ELprTypeType.FRONT, label: '전방', color: 'black' },
+  { value: ELprTypeType.BACK, label: '후방', color: 'black' },
+  { value: ELprTypeType.ASSIST, label: '보조', color: 'black' },
+  { value: ELprTypeType.INFRONT, label: '양방향 입차전방', color: 'black' },
+  { value: ELprTypeType.INBACK, label: '양방향 입차보조', color: 'black' },
+  { value: ELprTypeType.OUTFRONT, label: '양방향 출차전방', color: 'black' }
 ];

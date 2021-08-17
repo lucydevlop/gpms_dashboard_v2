@@ -41,7 +41,8 @@ export function getEditableColumn<T>(
       editConfig: {
         editable: true,
         inputType: inputType,
-        selectOption: selectOptions
+        selectOptions: selectOptions,
+        initialValue: initialValue
       },
       editable: true,
       dataIndex: name.toString(),

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { IDisplayMsgObj } from '@models/display';
-import { IFacilityObj } from '@models/facility';
 import { Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/lib/table';
@@ -8,9 +7,8 @@ import {
   getActionsColumn,
   getColumn,
   getEditableColumn
-} from '@components/EditTable/columnHelpers';
+} from '@components/EditableTable/columnHelpers';
 import { messageClassTypeOpt, messageTypeTypeOpt } from '@/constants/list';
-import { EditableList } from '@components/EditTable';
 
 interface IProps {
   displayMsgs: IDisplayMsgObj[];
@@ -53,11 +51,11 @@ class DisplayTab extends PureComponent<IProps, IState> {
     ];
     return (
       <>
-        <EditableList<IDisplayMsgObj>
-          columns={columns}
-          entries={this.props.displayMsgs}
-          rowKeySelector={(row: IDisplayMsgObj) => row.sn!!.toString()}
-        />
+        {/*<EditableList<IDisplayMsgObj>*/}
+        {/*  columns={columns}*/}
+        {/*  entries={this.props.displayMsgs}*/}
+        {/*  rowKeySelector={(row: IDisplayMsgObj) => row.sn!!.toString()}*/}
+        {/*/>*/}
       </>
     );
   }
