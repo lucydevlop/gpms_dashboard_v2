@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PageWrapper from '@components/PageWrapper';
-import { getDisplayMessages, getFacilities, getGates, updateGate } from '@api/facility';
+import { createGate, getDisplayMessages, getFacilities, getGates, updateGate } from '@api/facility';
 import { IGateObj } from '@models/gate';
 import { runInAction } from 'mobx';
 import { Tabs } from 'antd';
@@ -66,8 +66,8 @@ class FacilitySetting extends PureComponent<any, IState> {
     this.setState({ loading: false });
   }
 
-  handleUpdate = async (record: IGateObj) => {
-    console.log('handleUpdate', record);
+  handleGateUpdate = async (record: IGateObj) => {
+    // console.log('handleUpdate', record);
     updateGate(record)
       .then((res: any) => {
         const { msg, data } = res;
@@ -87,8 +87,23 @@ class FacilitySetting extends PureComponent<any, IState> {
       .catch(() => {});
   };
 
-  handleDelete = async (record: IGateObj) => {
-    console.log('handleSave', record);
+  handleGateCreate = async (record: IGateObj) => {
+    console.log('handleGateCreate', record);
+    createGate(record)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const add = data;
+            const gates = [...this.state.gates, add];
+          });
+        }
+      })
+      .catch(() => {});
+  };
+
+  handleFacilityUpdate = async (record: IFacilityObj) => {
+    console.log('handleFacilityUpdate', record);
   };
 
   render() {
@@ -99,10 +114,20 @@ class FacilitySetting extends PureComponent<any, IState> {
       <PageWrapper>
         <Tabs type="card">
           <TabPane tab="게이트" key="1">
-            <GateTab gates={gates} loading={this.state.loading} onUpdate={this.handleUpdate} />
+            <GateTab
+              gates={gates}
+              loading={this.state.loading}
+              onUpdate={this.handleGateUpdate}
+              onCreate={this.handleGateCreate}
+            />
           </TabPane>
           <TabPane tab="시설" key="2">
-            <FacilityTab facilities={facilities} gates={gates} loading={this.state.loading} />
+            <FacilityTab
+              facilities={facilities}
+              gates={gates}
+              loading={this.state.loading}
+              onUpdate={this.handleFacilityUpdate}
+            />
           </TabPane>
           <TabPane tab="전광판" key="3">
             <DisplayTab displayMsgs={displayMessages} />

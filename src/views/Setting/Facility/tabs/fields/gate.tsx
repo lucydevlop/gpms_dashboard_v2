@@ -1,10 +1,44 @@
+import { IGateObj } from '@models/gate';
+import { IFormFieldConfig } from '@utils/form';
+import { FormType } from '@/constants/form';
+
+export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] {
+  return [
+    {
+      id: 'gateId',
+      label: '게이트ID',
+      colProps: {
+        span: 24
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 19
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.gateId : ''
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '입력하세요'
+        }
+      }
+    }
+  ];
+}
+
 // import { GetColumnSearchPropsFn } from '@utils/useColSearchProps';
 // import { BaseColConfig } from '@components/EditableTable/EditableTable';
 // import { IGateObj } from '@models/gate';
 // import { EGateType, gateActionTypeOpt, gateOpenActionTypeOpt, gateTypeOpt } from '@/constants/list';
 // import { conversionEnumValue } from '@utils/conversion';
 // import { Button, Popconfirm } from 'antd';
-import React from 'react';
+// import React from 'react';
 //
 // // export const columns = (update: (record: IGateObj, key: string, value: any) => void): BaseColConfig<IGateObj>[] => [
 // //   {
