@@ -47,7 +47,7 @@
   "layoutSetting.darkTheme": "다크모드",
   "layoutSetting.colorStyle": "색상 스타일",
 
-  "alert.delete": "선택 항목을 삭제 하시겠습니까?",
+  "alert.delete": "선택 항목을 삭제(비활성) 하시겠습니까?",
   "alert.reset": "리셋 하시겠습니까?",
   "alert.select.time": "시간을 선택하세요",
   "alert.select.breaker": "차단기 상태를 선택하세요",
