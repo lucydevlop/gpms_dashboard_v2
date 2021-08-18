@@ -46,3 +46,25 @@ export function postLogin(userName, password) {
 export function getUserInfo() {
   return io.get('/get/userInfo');
 }
+
+export function getAdminList(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/list', {
+    data
+  });
+}
+
+export function createUser(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/admin/register', {
+    data
+  });
+}
+
+export function editUser(data) {
+  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/edit', {
+    data
+  });
+}
+
+export function deleteUser(data) {
+  return io.delete(process.env.REACT_APP_API_DOMAIN_URL + `/dashboard/admin/delete/${data}`, data);
+}

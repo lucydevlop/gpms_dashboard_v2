@@ -25,6 +25,8 @@ import { FormType } from '@/constants/form';
 import { GetFieldDecoratorOptions } from '@ant-design/compatible/lib/form/Form';
 import { DatePickerProps, RangePickerProps } from 'antd/lib/date-picker';
 import styled from 'styled-components';
+import { color } from 'echarts/core';
+import { parkinglotStore } from '@/store/parkinglotStore';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -53,6 +55,7 @@ export interface IFormFieldOption {
   type: FormType;
   option?: IComponentOption;
   selectOptions?: ISelectOptions[];
+  handler?: () => void;
 }
 
 export interface IFromFieldBaseConfig {
@@ -89,7 +92,7 @@ const getFormComponent = (component: IFormFieldOption) => {
       return <Input size="middle" {...option} />;
     case FormType.Select:
       return (
-        <Select size="middle" {...option}>
+        <Select style={{ width: '60%' }} size="middle" {...option}>
           {selectOptions.map(
             (item) =>
               item.value && (
@@ -104,10 +107,17 @@ const getFormComponent = (component: IFormFieldOption) => {
       return (
         <Radio.Group size="middle" {...option} className="radio-group">
           {selectOptions.map((item) => (
-            <Radio key={item.value} value={item.value}>
+            <Radio
+              key={item.value}
+              value={item.value}
+              onChange={(e) => {
+                e.target.value === 'On' ? option.open() : option.close();
+              }}
+            >
               {item.label}
             </Radio>
           ))}
+          <span style={{ fontSize: '12px' }}>{option.note}</span>
         </Radio.Group>
       );
     case FormType.RangePicker:
@@ -193,8 +203,21 @@ export const getFormFields = (
     } = {
       ...formField
     };
+
     const key = formField.id + index;
-    const labelStyle = <label style={{ fontWeight: 600 }}>{label}</label>;
+    const optional: ColProps = { span: 8, xs: 24, md: 24, xl: 8 };
+    let requireTag = null;
+    if (fieldOption !== null && fieldOption !== undefined) {
+      if (fieldOption.rules !== null && fieldOption.rules !== undefined) {
+        requireTag = <span style={{ color: 'red' }}>*</span>;
+      }
+    }
+    const labelStyle = (
+      <label style={{ fontWeight: 600 }}>
+        {requireTag}
+        {label}
+      </label>
+    );
     if (formField.hidden) return;
     if (formField.formSubItemProps) {
       // return (
@@ -221,7 +244,11 @@ export const getFormFields = (
       //   </Col>
       // );
       return (
-        <Col {...colProps} key={key} style={{}}>
+        <Col
+          {...(colProps === null || colProps === undefined ? optional : colProps)}
+          key={key}
+          style={{}}
+        >
           <FormItem
             label={labelStyle}
             // labelAlign={'right'}
@@ -241,7 +268,7 @@ export const getFormFields = (
     }
     return (
       <Col
-        {...colProps}
+        {...(colProps === null || colProps === undefined ? optional : colProps)}
         key={key}
         style={{ display: putAway && index >= (putAwayNum || maxIndex) ? 'none' : 'block' }}
       >
@@ -394,3 +421,6 @@ export const disabledDateAfterToday = (current: Moment) =>
 // 禁止选择今天以前的时间
 export const disabledDateBeforToday = (current: Moment) =>
   current && current < moment().startOf('day');
+
+export const disabledThreeMonth = (current: Moment) =>
+  current && (current > moment().add(3, 'month') || current < moment().subtract(3, 'month'));
