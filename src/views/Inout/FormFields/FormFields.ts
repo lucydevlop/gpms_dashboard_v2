@@ -5,11 +5,12 @@ import {
   formColProps6Config,
   IFormFieldConfig
 } from '@/utils/form';
-import { IInoutSelectReq } from '@models/inout';
-import { EInoutType, inoutSearchDateTypeOpt } from '@/constants/list';
+import { IInoutObj, IInoutSelectReq } from '@models/inout';
+import { EInoutType, ETicketType, inoutSearchDateTypeOpt, ticketTypeOpt } from '@/constants/list';
 import { FormType } from '@/constants/form';
 import { datePickerFormat } from '@/constants';
 import moment from 'moment';
+import { conversionDateTime } from '@/utils/conversion';
 
 const regisDateRangeConfig = {
   rules: [
@@ -33,14 +34,17 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
         initialValue: EInoutType.IN
       },
       colProps: {
-        span: 12
+        xl: 12,
+        xs: 24
       },
       formItemProps: {
         labelCol: {
-          span: 4
+          xl: 4,
+          xs: 8
         },
         wrapperCol: {
-          span: 15
+          xl: 10,
+          xs: 16
         }
       },
       component: {
@@ -72,20 +76,458 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
       id: 'vehicleNo',
       label: '차량번호',
       colProps: {
-        span: 10
+        xl: 12,
+        xs: 24
       },
       formItemProps: {
         labelCol: {
-          span: 8
+          xl: 4,
+          xs: 8
         },
         wrapperCol: {
-          span: 10
+          xl: 20,
+          xs: 16
         }
       },
       component: {
         type: FormType.Input,
         option: {
           placeholder: '입력하세요'
+        }
+      }
+    }
+  ];
+}
+
+export function newInoutFields(gates: any[]): IFormFieldConfig<keyof IInoutObj>[] {
+  const { localeObj } = localeStore;
+  return [
+    {
+      id: 'parkinSn',
+      label: '입차 SEQ',
+      hidden: true,
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: null
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '선택하세요'
+        }
+      }
+    },
+    {
+      id: 'parkcartype',
+      label: '차량타입',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: ETicketType.NORMAL
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: ticketTypeOpt
+      }
+    },
+    {
+      id: 'vehicleNo',
+      label: '차량번호',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: null,
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'inGateId',
+      label: '입차게이트',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gates[0]!!.value
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: gates
+      }
+    },
+    {
+      id: 'inDate',
+      label: '입차날짜',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: moment(new Date())
+      },
+      component: {
+        type: FormType.DatePicker,
+        option: {
+          format: 'YYYY-MM-DD HH:mm',
+          showTime: false,
+          disabledDate: disabledDateAfterToday
+        }
+      }
+    },
+    {
+      id: 'memo',
+      label: '메모',
+      colProps: {
+        xl: 24,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 4,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 20,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: null
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'type',
+      fieldOption: {
+        initialValue: EInoutType.IN
+      },
+      component: {
+        type: FormType.Select
+      }
+    }
+  ];
+}
+
+export function newInoutDetailFileds(
+  inout?: IInoutObj,
+  gates?: any[]
+): IFormFieldConfig<keyof IInoutObj>[] {
+  const { localeObj } = localeStore;
+  return [
+    {
+      id: 'parkinSn',
+      label: '입차 SEQ',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout ? inout.parkinSn : null
+      },
+      hidden: true,
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'parkcartype',
+      label: '차량타입',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout ? inout.parkcartype : ETicketType.NORMAL
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: ticketTypeOpt
+      }
+    },
+    {
+      id: 'vehicleNo',
+      label: '차량번호',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout ? inout.vehicleNo : null
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'inGateId',
+      label: '입차게이트',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout ? inout.inGateId : gates!![0].gateId
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: gates
+      }
+    },
+    {
+      id: 'inDate',
+      label: '입차날짜',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout ? moment(inout.inDate) : moment(new Date())
+      },
+      component: {
+        type: FormType.DatePicker,
+        option: {
+          format: 'YYYY-MM-DD HH:mm',
+          showTime: false
+        }
+      }
+    },
+    {
+      id: 'outGateId',
+      label: '출차게이트',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 12,
+          xs: 12
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout?.outGateId ? inout.outGateId : gates!![0].gateId
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: gates
+      }
+    },
+    {
+      id: 'outDate',
+      label: '출차날짜',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout?.outDate ? moment(inout.outDate) : ''
+      },
+      component: {
+        type: FormType.DatePicker,
+        option: {
+          format: 'YYYY-MM-DD HH:mm',
+          showTime: false
+        }
+      }
+    },
+    {
+      id: 'memo',
+      label: '메모',
+      colProps: {
+        xl: 24,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 4,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 20,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout ? inout.memo : null
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'type',
+      fieldOption: {
+        initialValue: EInoutType.IN
+      },
+      component: {
+        type: FormType.Select
+      }
+    },
+    {
+      id: 'parkinSn',
+      label: '입차 SEQ',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: inout ? inout.parkinSn : null
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '선택하세요'
         }
       }
     }

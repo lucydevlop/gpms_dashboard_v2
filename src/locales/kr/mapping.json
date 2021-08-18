@@ -1,6 +1,7 @@
 {
   "menu.dashboard": "dashboard",
   "menu.inout": "입출차현황",
+  "menu.ticket": "정기권관리",
   "menu.tenant": "입주사",
   "menu.users": "사용자관리",
   "menu.setting": "설정관리",
@@ -74,6 +75,15 @@
   "label.new.disability": "신규 장애",
   "label.parkinglot.disability": "주차장 장애",
   "label.inout.info": "주차장 입출차 현황",
+  "label.inout.create": "입출차 등록",
   "label.inout.detail": "입출차 상세 내역",
-  "label.ticket.info": "주차장 정기권 현황"
+  "label.ticket.info": "주차장 정기권 현황",
+
+  "label.ticket.create": "정기권 등록",
+  "label.ticket.update": "정기권 상세",
+
+  "label.setting.space": "만차제어",
+
+  "label.user.create": "사용자 등록",
+  "label.user.detail": "사용자 상세 내역"
 }

@@ -1,8 +1,13 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
-import { getInouts } from '@/api/Inout';
+import {
+  createParkinglotInout,
+  deleteParkinglotInout,
+  editParkinglotInout,
+  getInouts
+} from '@/api/Inout';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
-import { runInAction } from 'mobx';
+import { runInAction, toJS } from 'mobx';
 import Table, { ColumnProps } from 'antd/lib/table';
 import { localeStore } from '@/store/localeStore';
 import PageWrapper from '@/components/PageWrapper';
@@ -14,6 +19,12 @@ import { searchInoutFields } from '@views/Inout/FormFields/FormFields';
 import { conversionDate, conversionDateTime, conversionEnumValue } from '@utils/conversion';
 import { EInoutType, ticketTypeOpt } from '@/constants/list';
 import moment from 'moment';
+import DraggableModal from '@/components/DraggableModal';
+import InoutCreateModalForm from '@/views/Inout/Modal/InoutCreateModal';
+import InoutDetailModalForm from './Modal/InoutDetailModal';
+import { parkinglotStore } from '@/store/parkinglotStore';
+import { deleteTikcet } from '@/api/ticket';
+import { ITicketObj } from '@models/ticket';
 import { DownloadOutlined } from '@ant-design/icons';
 import { generateCsv } from '@utils/downloadUtil';
 
@@ -26,7 +37,9 @@ interface IState {
   createModal: boolean;
   detailModal: boolean;
   searchParam?: IInoutSelectReq;
+  gates: any[];
   selected?: IInoutObj;
+  deleteList: any[];
 }
 @inject('parkinglotStore', 'localeStore')
 @observer
@@ -40,11 +53,20 @@ class Inout extends PureComponent<any, IState> {
       current: 1,
       pageSize: 20,
       createModal: false,
-      detailModal: false
+      gates: [],
+      detailModal: false,
+      deleteList: []
     };
   }
 
   componentDidMount() {
+    parkinglotStore.initGateList().then(() => {
+      const unique: { value: string; label: string }[] = [];
+      parkinglotStore.gateList.forEach((gate) => {
+        unique.push({ value: gate.gateId, label: gate.gateName });
+      });
+      this.setState({ gates: unique });
+    });
     this.setState({ loading: true });
     const createTm = [moment(new Date()).subtract(3, 'days'), moment(new Date())];
     const searchParam: IInoutSelectReq = {
@@ -53,13 +75,41 @@ class Inout extends PureComponent<any, IState> {
       createTm: [createTm[0].unix(), createTm[1].unix()],
       dateType: EInoutType.IN
     };
-    // console.log('pollData', searchParam);
     this.setState(
       {
         searchParam: searchParam
       },
       () => this.pollData()
     );
+  }
+
+  update = (info: IInoutObj) => {
+    this.setState({ detailModal: false });
+    editParkinglotInout(info).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+        this.pollData();
+      }
+    });
+  };
+
+  async delete() {
+    let count = 0;
+    this.state.deleteList.forEach((data: any) => {
+      deleteParkinglotInout(data.parkinSn).then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            count++;
+            if (count === this.state.deleteList.length) {
+              this.setState({ deleteList: [] });
+              this.pollData();
+            }
+          });
+        }
+      });
+    });
+    await this.pollData();
   }
 
   async pollData() {
@@ -79,7 +129,6 @@ class Inout extends PureComponent<any, IState> {
   }
 
   getSearchData = (info: IInoutSelectReq) => {
-    // console.log('getSearchData', info);
     const searchParam: IInoutSelectReq = {
       dateType: info.dateType,
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),
@@ -88,6 +137,16 @@ class Inout extends PureComponent<any, IState> {
       vehicleNo: info.vehicleNo
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
+  };
+
+  create = (info: IInoutObj) => {
+    this.setState({ createModal: false });
+    createParkinglotInout(info).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+        this.pollData();
+      }
+    });
   };
 
   paginationChange = (pagination: TablePaginationConfig) => {
@@ -106,6 +165,16 @@ class Inout extends PureComponent<any, IState> {
           }}
         >
           + {localeObj['label.create'] || '신규 등록'}
+        </Button>
+        <Button
+          type="ghost"
+          onClick={(e: any) => {
+            e.stopPropagation();
+            this.delete();
+          }}
+          style={{ marginLeft: '1rem' }}
+        >
+          -{localeObj['label.delete'] || '삭제'}
         </Button>
         <Button
           style={{ marginLeft: '1rem' }}
@@ -165,7 +234,6 @@ class Inout extends PureComponent<any, IState> {
   }
 
   handleBtnClick = (info: IInoutObj) => {
-    //console.log('handleBtnClick', info);
     this.setState({ detailModal: true, createModal: false, selected: info });
   };
 
@@ -350,6 +418,9 @@ class Inout extends PureComponent<any, IState> {
               }
             }
           }}
+          onSelectRow={(row: ITicketObj[]) => {
+            this.setState({ deleteList: row });
+          }}
           summary={() => (
             <Table.Summary fixed>
               <Table.Summary.Row>
@@ -364,6 +435,39 @@ class Inout extends PureComponent<any, IState> {
           onChange={this.paginationChange}
           isSelected
         />
+        {this.state.createModal ? (
+          <DraggableModal
+            title={localeObj['label.inout.create'] || '입출차 등록'}
+            visible={this.state.createModal}
+            width={800}
+            onOk={() => this.setState({ createModal: false })}
+            onCancel={(): void => {
+              this.setState({ createModal: false });
+            }}
+          >
+            <InoutCreateModalForm
+              onSubmit={(value) => this.create(value)}
+              gates={this.state.gates}
+            />
+          </DraggableModal>
+        ) : null}
+        {this.state.detailModal ? (
+          <DraggableModal
+            title={localeObj['label.inout.detail'] || '입출차 상세 내역'}
+            visible={this.state.detailModal}
+            width={800}
+            onOk={() => this.setState({ detailModal: false })}
+            onCancel={(): void => {
+              this.setState({ detailModal: false });
+            }}
+          >
+            <InoutDetailModalForm
+              onSubmit={(value) => this.update(value)}
+              inout={this.state.selected!!}
+              gates={this.state.gates}
+            />
+          </DraggableModal>
+        ) : null}
       </PageWrapper>
     );
   }
