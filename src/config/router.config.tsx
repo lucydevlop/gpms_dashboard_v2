@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  DashboardOutlined,
   PieChartOutlined,
   AppstoreOutlined,
   FormOutlined,
@@ -49,7 +50,7 @@ export const asyncRouteConfig: RouteChild[] = [
   },
   {
     name: 'dashboard',
-    icon: <PieChartOutlined />,
+    icon: <DashboardOutlined />,
     path: '/dashboard',
     component: ['/views/Dashboard'],
     loading: true,
@@ -63,6 +64,15 @@ export const asyncRouteConfig: RouteChild[] = [
     authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
     loading: true,
     localeKey: 'menu.inout'
+  },
+  {
+    name: 'tickets',
+    icon: <CarOutlined />,
+    path: '/tickets',
+    component: ['/views/Ticket'],
+    authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
+    loading: true,
+    localeKey: 'menu.ticket'
   },
   {
     name: 'setting',
@@ -84,32 +94,38 @@ export const asyncRouteConfig: RouteChild[] = [
         localeKey: 'menu.setting.facility'
       },
       {
-        name: 'userSetting',
-        path: '/setting/userSetting',
-        component: ['/views/Setting/UserSetting'],
-        localeKey: 'menu.setting.userSetting'
+        name: 'feeSetting',
+        path: '/setting/fee',
+        component: ['/views/Setting/Fee'],
+        localeKey: 'menu.setting.fee'
       },
       {
-        name: 'failedResult',
-        path: '/result/failedResult',
-        component: ['/views/Result/FailedResult'],
-        localeKey: 'menu.result.failedResult'
+        name: 'productSetting',
+        path: '/setting/product',
+        component: ['/views/Setting/Product'],
+        localeKey: 'menu.setting.product'
+      },
+      {
+        name: 'userSetting',
+        path: '/setting/user',
+        component: ['/views/Setting/User'],
+        localeKey: 'menu.setting.user'
       }
     ]
   },
   {
-    name: 'parkinglot',
-    icon: <CarOutlined />,
-    path: '/parkinglot',
-    localeKey: 'menu.parkinglot',
+    name: 'statistics',
+    icon: <PieChartOutlined />,
+    path: '/statistics',
+    localeKey: 'menu.statistics',
+    authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
     routes: [
       {
-        name: 'statistics',
-        path: '/parkinglot/statistics',
-        component: ['/views/ParkingLot/Statistics'],
-        authority: ['admin', 'ROLE_SUPER'],
+        name: 'inout',
+        path: '/statistics/inout',
+        component: ['/views/Statistics/Inout'],
         loading: true,
-        localeKey: 'menu.parkinglot.statistics'
+        localeKey: 'menu.statistics.inout'
       },
       {
         name: 'erros',

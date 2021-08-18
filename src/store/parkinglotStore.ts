@@ -1,6 +1,8 @@
 import {
   createParkinglot,
   getAllDisabilities,
+  getGateGroups,
+  getGateList,
   getParkinglot,
   getParkinglotActions,
   getParkinglotStatistist,
@@ -19,6 +21,7 @@ import {
 import { IFacilityObj, IFacilitySummaryObj } from '@models/facility';
 import { rules } from '@typescript-eslint/eslint-plugin';
 import { IActionsHistoryObj, IDisabilityObj } from '@models/history';
+import { Console } from 'console';
 
 configure({ enforceActions: 'observed' });
 class ParkinglotStore {
@@ -45,6 +48,10 @@ class ParkinglotStore {
   };
 
   @observable parkinglotErrorSum: Array<IParkinglotErrorSummaryObj> = [];
+
+  @observable gateList: Array<any> = [];
+
+  @observable gateGroups: Array<any> = [];
 
   @action get() {
     return getParkinglot()
@@ -93,7 +100,6 @@ class ParkinglotStore {
         if (msg === 'ok') {
           runInAction(() => {
             this.setParkinglotList(data);
-            // console.log('getParkinglotList', this.parkinglotList);
           });
         }
       })
@@ -104,37 +110,6 @@ class ParkinglotStore {
 
   @action setParkinglotList(list: Array<IParkinglotObj>): void {
     this.parkinglotList = list;
-  }
-
-  @action getParkinglotDetail(sn: number) {
-    this.facilities = [];
-    return getFacilities(sn)
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'ok') {
-          // console.log('setFacilitySummary', data);
-          runInAction(() => {
-            this.setFacilityList(data.facilities);
-            const summary: IFacilitySummaryObj = {
-              total: data.totalCount,
-              active: data.successCount,
-              failure: data.failedCount
-            };
-            this.setFacilitySummary(summary);
-          });
-        }
-      })
-      .catch((err) => {
-        runInAction(() => {
-          this.facilities = [];
-          const summary: IFacilitySummaryObj = {
-            total: 0,
-            active: 0,
-            failure: 0
-          };
-          this.setFacilitySummary(summary);
-        });
-      });
   }
 
   @action setFacilityList(list: Array<IFacilityObj>): void {
@@ -199,6 +174,32 @@ class ParkinglotStore {
 
   @action setDisabilities(list: Array<IDisabilityObj>) {
     this.disabilities = list;
+  }
+
+  @action setGateList(list: Array<any>) {
+    this.gateList = list;
+  }
+
+  @action initGateList() {
+    return getGateList().then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+        runInAction(() => {
+          this.gateList = data;
+        });
+      }
+    });
+  }
+
+  @action initGateGroups() {
+    return getGateGroups().then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+        runInAction(() => {
+          this.gateGroups = data;
+        });
+      }
+    });
   }
 }
 export const parkinglotStore = new ParkinglotStore();

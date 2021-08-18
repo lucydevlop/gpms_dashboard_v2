@@ -1,5 +1,5 @@
-import { postLogin } from '@api/user';
-import { action, configure, observable, runInAction } from 'mobx';
+import { getAdminList, postLogin } from '@api/user';
+import { action, configure, observable, runInAction, toJS } from 'mobx';
 import io from '@utils/io';
 
 type IdentifyStatus = 'identifying' | 'identifyPass' | 'unauthorized';
@@ -10,6 +10,7 @@ class UserStore {
   @observable authority: string[] = [];
   @observable authorization: string;
   @observable identifyStatus: IdentifyStatus = 'identifying';
+  @observable adminList: any = [];
 
   constructor() {
     this.initUserInfo();
@@ -89,6 +90,19 @@ class UserStore {
       this.identifyStatus = 'unauthorized';
       this.setAuthority([]);
     }
+  };
+
+  @action loadAdminList = (req?: any): Promise<any> => {
+    return getAdminList(req).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+        data.forEach((user: any) => {
+          if (user.role !== 'SUPER_ADMIN') {
+            this.adminList.push(user);
+          }
+        });
+      }
+    });
   };
 }
 

@@ -159,22 +159,6 @@ export function createParkinglot(data) {
   });
 }
 
-export function updateParkinglot(data) {
-  return io.patch(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots', {
-    data: {
-      parkinglot: {
-        id: data.parkinglotId,
-        ip: data.ip,
-        name: data.parkinglotName,
-        city: data.city,
-        address: data.address,
-        remoteTool: data.remoteTool,
-        remoteKey: data.remoteKey
-      }
-    }
-  });
-}
-
 export function getAllDisabilities(data) {
   return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/errors', {
     params: {
@@ -209,4 +193,18 @@ export function getParkinglotDashboard() {
 
 export function getParkinglot() {
   return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglot');
+}
+
+export function getGateList() {
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/gate/list');
+}
+
+export function updateParkinglot(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglot/update', {
+    data
+  });
+}
+
+export function getGateGroups() {
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/gate_groups');
 }
