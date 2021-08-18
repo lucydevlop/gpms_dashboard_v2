@@ -1,13 +1,13 @@
 import React from 'react';
-import { Row, Col, Card, Badge, Button } from 'antd';
+import { Row, Col, Card, Badge, Button, Descriptions } from 'antd';
 import { IDashboardObj } from '@models/dashboard';
-import { IMAGE_SIZES, ImageWrapper } from '@/components/ImageWrapper';
+import Image from '@/components/ImageWrapper';
 import emptyImage from './images/empty.svg';
-import { conversionEnumValue } from '@utils/conversion';
-import { breakerStatusOpt, gateTypeOpt } from '@/constants/list';
+import { conversionDateTime, conversionEnumValue } from '@utils/conversion';
+import { breakerStatusOpt, gateTypeOpt, ticketTypeOpt } from '@/constants/list';
 import zdsTips from '@utils/tips';
 import { localeStore } from '@store/localeStore';
-import { actionReset } from '@api/dashboard';
+import { actionGate, actionReset } from '@api/dashboard';
 
 interface InfoCardProps {
   icon: any;
@@ -62,6 +62,20 @@ class RowInfoCard extends React.Component<IProps, any> {
     });
   }
 
+  handleGateActionClick(e: React.MouseEvent<HTMLDivElement>, action: string) {
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (this.props.item.breakerAction === 'XUPLOCK') {
+      zdsTips.error('수동 열림고정은 해제 할 수 없습니다');
+      return;
+    }
+
+    actionGate(this.props.item.gateId, action).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+      }
+    });
+  }
+
   renderFacilityStatus(name: string, status: string) {
     let category: string;
     switch (name) {
@@ -76,15 +90,20 @@ class RowInfoCard extends React.Component<IProps, any> {
         break;
     }
     return (
-      <>
-        <Badge color={status === 'NORMAL' ? '#33CA65' : '#FE1100'} style={{ paddingLeft: '5px' }} />
+      <div style={{ display: 'flex', margin: '0 5px' }}>
+        <h5>
+          <Badge
+            color={status === 'NORMAL' ? '#33CA65' : '#FE1100'}
+            style={{ paddingLeft: '5px' }}
+          />
+        </h5>
         <span
           style={{ paddingRight: '2px', color: '#85868A' }}
           onClick={() => this.handleResetClick(category)}
         >
           {name}
         </span>
-      </>
+      </div>
     );
   }
 
@@ -109,36 +128,83 @@ class RowInfoCard extends React.Component<IProps, any> {
             </Row>
           </Col>
           <Col span={16}>
-            <Row style={{ backgroundColor: '#EBECEC' }}>
+            <Row style={{ backgroundColor: '#EBECEC', justifyContent: 'center' }}>
               <Card
-                style={{ padding: 0, backgroundColor: '#EBECEC' }}
+                style={{ padding: 0, backgroundColor: '#EBECEC', fontSize: '.9vw' }}
                 bodyStyle={{ padding: '0.2vw 0.4vw' }}
                 bordered={false}
               >
-                {this.renderFacilityStatus(
-                  'LPR',
-                  this.props.item.lprStatus ? this.props.item.lprStatus : 'NONE'
-                )}
-                {this.renderFacilityStatus(
-                  '전광판',
-                  this.props.item.displayStatus ? this.props.item.displayStatus : 'NONE'
-                )}
-                {this.renderFacilityStatus(
-                  '차단기',
-                  this.props.item.breakerStatus ? this.props.item.breakerStatus : 'NONE'
-                )}
-                {this.props.item.paystationStatus && this.props.item.gateType !== 'IN'
-                  ? this.renderFacilityStatus(
-                      '차단기',
-                      this.props.item.paystationStatus ? this.props.item.paystationStatus : 'NONE'
-                    )
-                  : null}
+                <Row style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+                  {this.renderFacilityStatus(
+                    'LPR',
+                    this.props.item.lprStatus ? this.props.item.lprStatus : 'NONE'
+                  )}
+                  {this.renderFacilityStatus(
+                    '전광판',
+                    this.props.item.displayStatus ? this.props.item.displayStatus : 'NONE'
+                  )}
+                  {this.renderFacilityStatus(
+                    '차단기',
+                    this.props.item.breakerStatus ? this.props.item.breakerStatus : 'NONE'
+                  )}
+                  {this.props.item.paystationStatus && this.props.item.gateType !== 'IN'
+                    ? this.renderFacilityStatus(
+                        '차단기',
+                        this.props.item.paystationStatus ? this.props.item.paystationStatus : 'NONE'
+                      )
+                    : null}
+                </Row>
               </Card>
             </Row>
             <Row style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
-              <Button>열 림</Button>
-              <Button>열림고정</Button>
-              <Button>닫 힘</Button>
+              <Button
+                size="large"
+                style={{
+                  backgroundColor: '#5C9AD2',
+                  letterSpacing: '1px',
+                  fontWeight: 700,
+                  color: '#fff',
+                  borderRadius: '5px'
+                }}
+                onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                  this.handleGateActionClick(e, 'open');
+                }}
+              >
+                열 림
+              </Button>
+              <Button
+                size="large"
+                style={{
+                  backgroundColor: '#A7A7A7',
+                  letterSpacing: '1px',
+                  fontWeight: 700,
+                  color: '#fff',
+                  borderRadius: '5px'
+                }}
+                onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                  this.handleGateActionClick(
+                    e,
+                    this.props.item.breakerAction === 'UPLOCK' ? 'unlock' : 'uplock'
+                  );
+                }}
+              >
+                {this.props.item.breakerAction === 'UPLOCK' ? '고정해제' : '열림고정'}
+              </Button>
+              <Button
+                size="large"
+                style={{
+                  backgroundColor: '#FF7C86',
+                  letterSpacing: '1px',
+                  fontWeight: 700,
+                  color: '#fff',
+                  borderRadius: '5px'
+                }}
+                onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                  this.handleGateActionClick(e, 'close');
+                }}
+              >
+                닫 힘
+              </Button>
             </Row>
           </Col>
         </Row>
@@ -148,25 +214,53 @@ class RowInfoCard extends React.Component<IProps, any> {
 
   render() {
     if (!this.props.item) return;
+
     return (
       <>
         <Card
-          headStyle={{ padding: '0 2vw' }}
+          headStyle={{ padding: '0 2vw 20px 2vw' }}
           title={this.renderTitle()}
           className="fat-card monitor-list-card"
           bordered={false}
           hoverable
           cover={
             this.props.item.image ? (
-              <ImageWrapper
-                size={IMAGE_SIZES.SMALL}
-                style={{ width: '200px' }}
-                url={`${process.env.REACT_APP_BACKEND_URL}/${this.props.item.image}`}
+              <Image
+                src={`${process.env.REACT_APP_BACKEND_URL}/${this.props.item.image}`}
+                ratio={1.8}
+                // src={
+                //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
+                // }
               />
-            ) : // <ImageWrapper size={IMAGE_SIZES.SMALL} style={{ width: '200px' }} url={emptyImage} />
-            null
+            ) : (
+              <Image
+                ratio={1.8}
+                // @ts-ignore
+                src={emptyImage}
+              />
+            )
           }
-        />
+        >
+          <Descriptions
+            layout="vertical"
+            bordered
+            labelStyle={{ fontWeight: 600, textAlign: 'center' }}
+            style={{ textAlign: 'center' }}
+          >
+            <Descriptions.Item label="차량구분">
+              {
+                conversionEnumValue(
+                  this.props.item.carType ? this.props.item.carType : 'NONE',
+                  ticketTypeOpt
+                ).label
+              }
+            </Descriptions.Item>
+            <Descriptions.Item label="차량번호">{this.props.item.vehicleNo}</Descriptions.Item>
+            <Descriptions.Item label="시간">
+              {conversionDateTime(this.props.item.date, '{y}-{m}-{d} {h}:{i}') || '--'}
+            </Descriptions.Item>
+          </Descriptions>
+        </Card>
       </>
     );
   }
