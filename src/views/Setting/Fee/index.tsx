@@ -6,7 +6,14 @@ import { layoutStore } from '@store/layoutStore';
 import { Col, Row, Collapse, Form, Input, Card, Descriptions, Button } from 'antd';
 import { EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { IFareBasicObj, IFareInfoObj, IFarePolicyObj } from '@models/fare';
-import { getFareBasic, getFareInfo, getFarePolicies, updateFareBasic } from '@/api/fare';
+import {
+  createFarePolicy,
+  getFareBasic,
+  getFareInfo,
+  getFarePolicies,
+  updateFareBasic,
+  updateFarePolicy
+} from '@/api/fare';
 import { runInAction } from 'mobx';
 import StandardDescription, { Attribute } from '@components/StandardDescription';
 import { conversionDate } from '@utils/conversion';
@@ -15,6 +22,7 @@ import StandardTable from '@components/StandardTable';
 import DraggableModal from '@components/DraggableModal';
 import { localeStore } from '@store/localeStore';
 import FareBasicModal from '@views/Setting/Fee/Modal/FareBasicModal';
+import FarePolicyModal from '@views/Setting/Fee/Modal/FarePolicyModal';
 
 interface IState {
   loading: boolean;
@@ -22,6 +30,8 @@ interface IState {
   fareBasic?: IFareBasicObj | null;
   farePolicies: IFarePolicyObj[];
   fareBasicModal: boolean;
+  farePolicyModal: boolean;
+  selectedFarePolicy?: IFarePolicyObj;
 }
 @inject('layoutStore')
 @observer
@@ -32,7 +42,8 @@ class FeeSetting extends PureComponent<any, IState> {
       loading: true,
       fareInfos: [],
       farePolicies: [],
-      fareBasicModal: false
+      fareBasicModal: false,
+      farePolicyModal: false
     };
   }
 
@@ -57,7 +68,43 @@ class FeeSetting extends PureComponent<any, IState> {
 
   handleFarePolicyClick(key: string, info?: IFarePolicyObj) {
     console.log('handleFarePolicyClick', key);
+    this.setState({ selectedFarePolicy: info, farePolicyModal: true });
   }
+
+  handleFarePolicySubmit = (info: IFarePolicyObj) => {
+    console.log('handleFarePolicySubmit', info);
+    if (info.sn === null) {
+      createFarePolicy(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const farePolicies = this.state.farePolicies;
+              this.setState({ farePolicies: [...farePolicies, data] });
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      updateFarePolicy(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const farePolicies = this.state.farePolicies.map((p) => {
+                if (p.sn === data.sn) {
+                  return { ...data };
+                }
+                return { ...p };
+              });
+              this.setState({ farePolicies: farePolicies });
+            });
+          }
+        })
+        .catch(() => {});
+    }
+    this.setState({ farePolicyModal: false });
+  };
 
   handleFareInfoClick(key: string, info?: IFareInfoObj) {
     console.log('handleFarePolicyClick', key);
@@ -340,6 +387,27 @@ class FeeSetting extends PureComponent<any, IState> {
                 this.handleFareBasicSubmit(value);
               }}
               farebasic={this.state.fareBasic}
+            />
+          </DraggableModal>
+        ) : null}
+        {this.state.farePolicyModal ? (
+          <DraggableModal
+            title={localeObj['label.gate.info'] || '게이트 상세'}
+            visible={this.state.farePolicyModal}
+            onOk={(): void => {
+              this.setState({ farePolicyModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ farePolicyModal: false });
+            }}
+            width={550}
+          >
+            <FarePolicyModal
+              onSubmit={(value) => {
+                this.handleFarePolicySubmit(value);
+              }}
+              fareInfos={this.state.fareInfos}
+              farePolicy={this.state.selectedFarePolicy}
             />
           </DraggableModal>
         ) : null}

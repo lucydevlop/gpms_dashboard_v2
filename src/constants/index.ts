@@ -24,6 +24,8 @@ export const datePickerFormat = 'YYYY/MM/DD';
 
 export const dateTimePickerFormat = 'YYYY/MM/DD HH:mm';
 
+export const timePickerFormat = 'HH:mm';
+
 // 媒体类型
 export enum MediaType {
   image,

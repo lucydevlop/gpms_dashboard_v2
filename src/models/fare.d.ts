@@ -49,4 +49,8 @@ export interface IFarePolicyObj {
   createDate?: Date;
   updateBy?: string;
   updateDate?: Date;
+  //non entity
+  timeRange: number[];
+  selectBasicFareSn: string;
+  selectAddFareSn: string;
 }
