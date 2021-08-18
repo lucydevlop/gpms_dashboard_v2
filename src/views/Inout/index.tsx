@@ -172,14 +172,18 @@ class Inout extends PureComponent<any, IState> {
             e.stopPropagation();
             this.delete();
           }}
-        >
-          - {localeObj['label.delete'] || '삭제'}
           style={{ marginLeft: '1rem' }}
-          type="primary" onClick=
-          {(e: any) => {
+        >
+          -{localeObj['label.delete'] || '삭제'}
+        </Button>
+        <Button
+          style={{ marginLeft: '1rem' }}
+          type="primary"
+          onClick={(e: any) => {
             e.stopPropagation();
             this.handleDownloadClick();
           }}
+        >
           <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
         </Button>
       </>

@@ -109,10 +109,10 @@ class Ticket extends PureComponent<any, IState> {
       const { msg, data } = res;
       if (msg === 'success') {
         runInAction(() => {
-          const ticket = data;
-          const tickets = [...this.state.list, ticket];
-          //this.pollData();
-          this.setState({ list: tickets });
+          //const ticket = data;
+          //const tickets = [...this.state.list, ticket];
+          //this.setState({ list: tickets });
+          this.pollData();
         });
       }
     });
@@ -203,6 +203,7 @@ class Ticket extends PureComponent<any, IState> {
             e.stopPropagation();
             this.delete();
           }}
+          style={{ marginLeft: '1rem' }}
         >
           - {localeObj['label.delete'] || '삭제'}
         </Button>
