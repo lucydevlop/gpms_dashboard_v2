@@ -1,53 +1,205 @@
 import React, { PureComponent } from 'react';
 import { IFacilityObj } from '@models/facility';
-import { EditableList } from '@components/EditTable';
-import { ColumnsType } from 'antd/lib/table';
-import {
-  getActionsColumn,
-  getColumn,
-  getEditableColumn
-} from '@components/EditTable/columnHelpers';
-import { Button } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+// import EditableTable from '@components/EditableTable/EditableTable';
+import { ColumnProps, ColumnsType } from 'antd/lib/table';
+// import {
+//   getActionsColumn,
+//   getColumn,
+//   getEditableColumn
+// } from '@components/EditableTable/columnHelpers';
+import { Button, Divider, Row } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { IGateObj } from '@models/gate';
+import { conversionEnumValue } from '@utils/conversion';
+import { categoryOpt, delYnOpt, EDelYn, lprTypeTypeOpt } from '@/constants/list';
+import StandardTable from '@components/StandardTable';
+import { localeStore } from '@store/localeStore';
+import zdsTips from '@utils/tips';
 
 interface IProps {
   facilities: IFacilityObj[];
+  gates: IGateObj[];
+  loading: boolean;
+  onUpdate: (info: IFacilityObj) => void;
 }
 
-interface IState {}
+interface IState {
+  detailModal: boolean;
+  createModal: boolean;
+  selected?: IFacilityObj;
+}
 
 class FacilityTab extends PureComponent<IProps, IState> {
-  handleSave = async (record: IFacilityObj) => {
-    console.log('handleSave', record);
-  };
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      detailModal: false,
+      createModal: false
+    };
+  }
 
-  handleDelete = async (record: IFacilityObj) => {
-    console.log('handleSave', record);
+  handleCreateClick() {
+    this.setState({ detailModal: false, createModal: true });
+  }
+
+  handleBtnClick = (info: IFacilityObj, key: string) => {
+    const { localeObj } = localeStore;
+    //console.log('handleBtnClick', info);
+    if (key === 'delete') {
+      zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
+        info.delYn = EDelYn.Y;
+        this.props.onUpdate(info);
+      });
+    } else {
+      this.setState({ detailModal: true, createModal: false, selected: info });
+    }
   };
 
   render() {
-    const renderActions = (info: IFacilityObj): JSX.Element => {
-      return (
-        <Button
-          type={'default'}
-          icon={<DeleteOutlined />}
-          onClick={() => this.handleDelete(info)}
-        />
-      );
-    };
-    const columns: ColumnsType<IFacilityObj> = [
-      getColumn('장비ID', 'dtFacilitiesId'),
-      getEditableColumn('징비명', 'fname', this.handleSave, 'text'),
-      getEditableColumn('게이트', 'gateId', this.handleSave, 'text'),
-      getColumn('IP', 'ip'),
-      getActionsColumn(renderActions)
+    const { localeObj } = localeStore;
+    const columns: ColumnProps<IFacilityObj>[] = [
+      {
+        title: '사용여부',
+        key: 'delYn',
+        width: 100,
+        align: 'center',
+        filters: delYnOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.delYn.indexOf(value as string) === 0,
+        render: (text: string, record: IFacilityObj) => {
+          const value = conversionEnumValue(record.delYn, delYnOpt);
+          return <span style={{ color: value.color }}>{value.label}</span>;
+        }
+      },
+      {
+        title: '게이트',
+        key: 'gate',
+        width: 110,
+        align: 'center',
+        filters: this.props.gates.map((r) => ({ text: r.gateName, value: r.gateId })),
+        onFilter: (value, record) => record.gateId.indexOf(value as string) === 0,
+        render: (text: string, record: IFacilityObj) => {
+          const value = this.props.gates.find((g) => g.gateId === record.gateId);
+          return value ? value.gateName : text;
+        }
+      },
+      {
+        title: '장비 ID',
+        key: 'dtFacilitiesId',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IFacilityObj) => record.dtFacilitiesId
+      },
+      {
+        title: '장비이름',
+        key: 'fname',
+        width: 130,
+        align: 'center',
+        render: (text: string, record: IFacilityObj) => record.fname
+      },
+      {
+        title: '카테고리',
+        key: 'category',
+        width: 110,
+        align: 'center',
+        filters: categoryOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.category.indexOf(value as string) === 0,
+        render: (text: string, record: IFacilityObj) =>
+          conversionEnumValue(record.category, categoryOpt).label
+      },
+      {
+        title: '모델ID',
+        key: 'modelid',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IFacilityObj) => record.modelid
+      },
+      {
+        title: 'IP',
+        key: 'ip',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IFacilityObj) => record.ip
+      },
+      {
+        title: 'PORT',
+        key: 'port',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IFacilityObj) => record.port
+      },
+      {
+        title: '리셋',
+        key: 'resetPort',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IFacilityObj) => record.resetPort
+      },
+      {
+        title: 'LPR 타입',
+        key: 'lprType',
+        width: 110,
+        align: 'center',
+        filters: lprTypeTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.lprType.indexOf(value as string) === 0,
+        render: (text: string, record: IFacilityObj) =>
+          conversionEnumValue(record.lprType, lprTypeTypeOpt).label
+      },
+      {
+        title: '이미지 path',
+        key: 'imagePath',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IFacilityObj) => record.imagePath
+      },
+      {
+        title: 'Action',
+        width: 100,
+        align: 'center',
+        fixed: 'right',
+        render: (item: IFacilityObj) => (
+          <div>
+            <a
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.handleBtnClick(item, 'edit');
+              }}
+            >
+              <EditOutlined />
+            </a>
+            <Divider type="vertical" />
+            <a
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.handleBtnClick(item, 'edit');
+              }}
+            >
+              <DeleteOutlined />
+            </a>
+          </div>
+        )
+      }
     ];
     return (
       <>
-        <EditableList<IFacilityObj>
+        <Row style={{ marginBottom: '1rem' }}>
+          <Button
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleCreateClick();
+            }}
+          >
+            + {localeObj['label.create'] || '신규 등록'}
+          </Button>
+        </Row>
+        <StandardTable
+          scroll={{ x: 'max-content' }}
           columns={columns}
-          entries={this.props.facilities}
-          rowKeySelector={(row: IFacilityObj) => row.dtFacilitiesId}
+          loading={this.props.loading}
+          // @ts-ignore
+          rowKey={(record: IFacilityObj) => String(record.sn)}
+          data={{ list: this.props.facilities }}
+          hidePagination
         />
       </>
     );

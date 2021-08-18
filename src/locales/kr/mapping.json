@@ -2,6 +2,7 @@
   "menu.dashboard": "dashboard",
   "menu.inout": "입출차현황",
   "menu.ticket": "정기권관리",
+  "menu.tenant": "입주사",
   "menu.users": "사용자관리",
   "menu.setting": "설정관리",
   "menu.statistics": "통계",
@@ -11,6 +12,8 @@
   "menu.parkinglot.error": "주차장장애현황",
   "menu.parkinglotcs.inout": "입출차현황",
   "menu.parkinglotcs.ticket": "정기권",
+  "menu.tenant.list": "입주사리스트",
+  "menu.tenant.tickets": "입주사할인권",
 
   "menu.setting.parkinglot": "주차장기본정보",
   "menu.setting.facility": "시설정보",
@@ -48,7 +51,7 @@
   "layoutSetting.darkTheme": "다크모드",
   "layoutSetting.colorStyle": "색상 스타일",
 
-  "alert.delete": "선택 항목을 삭제 하시겠습니까?",
+  "alert.delete": "선택 항목을 삭제(비활성) 하시겠습니까?",
   "alert.reset": "리셋 하시겠습니까?",
   "alert.select.time": "시간을 선택하세요",
   "alert.select.breaker": "차단기 상태를 선택하세요",

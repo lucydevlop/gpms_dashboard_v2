@@ -1,23 +1,14 @@
 import React, { PureComponent } from 'react';
 import PageWrapper from '@components/PageWrapper';
-import { getDisplayMessages, getFacilities, getGates } from '@api/facility';
+import { createGate, getDisplayMessages, getFacilities, getGates, updateGate } from '@api/facility';
 import { IGateObj } from '@models/gate';
 import { runInAction } from 'mobx';
-import { EditableList } from '@components/EditTable';
-import { IInoutObj } from '@models/inout';
-import StandardTable from '@components/StandardTable';
-import { Button, Divider, Tabs } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
-import {
-  getActionsColumn,
-  getColumn,
-  getEditableColumn
-} from '@components/EditTable/columnHelpers';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Tabs } from 'antd';
 import { IFacilityObj } from '@models/facility';
 import FacilityTab from '@views/Setting/Facility/tabs/FacilityTab';
 import DisplayTab from '@views/Setting/Facility/tabs/DisplayTab';
 import { IDisplayMsgObj } from '@models/display';
+import GateTab from '@views/Setting/Facility/tabs/GateTab';
 
 interface IState {
   loading: boolean;
@@ -71,33 +62,51 @@ class FacilitySetting extends PureComponent<any, IState> {
         }
       })
       .catch(() => {});
+
+    this.setState({ loading: false });
   }
 
-  handleSave = async (record: IGateObj) => {
-    console.log('handleSave', record);
+  handleGateUpdate = async (record: IGateObj) => {
+    // console.log('handleUpdate', record);
+    updateGate(record)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const update = data;
+            const gates = this.state.gates.map((e) => {
+              if (e.sn === update.sn) {
+                return { ...update };
+              }
+              return { ...e };
+            });
+            this.setState({ gates: gates });
+          });
+        }
+      })
+      .catch(() => {});
   };
 
-  handleDelete = async (record: IGateObj) => {
-    console.log('handleSave', record);
+  handleGateCreate = async (record: IGateObj) => {
+    console.log('handleGateCreate', record);
+    createGate(record)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const add = data;
+            const gates = [...this.state.gates, add];
+          });
+        }
+      })
+      .catch(() => {});
+  };
+
+  handleFacilityUpdate = async (record: IFacilityObj) => {
+    console.log('handleFacilityUpdate', record);
   };
 
   render() {
-    const renderActions = (info: IGateObj): JSX.Element => {
-      return (
-        <Button
-          type={'default'}
-          icon={<DeleteOutlined />}
-          onClick={() => this.handleDelete(info)}
-        />
-      );
-    };
-    const columns: ColumnsType<IGateObj> = [
-      getColumn('게이트 ID', 'gateId'),
-      getEditableColumn('게이트이름', 'gateName', this.handleSave, 'text'),
-      getEditableColumn('게이트타입', 'gateType', this.handleSave, 'text'),
-      getColumn('Relay', 'relaySvr'),
-      getActionsColumn(renderActions)
-    ];
     const { gates, facilities, displayMessages } = this.state;
     const { TabPane } = Tabs;
 
@@ -105,14 +114,20 @@ class FacilitySetting extends PureComponent<any, IState> {
       <PageWrapper>
         <Tabs type="card">
           <TabPane tab="게이트" key="1">
-            <EditableList<IGateObj>
-              columns={columns}
-              entries={gates}
-              rowKeySelector={(row: IGateObj) => row.gateId}
+            <GateTab
+              gates={gates}
+              loading={this.state.loading}
+              onUpdate={this.handleGateUpdate}
+              onCreate={this.handleGateCreate}
             />
           </TabPane>
           <TabPane tab="시설" key="2">
-            <FacilityTab facilities={facilities} />
+            <FacilityTab
+              facilities={facilities}
+              gates={gates}
+              loading={this.state.loading}
+              onUpdate={this.handleFacilityUpdate}
+            />
           </TabPane>
           <TabPane tab="전광판" key="3">
             <DisplayTab displayMsgs={displayMessages} />

@@ -47,6 +47,18 @@ export function getGates() {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/gate/list`);
 }
 
+export function updateGate(data) {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/gates`, {
+    data: data
+  });
+}
+
+export function createGate(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/gate`, {
+    data: data
+  });
+}
+
 export function getFacilities() {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities`);
 }

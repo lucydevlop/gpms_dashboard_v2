@@ -7,7 +7,6 @@ import moment from 'moment';
 import { conversionDate } from '@utils/conversion';
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
-import PageWrapper from '@components/PageWrapper';
 import { searchStatisticsInoutDayFields } from '@views/Statistics/Inout/tabs/inoutFields';
 
 interface IProps {}
