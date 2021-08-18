@@ -1,5 +1,8 @@
-import { formColProps6Config, IFormFieldConfig, ISelectOptions } from '@utils/form';
+import { IFormFieldConfig } from '@utils/form';
 import { FormType } from '@/constants/form';
+import { IUserObj } from '@models/user';
+import { localeStore } from '@store/localeStore';
+import { ESearchUserType, roleOpt, userSearchOpt } from '@/constants/list';
 
 //
 // export function searchUserFields(): IFormFieldConfig[] {
@@ -287,3 +290,236 @@ import { FormType } from '@/constants/form';
 //     }
 //   ];
 // }
+
+export function searchAdminFields(): IFormFieldConfig<keyof IUserObj>[] {
+  const { localeObj } = localeStore;
+  return [
+    {
+      id: 'searchLabel',
+      label: '조회기준',
+      fieldOption: {
+        initialValue: ESearchUserType.USERNAME
+      },
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: localeObj['label.choose'] || '선택해주세요',
+          allowClear: true
+        },
+        selectOptions: userSearchOpt
+      },
+      formSubItemProps: {
+        id: 'searchText',
+        component: {
+          type: FormType.Input
+        },
+        formItemProps: {
+          wrapperCol: {
+            xl: 10,
+            xs: 16
+          }
+        }
+      },
+      colProps: {
+        xl: 16,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 4,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 10,
+          xs: 16
+        }
+      }
+    }
+  ];
+}
+
+export function newUserFields(user?: IUserObj): IFormFieldConfig<keyof IUserObj>[] {
+  const { localeObj } = localeStore;
+  return [
+    {
+      id: 'userName',
+      label: '사용자이름',
+      fieldOption: {
+        initialValue: user ? user.userName : null,
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+      },
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        }
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'id',
+      label: '사용자ID',
+      fieldOption: {
+        initialValue: user ? user.id : null,
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+      },
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        }
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'userPhone',
+      label: '전화번호',
+      fieldOption: {
+        initialValue: user ? user.userPhone : null
+      },
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        }
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'role',
+      label: '권한',
+      fieldOption: {
+        initialValue: user ? user.role : null,
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+      },
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        }
+      },
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: localeObj['label.choose'] || '선택해주세요',
+          allowClear: true
+        },
+        selectOptions: roleOpt
+      }
+    },
+    {
+      id: 'password',
+      label: 'NEW PASSWORD',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      fieldOption: {
+        rules: user
+          ? undefined
+          : [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        }
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'passwordCnfirm',
+      label: 'CONFIRM PASSWORD',
+      hidden: user ? true : false,
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        }
+      },
+      component: {
+        type: FormType.Input
+      },
+      fieldOption: {
+        rules: user
+          ? undefined
+          : [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+      }
+    },
+    {
+      id: 'idx',
+      fieldOption: {
+        initialValue: user ? user.idx : null
+      },
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        }
+      },
+      component: {
+        type: FormType.Input
+      }
+    }
+  ];
+}

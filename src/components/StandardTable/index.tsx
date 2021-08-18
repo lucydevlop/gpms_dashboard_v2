@@ -14,6 +14,8 @@ import { ConfigConsumer, ConfigConsumerProps } from 'antd/lib/config-provider';
 import * as PropTypes from 'prop-types';
 import { localeStore } from '@store/localeStore';
 import FormatterLocale from '@components/FormatterLocale';
+import { inject, observer } from 'mobx-react';
+import { corpStore } from '@/store/corpStore';
 
 function initTotalList(columns: TableColumnProps[]) {
   if (!columns) {
@@ -29,6 +31,8 @@ function initTotalList(columns: TableColumnProps[]) {
 }
 
 function noop() {}
+
+@observer
 class StandardTable extends React.Component<StandardTableProps, TableState> {
   constructor(props: StandardTableProps) {
     super(props);
@@ -78,7 +82,6 @@ class StandardTable extends React.Component<StandardTableProps, TableState> {
     const prefixCls = getPrefixCls('filter', customizePrefixCls);
     this.prefixCls = prefixCls;
     const tableClassName = `${prefixCls}-table`;
-
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
@@ -112,6 +115,7 @@ class StandardTable extends React.Component<StandardTableProps, TableState> {
   };
 
   renderAlert = () => {
+    this.props.onSelectRow ? this.state.selectedRowKeys : null;
     const { localeObj } = localeStore;
     const tableAlertProps = `${this.prefixCls}-standard-table-alert`;
     const selectedRowKeys = this.state.selectedRowKeys;

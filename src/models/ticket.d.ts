@@ -10,6 +10,15 @@ export interface ITicketObj {
   ticketType: ETicketType;
   corp: ICorpObj;
   delYn: EDelYn;
+  dateType: string;
+  name?: string;
+  tel?: string;
+  productName?: string;
+  vehiclekind?: string;
+  etc?: string;
+  etc1?: string;
+  corpName?: string;
+  corpSn?: number;
 }
 
 export interface ITicketSelectReq {
@@ -19,4 +28,10 @@ export interface ITicketSelectReq {
   endDate: string;
   createTm: number[];
   vehicleNo?: string;
+  delYn?: EDelYn;
+  ticketType?: ETicketType;
+  searchText?: string;
+  searchLabel?: string;
+  fromDate?: string;
+  toDate?: string;
 }
