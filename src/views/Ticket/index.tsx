@@ -22,7 +22,6 @@ import Table, { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import React from 'react';
 import { PureComponent } from 'react';
-import { searchInoutFields } from '../Inout/FormFields/FormFields';
 import { searchTicketFields } from './FormFields/FormFields';
 import { runInAction, toJS } from 'mobx';
 import StandardTable from '@/components/StandardTable';
@@ -30,7 +29,6 @@ import DraggableModal from '@/components/DraggableModal';
 import TicketCreateModalForm from '@/views/Ticket/Modal/TicketCreateModal';
 import { ICorpObj } from '@/models/corp';
 import TicketDetailModal from './Modal/TicketDetailModal';
-import { corpStore } from '@/store/corpStore';
 
 type IState = {
   loading: boolean;

@@ -94,8 +94,8 @@ class FacilitySetting extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            const add = data;
-            const gates = [...this.state.gates, add];
+            const gates = [...this.state.gates, data];
+            this.setState({ gates: gates });
           });
         }
       })

@@ -24,9 +24,6 @@ import { InputProps, TextAreaProps } from 'antd/lib/input';
 import { FormType } from '@/constants/form';
 import { GetFieldDecoratorOptions } from '@ant-design/compatible/lib/form/Form';
 import { DatePickerProps, RangePickerProps } from 'antd/lib/date-picker';
-import styled from 'styled-components';
-import { color } from 'echarts/core';
-import { parkinglotStore } from '@/store/parkinglotStore';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -92,7 +89,7 @@ const getFormComponent = (component: IFormFieldOption) => {
       return <Input size="middle" {...option} />;
     case FormType.Select:
       return (
-        <Select style={{ width: '60%' }} size="middle" {...option}>
+        <Select style={{ width: '120px' }} size="middle" {...option}>
           {selectOptions.map(
             (item) =>
               item.value && (

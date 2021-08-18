@@ -18,6 +18,7 @@ export enum FormType {
   Switch,
   Button,
   SelectWithRangePicker,
+  TimeRangePicker,
   InputGroup
 }
 
