@@ -7,9 +7,9 @@ import {
   useOrUnuseOpt,
   vehicleTypeOpt
 } from '@/constants/list';
-import { IInoutObj, IInoutSelectReq } from '@/models/inout';
 import {
   createParkinglotTicket,
+  createTicketByFile,
   deleteTikcet,
   getCorpList,
   getParkinglotTickets
@@ -22,15 +22,16 @@ import Table, { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import React from 'react';
 import { PureComponent } from 'react';
-import { searchInoutFields } from '../Inout/FormFields/FormFields';
 import { searchTicketFields } from './FormFields/FormFields';
 import { runInAction, toJS } from 'mobx';
 import StandardTable from '@/components/StandardTable';
 import DraggableModal from '@/components/DraggableModal';
-import TicketCreateModalForm from '@/views/Ticket/Modal/TicketCreateModal';
 import { ICorpObj } from '@/models/corp';
-import TicketDetailModal from './Modal/TicketDetailModal';
-import { corpStore } from '@/store/corpStore';
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { generateCsv } from '@utils/downloadUtil';
+import TicketModal from './Modal/TicketModal';
+import UploadModal from '@components/UploadModal';
+import { readTicketObj } from '@utils/readFromCsv';
 
 type IState = {
   loading: boolean;
@@ -45,6 +46,7 @@ type IState = {
   corpList?: ICorpObj[];
   deleteList: any[];
   clear: boolean;
+  uploadModa: boolean;
 };
 
 class Ticket extends PureComponent<any, IState> {
@@ -59,7 +61,8 @@ class Ticket extends PureComponent<any, IState> {
       createModal: false,
       detailModal: false,
       deleteList: [],
-      clear: false
+      clear: false,
+      uploadModa: false
     };
   }
 
@@ -207,6 +210,26 @@ class Ticket extends PureComponent<any, IState> {
         >
           - {localeObj['label.delete'] || '삭제'}
         </Button>
+        <Button
+          style={{ marginLeft: '1rem' }}
+          type="primary"
+          onClick={(e: any) => {
+            e.stopPropagation();
+            this.handleDownloadClick();
+          }}
+        >
+          <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
+        </Button>
+        <Button
+          style={{ marginLeft: '1rem' }}
+          type="primary"
+          onClick={(e: any) => {
+            e.stopPropagation();
+            this.handleUploadClick();
+          }}
+        >
+          <UploadOutlined /> {localeObj['label.upload'] || '업로드'}
+        </Button>
       </>
     );
   };
@@ -217,6 +240,73 @@ class Ticket extends PureComponent<any, IState> {
 
   handleBtnClick = (info: ITicketObj) => {
     this.setState({ detailModal: true, createModal: false, selected: info });
+  };
+
+  async handleDownloadClick() {
+    const headers = [
+      '차량번호',
+      '상품타입',
+      '이름',
+      '전화번호',
+      '시작일',
+      '종료일',
+      '차량정보',
+      '차량모델정보(미입력 가능)',
+      '입주사명(미입력 가능)',
+      '회사정보1(미입력 가능)',
+      '회사정보2(미입력 가능)',
+      '정기권seq(수정금지)'
+    ].join(',');
+
+    const downLoadData = this.state.list.map((ticket) => {
+      const data: any = {};
+      data.vehicleNo = ticket.vehicleNo;
+      data.ticketType = conversionEnumValue(ticket.ticketType, ticketTypeOpt).label;
+      data.name = ticket.name;
+      data.tel = ticket.tel;
+      data.effectDate = conversionDate(ticket.effectDate as Date, '{y}-{m}-{d}');
+      data.expireDate = conversionDate(ticket.expireDate as Date, '{y}-{m}-{d}');
+      data.vehicleType = conversionEnumValue(ticket.vehicleType, vehicleTypeOpt).label;
+      data.vehiclekind = ticket.vehiclekind;
+      data.corpName = this.state.corpList
+        ? this.state.corpList.filter((c) => c.sn === ticket.corpSn)[0].corpName
+        : '';
+      data.etc = ticket.etc;
+      data.etc1 = ticket.etc1;
+      return data;
+    });
+    await generateCsv(downLoadData, headers, '정기권');
+  }
+
+  handleUploadClick = () => {
+    this.setState({ uploadModa: true });
+  };
+
+  handleUploadData = (file: any): boolean => {
+    if (file !== undefined) {
+      const fileReader = new FileReader();
+      fileReader.readAsText(file, 'euc-kr');
+      fileReader.onload = () => {
+        const rawData = (fileReader.result as string).replace(/[="]/g, '');
+        const parsedPassengerData: ITicketObj[] = readTicketObj(rawData);
+        // console.log(' csv data ' + JSON.stringify(parsedPassengerData));
+        createTicketByFile(parsedPassengerData)
+          .then((res: any) => {
+            const { msg, data } = res;
+            if (msg === 'success') {
+              runInAction(() => {
+                this.pollData();
+              });
+            }
+          })
+          .catch(() => {
+            return false;
+          });
+      };
+      return true;
+    } else {
+      return false;
+    }
   };
 
   render() {
@@ -236,7 +326,7 @@ class Ticket extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (test: string, record: ITicketObj) =>
-          conversionDateTime(record.effectDate, '{y}-{m}-{d} {h}:{i}') || '--'
+          conversionDateTime(record.effectDate as Date, '{y}-{m}-{d} {h}:{i}') || '--'
       },
       {
         title: '종료일자',
@@ -244,7 +334,7 @@ class Ticket extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (test: string, record: ITicketObj) =>
-          conversionDate(record.expireDate, '{y}-{m}-{d} {h}:{i}') || '--'
+          conversionDate(record.expireDate as Date, '{y}-{m}-{d} {h}:{i}') || '--'
       },
       {
         title: '이름',
@@ -433,7 +523,7 @@ class Ticket extends PureComponent<any, IState> {
               this.setState({ createModal: false });
             }}
           >
-            <TicketCreateModalForm onSubmit={(value) => this.create(value)} />
+            <TicketModal onSubmit={(value) => this.create(value)} />
           </DraggableModal>
         ) : null}
         {this.state.detailModal ? (
@@ -446,11 +536,18 @@ class Ticket extends PureComponent<any, IState> {
               this.setState({ detailModal: false });
             }}
           >
-            <TicketDetailModal
-              onSubmit={(value) => this.update(value)}
-              ticket={this.state.selected!!}
-            />
+            <TicketModal onSubmit={(value) => this.update(value)} ticket={this.state.selected!!} />
           </DraggableModal>
+        ) : null}
+        {this.state.uploadModa ? (
+          <UploadModal
+            visiable={this.state.uploadModa}
+            onOk={() => this.setState({ uploadModa: false })}
+            onCancel={(): void => {
+              this.setState({ uploadModa: false });
+            }}
+            onChange={(file) => this.handleUploadData(file)}
+          />
         ) : null}
       </PageWrapper>
     );

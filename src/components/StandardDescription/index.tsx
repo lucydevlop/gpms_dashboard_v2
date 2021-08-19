@@ -1,7 +1,7 @@
 import React from 'react';
 import { v4 as generateUUID } from 'uuid';
 import { Card, Descriptions } from 'antd';
-import { IconType } from 'react-icons';
+import Icons from '@/components/IconMap';
 import './description.less';
 
 export interface Attribute {
@@ -16,7 +16,7 @@ export interface AttributeGroup {
 
 interface DescriptionProps {
   header?: React.ReactNode;
-  icon?: IconType;
+  icon?: any;
   attributes: Attribute[];
   selectable?: boolean;
   hasLongValues?: boolean;
@@ -45,9 +45,9 @@ class StandardDescription extends React.Component<DescriptionProps, {}> {
       );
     });
     let icon = null;
-    if (this.props.icon !== undefined) {
-      icon = <this.props.icon />;
-    }
+    // if (this.props.icon !== undefined) {
+    //   icon = <Icons icon={this.props.icon} />;
+    // }
     let layout: 'horizontal' | 'vertical' = 'horizontal';
     if (this.props.hasLongValues !== undefined && this.props.hasLongValues) {
       layout = 'vertical';
@@ -57,7 +57,7 @@ class StandardDescription extends React.Component<DescriptionProps, {}> {
         title={this.props.header}
         type="inner"
         headStyle={{ fontSize: 18, fontWeight: 700 }}
-        // extra={icon}
+        extra={this.props.icon}
         size="default"
         hoverable={this.props.selectable}
         // bordered={this.props.header !== undefined}

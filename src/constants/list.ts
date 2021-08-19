@@ -405,3 +405,13 @@ export const elineStatusOpt: ISelectOptions[] = [
   { value: ELineStatus.FIX, label: '고정', color: 'black' },
   { value: ELineStatus.FLOW, label: '흐름', color: 'black' }
 ];
+
+export enum EFareType {
+  BASIC = 'BASIC',
+  ADD = 'ADD'
+}
+
+export const fareTypeOpt: ISelectOptions[] = [
+  { value: EFareType.BASIC, label: '기본', color: 'black' },
+  { value: EFareType.ADD, label: '추가', color: 'black' }
+];

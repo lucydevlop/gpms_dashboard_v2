@@ -33,18 +33,18 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
       fieldOption: {
         initialValue: EInoutType.IN
       },
-      colProps: {
-        xl: 12,
-        xs: 24
-      },
       formItemProps: {
         labelCol: {
-          xl: 4,
-          xs: 8
+          span: 5,
+          xl: 5,
+          md: 5,
+          xs: 5
         },
         wrapperCol: {
-          xl: 10,
-          xs: 16
+          span: 19,
+          xs: 19,
+          md: 19,
+          xl: 19
         }
       },
       component: {
@@ -81,12 +81,12 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
       },
       formItemProps: {
         labelCol: {
-          xl: 4,
-          xs: 8
+          xl: 5,
+          xs: 5
         },
         wrapperCol: {
-          xl: 20,
-          xs: 16
+          xl: 10,
+          xs: 10
         }
       },
       component: {

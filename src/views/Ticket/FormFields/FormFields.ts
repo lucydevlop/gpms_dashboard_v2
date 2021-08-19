@@ -134,8 +134,8 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
         wrapperCol: {
           span: 15,
           xs: 19,
-          md: 15,
-          xl: 15
+          md: 19,
+          xl: 19
         }
       },
       fieldOption: {

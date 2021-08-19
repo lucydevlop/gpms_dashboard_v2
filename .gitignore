@@ -25,3 +25,5 @@ yarn-error.log*
 
 # custom
 dist.zip
+package-lock.json
+yarn.lock
