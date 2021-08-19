@@ -364,3 +364,13 @@ export const lprTypeTypeOpt: ISelectOptions[] = [
   { value: ELprTypeType.INBACK, label: '양방향 입차보조', color: 'black' },
   { value: ELprTypeType.OUTFRONT, label: '양방향 출차전방', color: 'black' }
 ];
+
+export enum EFareType {
+  BASIC = 'BASIC',
+  ADD = 'ADD'
+}
+
+export const fareTypeOpt: ISelectOptions[] = [
+  { value: EFareType.BASIC, label: '기본', color: 'black' },
+  { value: EFareType.ADD, label: '추가', color: 'black' }
+];

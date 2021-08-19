@@ -3,26 +3,31 @@ import PageWrapper from '@components/PageWrapper';
 import classNames from 'classnames';
 import { inject, observer } from 'mobx-react';
 import { layoutStore } from '@store/layoutStore';
-import { Col, Row, Collapse, Form, Input, Card, Descriptions, Button } from 'antd';
-import { EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Col, Row, Collapse, Form, Input, Card, Descriptions, Button, Divider } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { IFareBasicObj, IFareInfoObj, IFarePolicyObj } from '@models/fare';
 import {
+  createFareInfo,
   createFarePolicy,
   getFareBasic,
   getFareInfo,
   getFarePolicies,
   updateFareBasic,
+  updateFareInfo,
   updateFarePolicy
 } from '@/api/fare';
 import { runInAction } from 'mobx';
 import StandardDescription, { Attribute } from '@components/StandardDescription';
-import { conversionDate } from '@utils/conversion';
+import { conversionDate, conversionEnumValue } from '@utils/conversion';
 import { ColumnProps } from 'antd/lib/table';
 import StandardTable from '@components/StandardTable';
 import DraggableModal from '@components/DraggableModal';
 import { localeStore } from '@store/localeStore';
 import FareBasicModal from '@views/Setting/Fee/Modal/FareBasicModal';
 import FarePolicyModal from '@views/Setting/Fee/Modal/FarePolicyModal';
+import FareInfoModal from '@views/Setting/Fee/Modal/FareInfoModal';
+import { v4 as generateUUID } from 'uuid';
+import { EDelYn, fareTypeOpt } from '@/constants/list';
 
 interface IState {
   loading: boolean;
@@ -32,6 +37,8 @@ interface IState {
   fareBasicModal: boolean;
   farePolicyModal: boolean;
   selectedFarePolicy?: IFarePolicyObj;
+  fareInfoModal: boolean;
+  selectedFareInfo?: IFareInfoObj;
 }
 @inject('layoutStore')
 @observer
@@ -43,7 +50,8 @@ class FeeSetting extends PureComponent<any, IState> {
       fareInfos: [],
       farePolicies: [],
       fareBasicModal: false,
-      farePolicyModal: false
+      farePolicyModal: false,
+      fareInfoModal: false
     };
   }
 
@@ -67,12 +75,12 @@ class FeeSetting extends PureComponent<any, IState> {
   };
 
   handleFarePolicyClick(key: string, info?: IFarePolicyObj) {
-    console.log('handleFarePolicyClick', key);
+    // console.log('handleFarePolicyClick', key);
     this.setState({ selectedFarePolicy: info, farePolicyModal: true });
   }
 
   handleFarePolicySubmit = (info: IFarePolicyObj) => {
-    console.log('handleFarePolicySubmit', info);
+    // console.log('handleFarePolicySubmit', info);
     if (info.sn === null) {
       createFarePolicy(info)
         .then((res: any) => {
@@ -107,8 +115,59 @@ class FeeSetting extends PureComponent<any, IState> {
   };
 
   handleFareInfoClick(key: string, info?: IFareInfoObj) {
-    console.log('handleFarePolicyClick', key);
+    // console.log('handleFarePolicyClick', key);
+    if (key === 'delete') {
+      info!!.delYn = EDelYn.Y;
+      updateFareInfo(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const fareInfos = this.state.fareInfos.filter((p) => p.sn !== data.sn);
+              this.setState({ fareInfos: fareInfos });
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      this.setState({ selectedFareInfo: info, fareInfoModal: true });
+    }
   }
+
+  handleFareInfoSubmit = (info: IFareInfoObj) => {
+    console.log('handleFareInfoSubmit', info);
+    if (info.sn === null) {
+      createFareInfo(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const fareInfos = this.state.fareInfos;
+              this.setState({ fareInfos: [...fareInfos, data] });
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      updateFareInfo(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const fareInfos = this.state.fareInfos.map((p) => {
+                if (p.sn === data.sn) {
+                  return { ...data };
+                }
+                return { ...p };
+              });
+              this.setState({ fareInfos: fareInfos });
+            });
+          }
+        })
+        .catch(() => {});
+    }
+    this.setState({ fareInfoModal: false });
+  };
 
   componentDidMount() {
     this.setState({ loading: true });
@@ -165,6 +224,7 @@ class FeeSetting extends PureComponent<any, IState> {
     ];
     return (
       <StandardDescription
+        key={generateUUID()}
         attributes={attibutes}
         header={'정책 기본 정보'}
         icon={
@@ -197,7 +257,8 @@ class FeeSetting extends PureComponent<any, IState> {
         key: 'type',
         width: 100,
         align: 'center',
-        render: (text: string, record: IFareInfoObj) => record.type
+        render: (text: string, record: IFareInfoObj) =>
+          conversionEnumValue(record.type, fareTypeOpt).label
       },
       {
         title: '시간 / 금액',
@@ -211,7 +272,9 @@ class FeeSetting extends PureComponent<any, IState> {
         key: 'count',
         width: 100,
         align: 'center',
-        render: (text: string, record: IFareInfoObj) => record.count
+        render: (text: string, record: IFareInfoObj) => {
+          return record.count >= 9999 ? '무제한' : record.count;
+        }
       },
       {
         title: 'Action',
@@ -227,6 +290,15 @@ class FeeSetting extends PureComponent<any, IState> {
               }}
             >
               <EditOutlined />
+            </a>
+            <Divider type="vertical" />
+            <a
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.handleFareInfoClick('delete', item);
+              }}
+            >
+              <DeleteOutlined />
             </a>
           </div>
         )
@@ -279,6 +351,7 @@ class FeeSetting extends PureComponent<any, IState> {
       ];
       return (
         <StandardDescription
+          key={generateUUID()}
           attributes={attibutes}
           header={f.fareName}
           icon={
@@ -328,7 +401,7 @@ class FeeSetting extends PureComponent<any, IState> {
                           <a
                             onClick={(e: any) => {
                               e.stopPropagation();
-                              this.handleFarePolicyClick('add');
+                              this.handleFareInfoClick('add');
                             }}
                           >
                             <PlusCircleOutlined />
@@ -373,7 +446,7 @@ class FeeSetting extends PureComponent<any, IState> {
         </Row>
         {this.state.fareBasicModal ? (
           <DraggableModal
-            title={localeObj['label.gate.info'] || '게이트 상세'}
+            title={localeObj['label.fareBasic.info'] || '요금 정책 기본'}
             visible={this.state.fareBasicModal}
             onOk={(): void => {
               this.setState({ fareBasicModal: false });
@@ -392,7 +465,7 @@ class FeeSetting extends PureComponent<any, IState> {
         ) : null}
         {this.state.farePolicyModal ? (
           <DraggableModal
-            title={localeObj['label.gate.info'] || '게이트 상세'}
+            title={localeObj['label.farePolicy.info'] || '요금제 상세'}
             visible={this.state.farePolicyModal}
             onOk={(): void => {
               this.setState({ farePolicyModal: false });
@@ -408,6 +481,26 @@ class FeeSetting extends PureComponent<any, IState> {
               }}
               fareInfos={this.state.fareInfos}
               farePolicy={this.state.selectedFarePolicy}
+            />
+          </DraggableModal>
+        ) : null}
+        {this.state.fareInfoModal ? (
+          <DraggableModal
+            title={localeObj['label.fareInfo.info'] || '요금 블록'}
+            visible={this.state.fareInfoModal}
+            onOk={(): void => {
+              this.setState({ fareInfoModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ fareInfoModal: false });
+            }}
+            width={550}
+          >
+            <FareInfoModal
+              onSubmit={(value) => {
+                this.handleFareInfoSubmit(value);
+              }}
+              fareInfo={this.state.selectedFareInfo}
             />
           </DraggableModal>
         ) : null}

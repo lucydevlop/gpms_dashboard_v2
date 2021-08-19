@@ -1,18 +1,18 @@
-import { IFarePolicyObj } from '@models/fare';
+import { IFareInfoObj, IFarePolicyObj } from '@models/fare';
 import { IFormFieldConfig, ISelectOptions } from '@utils/form';
 import { FormType } from '@/constants/form';
 import { localeStore } from '@store/localeStore';
 import moment from 'moment';
+import { fareTypeOpt } from '@/constants/list';
 
-export function getFarePolicyFields(
-  fareInfos: ISelectOptions[],
-  farePolicy?: IFarePolicyObj | null
-): IFormFieldConfig<keyof IFarePolicyObj>[] {
+export function getFareInfoFields(
+  fareInfo?: IFareInfoObj | null
+): IFormFieldConfig<keyof IFareInfoObj>[] {
   const { localeObj } = localeStore;
   return [
     {
       id: 'fareName',
-      label: '요금제명',
+      label: '요금명',
       colProps: {
         xl: 12,
         xs: 24
@@ -29,7 +29,7 @@ export function getFarePolicyFields(
         children: null
       },
       fieldOption: {
-        initialValue: farePolicy ? farePolicy.fareName : '',
+        initialValue: fareInfo ? fareInfo.fareName : '',
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       component: {
@@ -37,8 +37,8 @@ export function getFarePolicyFields(
       }
     },
     {
-      id: 'timeRange',
-      label: '반영시간',
+      id: 'type',
+      label: '요금타입',
       colProps: {
         xl: 12,
         xs: 24
@@ -55,26 +55,17 @@ export function getFarePolicyFields(
         children: null
       },
       fieldOption: {
-        rules: [{ type: 'array', required: true, whitespace: true, message: '필수 입력 값입니다' }],
-        // format: "HH:mm",
-        initialValue: farePolicy
-          ? [moment(farePolicy.startTime, 'HH:mm'), moment(farePolicy.endTime, 'HH:mm')]
-          : ''
+        initialValue: fareInfo ? fareInfo.type : '',
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       component: {
-        type: FormType.TimePicker,
-        option: {
-          placeholder: [
-            localeObj['label.startTime'] || '시작시간',
-            localeObj['label.endTime'] || '종료시간'
-          ],
-          allowClear: true
-        }
+        type: FormType.Select,
+        selectOptions: fareTypeOpt
       }
     },
     {
-      id: 'selectBasicFareSn',
-      label: '기본요금',
+      id: 'time1',
+      label: '시간',
       colProps: {
         xl: 12,
         xs: 24
@@ -92,16 +83,16 @@ export function getFarePolicyFields(
       },
       fieldOption: {
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }],
-        initialValue: farePolicy ? farePolicy.basicFareSn.toString() : ''
+        // format: "HH:mm",
+        initialValue: fareInfo ? fareInfo.time1 : ''
       },
       component: {
-        type: FormType.Select,
-        selectOptions: fareInfos
+        type: FormType.Input
       }
     },
     {
-      id: 'selectAddFareSn',
-      label: '추가요금',
+      id: 'won1',
+      label: '요금',
       colProps: {
         xl: 12,
         xs: 24
@@ -118,11 +109,38 @@ export function getFarePolicyFields(
         children: null
       },
       fieldOption: {
-        initialValue: farePolicy ? farePolicy.addFareSn.toString() : ''
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }],
+        // format: "HH:mm",
+        initialValue: fareInfo ? fareInfo.won1 : ''
       },
       component: {
-        type: FormType.Select,
-        selectOptions: fareInfos
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'count1',
+      label: '반복',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }],
+        initialValue: fareInfo ? fareInfo.count1 : '1'
+      },
+      component: {
+        type: FormType.Input
       }
     }
   ];
