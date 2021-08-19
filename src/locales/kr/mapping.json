@@ -70,6 +70,8 @@
   "label.clear": "해제",
   "label.startTime": "시작시간",
   "label.endTime": "종료시간",
+  "label.download": "다운로드",
+  "label.upload": "업로드",
 
   "label.parkinglot.info": "주차장 정보",
   "label.breaker.control": "차단기 제어",
