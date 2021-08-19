@@ -5,7 +5,13 @@ export function getFareInfo() {
 }
 
 export function createFareInfo(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/fare/info`, {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/fare/info`, {
+    data: data
+  });
+}
+
+export function updateFareInfo(data) {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/fare/info`, {
     data: data
   });
 }

@@ -1,8 +1,10 @@
+import { EFareType } from '@/constants/list';
+
 export interface IFareInfoObj {
   sn?: number;
   effectDate: Date;
   expireDate: Date;
-  type: FareType;
+  type: EFareType;
   fareName: string;
   time1: number;
   time2?: number;
