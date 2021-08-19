@@ -5,8 +5,8 @@ export interface ITicketObj {
   sn: number;
   vehicleNo: string;
   vehicleType: EVehicleType;
-  effectDate: Date;
-  expireDate: Date;
+  effectDate: Date | number | string;
+  expireDate: Date | number | string;
   ticketType: ETicketType;
   corp: ICorpObj;
   delYn: EDelYn;

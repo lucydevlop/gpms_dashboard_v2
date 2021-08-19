@@ -7,20 +7,24 @@ import { Button, Row } from 'antd';
 import { getFormFields } from '@utils/form';
 import { NewTicketFields } from '../FormFields/FormFields';
 import { conversionDateTime } from '@/utils/conversion';
+import { string2mobile } from '@utils/tools';
 
-interface ITicketDetailModalProps extends FormComponentProps {
-  ticket: ITicketObj;
+interface ITicketModalProps extends FormComponentProps {
+  ticket?: ITicketObj;
   onSubmit: (ticket: ITicketObj) => void;
 }
 interface ITicketDetailModalState {}
 
 @inject('localeStore')
 @observer
-class TicketDetailModal extends PureComponent<ITicketDetailModalProps, ITicketDetailModalState> {
+class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
+      // console.log('Ticket', fieldsValue);
       fieldsValue.effectDate = conversionDateTime(fieldsValue.effectDate, '{y}-{m}-{d} 00:00:00');
       fieldsValue.expireDate = conversionDateTime(fieldsValue.expireDate, '{y}-{m}-{d} 23:59:59');
+      fieldsValue.tel = string2mobile(fieldsValue.tel);
+      // console.log('Ticket', fieldsValue);
       if (!err) this.props.onSubmit(fieldsValue);
     });
   }
@@ -51,8 +55,6 @@ class TicketDetailModal extends PureComponent<ITicketDetailModalProps, ITicketDe
   }
 }
 
-const TicketDetailModalForm = Form.create<ITicketDetailModalProps>({ name: 'ticketDetailModal' })(
-  TicketDetailModal
-);
+const TicketModalForm = Form.create<ITicketModalProps>({ name: 'ticketModal' })(TicketModal);
 
-export default TicketDetailModalForm;
+export default TicketModalForm;
