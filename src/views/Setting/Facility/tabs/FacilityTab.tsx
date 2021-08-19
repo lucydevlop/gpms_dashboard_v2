@@ -15,18 +15,23 @@ import { categoryOpt, delYnOpt, EDelYn, lprTypeTypeOpt } from '@/constants/list'
 import StandardTable from '@components/StandardTable';
 import { localeStore } from '@store/localeStore';
 import zdsTips from '@utils/tips';
+import DraggableModal from '@components/DraggableModal';
+import { ISelectOptions } from '@utils/form';
+import FacilityModal from '@views/Setting/Facility/tabs/modals/FacilityModal';
 
 interface IProps {
   facilities: IFacilityObj[];
   gates: IGateObj[];
   loading: boolean;
   onUpdate: (info: IFacilityObj) => void;
+  onCreate: (info: IFacilityObj) => void;
 }
 
 interface IState {
   detailModal: boolean;
   createModal: boolean;
   selected?: IFacilityObj;
+  selectOptGates?: ISelectOptions[];
 }
 
 class FacilityTab extends PureComponent<IProps, IState> {
@@ -37,10 +42,30 @@ class FacilityTab extends PureComponent<IProps, IState> {
       createModal: false
     };
   }
+  componentDidMount() {
+    this.gateListInit();
+  }
+  gateListInit = () => {
+    const unique: ISelectOptions[] = [];
+    this.props.gates
+      .filter((gate: IGateObj) => {
+        return gate.delYn !== EDelYn.Y;
+      })
+      .forEach((eGate) => unique.push({ value: eGate.gateId, label: eGate.gateName }));
+    this.setState({ selectOptGates: unique });
+  };
 
   handleCreateClick() {
+    this.gateListInit();
     this.setState({ detailModal: false, createModal: true });
   }
+  closeCreateModal = () => {
+    this.setState({ createModal: false });
+  };
+
+  closeDetailModal = () => {
+    this.setState({ detailModal: false });
+  };
 
   handleBtnClick = (info: IFacilityObj, key: string) => {
     const { localeObj } = localeStore;
@@ -51,6 +76,7 @@ class FacilityTab extends PureComponent<IProps, IState> {
         this.props.onUpdate(info);
       });
     } else {
+      this.gateListInit();
       this.setState({ detailModal: true, createModal: false, selected: info });
     }
   };
@@ -170,7 +196,7 @@ class FacilityTab extends PureComponent<IProps, IState> {
             <a
               onClick={(e: any) => {
                 e.stopPropagation();
-                this.handleBtnClick(item, 'edit');
+                this.handleBtnClick(item, 'delete');
               }}
             >
               <DeleteOutlined />
@@ -201,6 +227,45 @@ class FacilityTab extends PureComponent<IProps, IState> {
           data={{ list: this.props.facilities }}
           hidePagination
         />
+        {this.state.createModal ? (
+          <DraggableModal
+            title={localeObj['label.facility.info'] || '시설물 상세'}
+            visible={this.state.createModal}
+            onOk={(): void => {
+              this.setState({ createModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ createModal: false });
+            }}
+            width={800}
+          >
+            <FacilityModal
+              onSubmit={this.props.onCreate}
+              modalEvent={this.closeCreateModal}
+              gate={this.state.selectOptGates}
+            ></FacilityModal>
+          </DraggableModal>
+        ) : null}
+        {this.state.detailModal ? (
+          <DraggableModal
+            title={localeObj['label.facility.info'] || '시설물 상세'}
+            visible={this.state.detailModal}
+            onOk={(): void => {
+              this.setState({ detailModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ detailModal: false });
+            }}
+            width={800}
+          >
+            <FacilityModal
+              onSubmit={this.props.onUpdate}
+              modalEvent={this.closeDetailModal}
+              gate={this.state.selectOptGates}
+              facility={this.state.selected}
+            ></FacilityModal>
+          </DraggableModal>
+        ) : null}
       </>
     );
   }

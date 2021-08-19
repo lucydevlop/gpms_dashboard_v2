@@ -63,14 +63,16 @@ export enum ECategory {
   LPR = 'LPR',
   BREAKER = 'BREAKER',
   DISPLAY = 'DISPLAY',
-  PAYSTATION = 'PAYSTATION'
+  PAYSTATION = 'PAYSTATION',
+  VOIP = 'VOIP'
 }
 
 export const categoryOpt: ISelectOptions[] = [
   { value: ECategory.LPR, label: 'LPR', color: 'black' },
   { value: ECategory.BREAKER, label: '차단기', color: 'blue' },
   { value: ECategory.DISPLAY, label: '전광판', color: 'green' },
-  { value: ECategory.PAYSTATION, label: '정산기', color: 'navy' }
+  { value: ECategory.PAYSTATION, label: '정산기', color: 'navy' },
+  { value: ECategory.VOIP, label: 'VOIP', color: 'black' }
 ];
 
 export enum EGateType {
@@ -241,9 +243,9 @@ export enum EMessageClassType {
 }
 
 export const messageClassTypeOpt: ISelectOptions[] = [
-  { value: EMessageClassType.IN, label: '입차', color: 'black' },
-  { value: EMessageClassType.OUT, label: '출차', color: 'black' },
-  { value: EMessageClassType.WAIT, label: '정산', color: 'black' }
+  { value: EMessageClassType.IN, label: '입차', color: 'red' },
+  { value: EMessageClassType.OUT, label: '출차', color: 'blue' },
+  { value: EMessageClassType.WAIT, label: '정산', color: 'green' }
 ];
 
 export enum EMessageTypeType {
@@ -268,8 +270,8 @@ export const messageTypeTypeOpt: ISelectOptions[] = [
 ];
 
 export const useOrUnuseOpt: ISelectOptions[] = [
-  { value: EDelYn.N, label: '사용', color: 'black' },
-  { value: EDelYn.Y, label: '미사용', color: 'black' },
+  { value: EDelYn.N, label: '사용', color: 'blue' },
+  { value: EDelYn.Y, label: '미사용', color: 'red' },
   { value: 'ALL', label: '전체', color: 'black' }
 ];
 
@@ -363,4 +365,43 @@ export const lprTypeTypeOpt: ISelectOptions[] = [
   { value: ELprTypeType.INFRONT, label: '양방향 입차전방', color: 'black' },
   { value: ELprTypeType.INBACK, label: '양방향 입차보조', color: 'black' },
   { value: ELprTypeType.OUTFRONT, label: '양방향 출차전방', color: 'black' }
+];
+
+export enum EColorType {
+  C1 = 'C1',
+  C3 = 'C3',
+  C4 = 'C4',
+  C5 = 'C5'
+}
+
+export const colorTypeOpt: ISelectOptions[] = [
+  { value: EColorType.C1, label: '초록색', color: 'black' },
+  { value: EColorType.C3, label: '하늘색', color: 'black' },
+  { value: EColorType.C4, label: '빨강색', color: 'black' },
+  { value: EColorType.C5, label: '핑크색', color: 'black' }
+];
+
+export const lineOpt: ISelectOptions[] = [
+  { value: 1, label: '첫번째', color: 'black' },
+  { value: 2, label: '두번째', color: 'black' }
+];
+
+export const orderOpt: ISelectOptions[] = [
+  { value: 1, label: '첫번째', color: 'black' },
+  { value: 2, label: '두번째', color: 'black' },
+  { value: 3, label: '세번째', color: 'black' },
+  { value: 4, label: '네번째', color: 'black' },
+  { value: 5, label: '다섯번째', color: 'black' },
+  { value: 6, label: '여섯번째', color: 'black' },
+  { value: 7, label: '일곱번째', color: 'black' }
+];
+
+export enum ELineStatus {
+  FLOW = 'FLOW',
+  FIX = 'FIX'
+}
+
+export const elineStatusOpt: ISelectOptions[] = [
+  { value: ELineStatus.FIX, label: '고정', color: 'black' },
+  { value: ELineStatus.FLOW, label: '흐름', color: 'black' }
 ];

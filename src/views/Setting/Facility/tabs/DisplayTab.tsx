@@ -1,22 +1,67 @@
 import React, { PureComponent } from 'react';
 import { IDisplayMsgObj } from '@models/display';
-import { Button } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import { ColumnsType } from 'antd/lib/table';
+import { Button, Row } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { ColumnProps, ColumnsType } from 'antd/lib/table';
 import {
   getActionsColumn,
   getColumn,
   getEditableColumn
 } from '@components/EditableTable/columnHelpers';
-import { messageClassTypeOpt, messageTypeTypeOpt } from '@/constants/list';
+import {
+  colorTypeOpt,
+  ELineStatus,
+  EMessageClassType,
+  EMessageTypeType,
+  lineOpt,
+  messageClassTypeOpt,
+  messageTypeTypeOpt,
+  orderOpt
+} from '@/constants/list';
+import { localeStore } from '@store/localeStore';
+import { conversionEnumValue } from '@utils/conversion';
+import zdsTips from '@utils/tips';
+import StandardTable from '@components/StandardTable';
+import DraggableModal from '@components/DraggableModal';
+import DisplayModal from '@views/Setting/Facility/tabs/modals/DisplayModal';
+import { displayflowSetting, getDisplayFlowSetting } from '@api/facility';
+import { runInAction } from 'mobx';
 
 interface IProps {
   displayMsgs: IDisplayMsgObj[];
+  loading: boolean;
+  onCreate: (info: IDisplayMsgObj) => void;
+  onUpdate: (info: IDisplayMsgObj) => void;
 }
 
-interface IState {}
+interface IState {
+  detailModal: boolean;
+  createModal: boolean;
+  flowerSettingModal: boolean;
+  selected?: IDisplayMsgObj;
+  line1Status: ELineStatus;
+  line2Status: ELineStatus;
+}
 
 class DisplayTab extends PureComponent<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      createModal: false,
+      detailModal: false,
+      flowerSettingModal: false,
+      line1Status: ELineStatus.FIX,
+      line2Status: ELineStatus.FIX
+    };
+  }
+
+  componentDidMount() {
+    getDisplayFlowSetting().then((res: any) => {
+      const { msg, data } = res;
+      this.setState({ line1Status: data.line1Status, line2Status: data.line2Status });
+    });
+  }
+
   handleSave = async (record: IDisplayMsgObj) => {
     console.log('handleSave', record);
   };
@@ -25,8 +70,53 @@ class DisplayTab extends PureComponent<IProps, IState> {
     console.log('handleSave', record);
   };
 
+  closeDetailModal = () => {
+    this.setState({ detailModal: false });
+  };
+
+  closeFloweSettingModal = () => {
+    this.setState({ flowerSettingModal: false });
+  };
+
+  handleBtnClick = (info: IDisplayMsgObj) => {
+    const { localeObj } = localeStore;
+    this.setState({ detailModal: true, createModal: false, selected: info });
+  };
+
+  handleFloweSettingOpen = () => {
+    this.setState({ flowerSettingModal: true });
+  };
+
+  handleFloweSettingClose = () => {
+    this.setState({ flowerSettingModal: false });
+  };
+
+  createFlowSetting = (req: any) => {
+    console.log(req);
+    displayflowSetting(req).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+        runInAction(() => {
+          this.setState({ line1Status: data.line1Status });
+          this.setState({ line2Status: data.line2Status });
+          console.log('line1Status: ', this.state.line1Status);
+          console.log('line2Status: ', this.state.line2Status);
+        });
+      }
+    });
+  };
+
+  handleCreateClick() {
+    this.setState({ detailModal: false, createModal: true });
+  }
+
+  closeCreateModal = () => {
+    this.setState({ createModal: false });
+  };
+
+  /*
   render() {
-    const renderActions = (info: IDisplayMsgObj): JSX.Element => {
+    /!*const renderActions = (info: IDisplayMsgObj): JSX.Element => {
       return (
         <Button
           type={'default'}
@@ -48,14 +138,190 @@ class DisplayTab extends PureComponent<IProps, IState> {
       getEditableColumn('라인', 'lineNumber', this.handleSave, 'number'),
       getEditableColumn('메세지', 'messageDesc', this.handleSave, 'text'),
       getActionsColumn(renderActions)
+    ];*!/
+    return (
+      <>
+        {/!*<EditableList<IDisplayMsgObj>*!/}
+        {/!*  columns={columns}*!/}
+        {/!*  entries={this.props.displayMsgs}*!/}
+        {/!*  rowKeySelector={(row: IDisplayMsgObj) => row.sn!!.toString()}*!/}
+        {/!*!/>*!/}
+      </>
+    );
+  }*/
+  render() {
+    const { localeObj } = localeStore;
+    const columns: ColumnProps<IDisplayMsgObj>[] = [
+      {
+        title: '메세지그룹',
+        key: 'messageClass',
+        width: 100,
+        align: 'center',
+        filters: messageClassTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.messageClass.indexOf(value as string) === 0,
+        render: (text: string, record: IDisplayMsgObj) => {
+          const value = conversionEnumValue(record.messageClass, messageClassTypeOpt);
+          return <div style={{ color: value.color }}>{value.label}</div>;
+        }
+      },
+      {
+        title: '메세지타입',
+        key: 'messageType',
+        width: 100,
+        align: 'center',
+        filters: messageTypeTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.messageType.indexOf(value as string) === 0,
+        render: (text: string, record: IDisplayMsgObj) => {
+          const value = conversionEnumValue(record.messageType, messageTypeTypeOpt);
+          return <div style={{ color: value.color }}>{value.label}</div>;
+        }
+      },
+      {
+        title: '컬러',
+        key: 'colorCode',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IDisplayMsgObj) => {
+          const value = conversionEnumValue(record.colorCode, colorTypeOpt);
+          return <div style={{ color: value.color }}>{value.label}</div>;
+        }
+      },
+      {
+        title: '라인',
+        key: 'lineNumber',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IDisplayMsgObj) => {
+          const value = conversionEnumValue(String(record.lineNumber), lineOpt);
+          return <div style={{ color: value.color }}>{value.label}</div>;
+        }
+      },
+      {
+        title: '순서',
+        key: 'order',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IDisplayMsgObj) => {
+          const value = conversionEnumValue(String(record.order), orderOpt);
+          return <div style={{ color: value.color }}>{value.label}</div>;
+        }
+      },
+      {
+        title: '문구',
+        key: 'messageDesc',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IDisplayMsgObj) => record.messageDesc
+      },
+      {
+        title: 'Action',
+        width: 100,
+        align: 'center',
+        fixed: 'right',
+        render: (item: IDisplayMsgObj) => (
+          <div>
+            <a
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.handleBtnClick(item);
+              }}
+            >
+              <EditOutlined />
+            </a>
+          </div>
+        )
+      }
     ];
     return (
       <>
-        {/*<EditableList<IDisplayMsgObj>*/}
-        {/*  columns={columns}*/}
-        {/*  entries={this.props.displayMsgs}*/}
-        {/*  rowKeySelector={(row: IDisplayMsgObj) => row.sn!!.toString()}*/}
-        {/*/>*/}
+        <Row style={{ marginBottom: '1rem' }}>
+          <Button
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleCreateClick();
+            }}
+          >
+            + {localeObj['label.create'] || '신규등록'}
+          </Button>
+          <Button
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleFloweSettingOpen();
+            }}
+            style={{ marginLeft: '1rem' }}
+          >
+            {localeObj['label.display.flowSetting'] || '전광판 흐름설정'}
+          </Button>
+        </Row>
+        <StandardTable
+          scroll={{ x: 'max-content' }}
+          columns={columns}
+          loading={this.props.loading}
+          // @ts-ignore
+          rowKey={(record: IDisplayMsgObj) => String(record.sn)}
+          data={{ list: this.props.displayMsgs }}
+          hidePagination
+        />
+        {this.state.createModal ? (
+          <DraggableModal
+            title={localeObj['label.display.info' || '전광판 상세']}
+            visible={this.state.createModal}
+            onOk={(): void => {
+              this.setState({ createModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ createModal: false });
+            }}
+            width={800}
+          >
+            <DisplayModal
+              onSubmit={this.props.onCreate}
+              modalEvent={this.closeCreateModal}
+            ></DisplayModal>
+          </DraggableModal>
+        ) : null}
+        {this.state.detailModal ? (
+          <DraggableModal
+            title={localeObj['label.display.info' || '전광판 상세']}
+            visible={this.state.detailModal}
+            onOk={(): void => {
+              this.setState({ detailModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ detailModal: false });
+            }}
+            width={800}
+          >
+            <DisplayModal
+              onSubmit={this.props.onUpdate}
+              modalEvent={this.closeDetailModal}
+              display={this.state.selected}
+            ></DisplayModal>
+          </DraggableModal>
+        ) : null}
+        {this.state.flowerSettingModal ? (
+          <DraggableModal
+            visible={this.state.flowerSettingModal}
+            title={localeObj['label.display.flowSetting' || '전광판 흐름설정']}
+            onOk={(): void => {
+              this.setState({ flowerSettingModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ flowerSettingModal: false });
+            }}
+            width={800}
+          >
+            <DisplayModal
+              onSubmit={this.createFlowSetting}
+              modalEvent={this.handleFloweSettingClose}
+              flowerModal={true}
+              line1Status={this.state.line1Status}
+              line2Status={this.state.line2Status}
+            ></DisplayModal>
+          </DraggableModal>
+        ) : null}
       </>
     );
   }

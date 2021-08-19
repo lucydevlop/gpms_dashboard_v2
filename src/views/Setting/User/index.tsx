@@ -265,7 +265,7 @@
 // }
 // export default User;
 
-import { roleOpt, useOrUnuseOpt } from '@/constants/list';
+import { delYnOpt, roleOpt, useOrUnuseOpt } from '@/constants/list';
 import { IUserObj } from '@/models/user';
 import { userStore } from '@/store/userStore';
 import { conversionDateTime, conversionEnumValue } from '@/utils/conversion';
@@ -433,8 +433,10 @@ class UserSetting extends PureComponent<any, IState> {
         width: 100,
         key: 'delYn',
         align: 'center',
+        filters: delYnOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.delYn.indexOf(value as string) === 0,
         render: (text: string, record: IUserObj) => {
-          const type = conversionEnumValue(record.delYn, useOrUnuseOpt);
+          const type = conversionEnumValue(record.delYn, delYnOpt);
           return {
             props: {
               style: {
@@ -470,6 +472,8 @@ class UserSetting extends PureComponent<any, IState> {
         title: '권한',
         width: 100,
         key: 'role',
+        filters: roleOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.role.indexOf(value as string) === 0,
         align: 'center',
         render: (text: string, record: IUserObj) => {
           const type = conversionEnumValue(record.role, roleOpt);
@@ -487,6 +491,7 @@ class UserSetting extends PureComponent<any, IState> {
         title: '최종로그인시간',
         width: 100,
         key: 'loginDate',
+        align: 'center',
         render: (text: string, record: IUserObj) => {
           return record.loginDate
             ? conversionDateTime(record.loginDate, '{y}-{m}-{d} {h}:{i}') || '--'

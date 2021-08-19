@@ -66,3 +66,37 @@ export function getFacilities() {
 export function getDisplayMessages() {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/facility/display/message`);
 }
+
+export function createFacility(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/facility/create`, {
+    data: data
+  });
+}
+
+export function updateFacility(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/facility/all/update`, {
+    data: data
+  });
+}
+
+export function updateDisplay(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/message/update`, {
+    data: data
+  });
+}
+
+export function createDisplay(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/message/create`, {
+    data: data
+  });
+}
+
+export function displayflowSetting(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/message/info`, {
+    data: data
+  });
+}
+
+export function getDisplayFlowSetting() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/message/info`);
+}

@@ -40,6 +40,14 @@ class GateTab extends PureComponent<IProps, IState> {
     this.setState({ detailModal: false, createModal: true });
   }
 
+  closeCreateModal = () => {
+    this.setState({ createModal: false });
+  };
+
+  closeDetailModal = () => {
+    this.setState({ detailModal: false });
+  };
+
   handleBtnClick = (info: IGateObj, key: string) => {
     const { localeObj } = localeStore;
     //console.log('handleBtnClick', info);
@@ -71,7 +79,6 @@ class GateTab extends PureComponent<IProps, IState> {
       {
         title: '게이트 ID',
         key: 'gateId',
-        fixed: 'left',
         width: 110,
         align: 'center',
         render: (text: string, record: IGateObj) => record.gateId
@@ -115,7 +122,7 @@ class GateTab extends PureComponent<IProps, IState> {
       },
       {
         title: 'RESET URL',
-        key: 'relaySvr',
+        key: 'resetSvr',
         width: 110,
         align: 'center',
         render: (text: string, record: IGateObj) => record.resetSvr
@@ -181,8 +188,9 @@ class GateTab extends PureComponent<IProps, IState> {
             onCancel={(): void => {
               this.setState({ createModal: false });
             }}
+            width={800}
           >
-            <GateModal modalState={this.state.createModal} onSubmit={this.props.onCreate} />
+            <GateModal modalEvent={this.closeCreateModal} onSubmit={this.props.onCreate} />
           </DraggableModal>
         ) : null}
         {this.state.detailModal ? (
@@ -195,11 +203,12 @@ class GateTab extends PureComponent<IProps, IState> {
             onCancel={(): void => {
               this.setState({ detailModal: false });
             }}
+            width={800}
           >
             <GateModal
               gate={this.state.selected}
-              modalState={this.state.detailModal}
               onSubmit={this.props.onUpdate}
+              modalEvent={this.closeDetailModal}
             />
           </DraggableModal>
         ) : null}

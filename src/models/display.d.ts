@@ -1,4 +1,4 @@
-import { EMessageClassType, EMessageTypeType } from '@/constants/list';
+import { EColorType, EMessageClassType, EMessageTypeType } from '@/constants/list';
 
 export interface IDisplayMsgObj {
   sn?: number;
@@ -7,11 +7,13 @@ export interface IDisplayMsgObj {
   messageCode: string;
   order: number;
   lineNumber: number;
-  colorCode: string;
+  colorCode: EColorType;
   messageDesc: string;
   createBy?: string;
   createDate?: Date;
   updateBy?: string;
   updateDate?: Date;
   update?: boolean;
+  line1Status?: string;
+  line2Status?: string;
 }

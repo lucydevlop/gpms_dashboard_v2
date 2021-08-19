@@ -1,6 +1,12 @@
 import { IGateObj } from '@models/gate';
 import { IFormFieldConfig } from '@utils/form';
 import { FormType } from '@/constants/form';
+import {
+  EGateOpenActionType,
+  EGateType,
+  gateOpenActionTypeOpt,
+  gateTypeOpt
+} from '@/constants/list';
 
 export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] {
   return [
@@ -8,25 +14,225 @@ export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] 
       id: 'gateId',
       label: '게이트ID',
       colProps: {
-        span: 24
+        xl: 12,
+        xs: 24
       },
       formItemProps: {
         labelCol: {
-          span: 5
+          xl: 9,
+          xs: 9
         },
         wrapperCol: {
-          span: 19
+          xl: 15,
+          xs: 15
         },
         children: null
       },
       fieldOption: {
-        initialValue: gate ? gate.gateId : ''
+        initialValue: gate ? gate.gateId : '',
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {
         type: FormType.Input,
         option: {
           placeholder: '입력하세요'
         }
+      }
+    },
+    {
+      id: 'gateName',
+      label: '게이트이름',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.gateName : '',
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '입력하세요'
+        }
+      }
+    },
+    {
+      id: 'gateType',
+      label: '게이트타입',
+      colProps: {
+        xs: 24,
+        xl: 12
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.gateType : EGateType.IN,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: gateTypeOpt
+      }
+    },
+    {
+      id: 'openAction',
+      label: '오픈타입',
+      colProps: {
+        xs: 24,
+        xl: 12
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.openAction : EGateOpenActionType.NONE,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: gateOpenActionTypeOpt
+      }
+    },
+    {
+      id: 'relaySvrKey',
+      label: 'RELAY서버키',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.relaySvrKey : 'GATESVR1',
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'relaySvr',
+      label: 'RELAY SVR URL',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.relaySvr : 'http://192.168.20.201/v1',
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'resetSvr',
+      label: 'RESET URL',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.resetSvr : 'http://192.168.20.201/io.cgi?relay=',
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'sn',
+      label: 'sn',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.sn : null
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'delYn',
+      label: 'delYn',
+      fieldOption: {
+        initialValue: gate ? gate.delYn : 'N'
+      },
+      component: {
+        type: FormType.Input
       }
     }
   ];
