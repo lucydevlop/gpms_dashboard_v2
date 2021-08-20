@@ -209,7 +209,7 @@ export function facilityFields(
         children: null
       },
       fieldOption: {
-        initialValue: facility ? facility.lprType : ''
+        initialValue: facility ? facility.lprType : null
       },
       component: {
         type: FormType.Select,

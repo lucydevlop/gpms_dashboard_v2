@@ -62,14 +62,6 @@ class DisplayTab extends PureComponent<IProps, IState> {
     });
   }
 
-  handleSave = async (record: IDisplayMsgObj) => {
-    console.log('handleSave', record);
-  };
-
-  handleDelete = async (record: IDisplayMsgObj) => {
-    console.log('handleSave', record);
-  };
-
   closeDetailModal = () => {
     this.setState({ detailModal: false });
   };
@@ -92,15 +84,12 @@ class DisplayTab extends PureComponent<IProps, IState> {
   };
 
   createFlowSetting = (req: any) => {
-    console.log(req);
     displayflowSetting(req).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'success') {
         runInAction(() => {
           this.setState({ line1Status: data.line1Status });
           this.setState({ line2Status: data.line2Status });
-          console.log('line1Status: ', this.state.line1Status);
-          console.log('line2Status: ', this.state.line2Status);
         });
       }
     });

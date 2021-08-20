@@ -78,7 +78,6 @@ class FacilitySetting extends PureComponent<any, IState> {
   }
 
   handleGateUpdate = async (record: IGateObj) => {
-    // console.log('handleUpdate', record);
     updateGate(record)
       .then((res: any) => {
         const { msg, data } = res;
@@ -87,7 +86,6 @@ class FacilitySetting extends PureComponent<any, IState> {
             const update = data;
             const gates = this.state.gates.map((e) => {
               if (e.sn === update.sn) {
-                console.log('update is equal', update);
                 return { ...update };
               }
               return { ...e };
@@ -100,7 +98,6 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   handleGateCreate = async (record: IGateObj) => {
-    console.log('handleGateCreate', record);
     createGate(record)
       .then((res: any) => {
         const { msg, data } = res;
@@ -118,7 +115,6 @@ class FacilitySetting extends PureComponent<any, IState> {
     const wrapper: Array<IFacilityObj> = [];
     wrapper.push(record);
     const requsetData = { facilities: wrapper };
-    console.log('handleFacilityUpdate', requsetData);
     updateFacility(requsetData)
       .then((res: any) => {
         const { msg, data } = res;
@@ -142,14 +138,12 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   handleFacilityCreate = async (record: IFacilityObj) => {
-    console.log('handleFacilityCreate', record);
     createFacility(record)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
             const add = data;
-            console.log(add);
             const facilities = [...this.state.facilities, add];
             this.setState({ facilities: facilities });
           });
@@ -159,17 +153,14 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   handleDisplayCreate = async (record: IDisplayMsgObj) => {
-    console.log('handleDisplayCreate', record);
     createDisplay(record)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
             const add = data[0];
-            console.log(add);
             const displayMessages = [...this.state.displayMessages, add];
             this.setState({ displayMessages: displayMessages });
-            console.log(this.state.displayMessages);
           });
         }
       })
@@ -179,7 +170,6 @@ class FacilitySetting extends PureComponent<any, IState> {
   handleDisplayUpdate = async (record: IDisplayMsgObj) => {
     const wrapper: Array<IDisplayMsgObj> = [];
     wrapper.push(record);
-    console.log('handleDisplayUpdate', wrapper);
     updateDisplay(wrapper)
       .then((res: any) => {
         const { msg, data } = res;
