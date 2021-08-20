@@ -209,12 +209,7 @@ export const getFormFields = (
         requireTag = <span style={{ color: 'red' }}>*</span>;
       }
     }
-    const labelStyle = (
-      <label style={{ fontWeight: 600 }}>
-        {requireTag}
-        {label}
-      </label>
-    );
+    const labelStyle = <label style={{ fontWeight: 600 }}>{label}</label>;
     if (formField.hidden) return;
     if (formField.formSubItemProps) {
       // return (
