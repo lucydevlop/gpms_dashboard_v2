@@ -39,7 +39,6 @@ class GateTab extends PureComponent<IProps, IState> {
   handleCreateClick() {
     this.setState({ detailModal: false, createModal: true });
   }
-
   handleBtnClick = (info: IGateObj, key: string) => {
     const { localeObj } = localeStore;
     //console.log('handleBtnClick', info);
@@ -71,7 +70,6 @@ class GateTab extends PureComponent<IProps, IState> {
       {
         title: '게이트 ID',
         key: 'gateId',
-        fixed: 'left',
         width: 110,
         align: 'center',
         render: (text: string, record: IGateObj) => record.gateId
@@ -115,7 +113,7 @@ class GateTab extends PureComponent<IProps, IState> {
       },
       {
         title: 'RESET URL',
-        key: 'relaySvr',
+        key: 'resetSvr',
         width: 110,
         align: 'center',
         render: (text: string, record: IGateObj) => record.resetSvr
@@ -181,8 +179,14 @@ class GateTab extends PureComponent<IProps, IState> {
             onCancel={(): void => {
               this.setState({ createModal: false });
             }}
+            width={800}
           >
-            <GateModal modalState={this.state.createModal} onSubmit={this.props.onCreate} />
+            <GateModal
+              onSubmit={(value) => {
+                this.setState({ createModal: false });
+                this.props.onCreate(value);
+              }}
+            />
           </DraggableModal>
         ) : null}
         {this.state.detailModal ? (
@@ -195,11 +199,14 @@ class GateTab extends PureComponent<IProps, IState> {
             onCancel={(): void => {
               this.setState({ detailModal: false });
             }}
+            width={800}
           >
             <GateModal
               gate={this.state.selected}
-              modalState={this.state.detailModal}
-              onSubmit={this.props.onUpdate}
+              onSubmit={(value) => {
+                this.setState({ detailModal: false });
+                this.props.onUpdate(value);
+              }}
             />
           </DraggableModal>
         ) : null}

@@ -7,22 +7,30 @@ import { Button, Row } from 'antd';
 import { getFormFields } from '@utils/form';
 import { IGateObj } from '@models/gate';
 import { gateFields } from '@views/Setting/Facility/tabs/fields/gate';
+import { IFacilityObj } from '@models/facility';
+import { facilityFields } from '@views/Setting/Facility/tabs/fields/facility';
+import { displayFields, flowSettingFields } from '@views/Setting/Facility/tabs/fields/display';
+import { IDisplayMsgObj } from '@models/display';
+import { ELineStatus } from '@/constants/list';
 
 interface IProps extends FormComponentProps {
-  onSubmit: (user: IGateObj) => void;
-  gate?: IGateObj;
+  onSubmit: (display: IDisplayMsgObj) => void;
+  display?: IDisplayMsgObj;
+  flowSettingModal?: boolean;
+  line1Status?: ELineStatus;
+  line2Status?: ELineStatus;
 }
 
 interface IState {}
 
-class GateModal extends PureComponent<IProps, IState> {
+class DisplayModal extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
   }
 
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
-      // console.log('handlerSubmit', fieldsValue);
+      console.log('handlerSubmit', fieldsValue);
       if (!err) {
         this.props.onSubmit(fieldsValue);
       }
@@ -32,7 +40,10 @@ class GateModal extends PureComponent<IProps, IState> {
   render() {
     const { localeObj } = localeStore;
     const { getFieldDecorator } = this.props.form;
-    const gateFieldsConfig = gateFields(this.props.gate);
+    const gateFieldsConfig =
+      this.props.flowSettingModal === true
+        ? flowSettingFields(this.props.line1Status, this.props.line2Status)
+        : displayFields(this.props.display);
     const submitFormLayout = {
       wrapperCol: {
         xs: {
@@ -52,7 +63,7 @@ class GateModal extends PureComponent<IProps, IState> {
           this.handlerSubmit();
         }}
       >
-        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 7)}</Row>
+        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 6)}</Row>
         <Form.Item
           {...submitFormLayout}
           style={{
@@ -68,5 +79,5 @@ class GateModal extends PureComponent<IProps, IState> {
   }
 }
 
-const GateModalForm = Form.create<IProps>({ name: 'gateModalForm' })(GateModal);
-export default GateModalForm;
+const DisplayModalForm = Form.create<IProps>({ name: 'disPlayModal' })(DisplayModal);
+export default DisplayModalForm;

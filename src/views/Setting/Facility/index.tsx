@@ -1,6 +1,16 @@
 import React, { PureComponent } from 'react';
 import PageWrapper from '@components/PageWrapper';
-import { createGate, getDisplayMessages, getFacilities, getGates, updateGate } from '@api/facility';
+import {
+  createDisplay,
+  createFacility,
+  createGate,
+  getDisplayMessages,
+  getFacilities,
+  getGates,
+  updateDisplay,
+  updateFacility,
+  updateGate
+} from '@api/facility';
 import { IGateObj } from '@models/gate';
 import { runInAction } from 'mobx';
 import { Tabs } from 'antd';
@@ -9,6 +19,7 @@ import FacilityTab from '@views/Setting/Facility/tabs/FacilityTab';
 import DisplayTab from '@views/Setting/Facility/tabs/DisplayTab';
 import { IDisplayMsgObj } from '@models/display';
 import GateTab from '@views/Setting/Facility/tabs/GateTab';
+import { mac } from 'address';
 
 interface IState {
   loading: boolean;
@@ -67,7 +78,6 @@ class FacilitySetting extends PureComponent<any, IState> {
   }
 
   handleGateUpdate = async (record: IGateObj) => {
-    // console.log('handleUpdate', record);
     updateGate(record)
       .then((res: any) => {
         const { msg, data } = res;
@@ -88,7 +98,6 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   handleGateCreate = async (record: IGateObj) => {
-    console.log('handleGateCreate', record);
     createGate(record)
       .then((res: any) => {
         const { msg, data } = res;
@@ -103,7 +112,82 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   handleFacilityUpdate = async (record: IFacilityObj) => {
-    console.log('handleFacilityUpdate', record);
+    const wrapper: Array<IFacilityObj> = [];
+    wrapper.push(record);
+    const requsetData = { facilities: wrapper };
+    updateFacility(requsetData)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const recive = data;
+            const changeData = recive.filter((x: IFacilityObj) => {
+              return x.sn === record.sn;
+            })[0];
+            const facilities = this.state.facilities.map((e) => {
+              if (e.sn === changeData.sn) {
+                return { ...changeData };
+              }
+              return { ...e };
+            });
+            this.setState({ facilities: facilities });
+          });
+        }
+      })
+      .catch(() => {});
+  };
+
+  handleFacilityCreate = async (record: IFacilityObj) => {
+    createFacility(record)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const add = data;
+            const facilities = [...this.state.facilities, add];
+            this.setState({ facilities: facilities });
+          });
+        }
+      })
+      .catch(() => {});
+  };
+
+  handleDisplayCreate = async (record: IDisplayMsgObj) => {
+    createDisplay(record)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const add = data[0];
+            const displayMessages = [...this.state.displayMessages, add];
+            this.setState({ displayMessages: displayMessages });
+          });
+        }
+      })
+      .catch(() => {});
+  };
+
+  handleDisplayUpdate = async (record: IDisplayMsgObj) => {
+    const wrapper: Array<IDisplayMsgObj> = [];
+    wrapper.push(record);
+    updateDisplay(wrapper)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const changeData = record;
+            const displayMessages = this.state.displayMessages.map((e) => {
+              if (e.sn === changeData.sn) {
+                return { ...changeData };
+              } else {
+                return { ...e };
+              }
+            });
+            this.setState({ displayMessages: displayMessages });
+          });
+        }
+      })
+      .catch(() => {});
   };
 
   render() {
@@ -127,10 +211,16 @@ class FacilitySetting extends PureComponent<any, IState> {
               gates={gates}
               loading={this.state.loading}
               onUpdate={this.handleFacilityUpdate}
+              onCreate={this.handleFacilityCreate}
             />
           </TabPane>
           <TabPane tab="전광판" key="3">
-            <DisplayTab displayMsgs={displayMessages} />
+            <DisplayTab
+              displayMsgs={displayMessages}
+              loading={this.state.loading}
+              onUpdate={this.handleDisplayUpdate}
+              onCreate={this.handleDisplayCreate}
+            />
           </TabPane>
         </Tabs>
       </PageWrapper>

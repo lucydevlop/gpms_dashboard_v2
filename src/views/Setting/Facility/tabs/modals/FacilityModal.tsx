@@ -7,15 +7,18 @@ import { Button, Row } from 'antd';
 import { getFormFields } from '@utils/form';
 import { IGateObj } from '@models/gate';
 import { gateFields } from '@views/Setting/Facility/tabs/fields/gate';
+import { IFacilityObj } from '@models/facility';
+import { facilityFields } from '@views/Setting/Facility/tabs/fields/facility';
 
 interface IProps extends FormComponentProps {
-  onSubmit: (user: IGateObj) => void;
-  gate?: IGateObj;
+  onSubmit: (user: IFacilityObj) => void;
+  gate?: any[];
+  facility?: IFacilityObj;
 }
 
 interface IState {}
 
-class GateModal extends PureComponent<IProps, IState> {
+class FacilityModal extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
   }
@@ -32,7 +35,7 @@ class GateModal extends PureComponent<IProps, IState> {
   render() {
     const { localeObj } = localeStore;
     const { getFieldDecorator } = this.props.form;
-    const gateFieldsConfig = gateFields(this.props.gate);
+    const gateFieldsConfig = facilityFields(this.props.gate, this.props.facility);
     const submitFormLayout = {
       wrapperCol: {
         xs: {
@@ -52,7 +55,7 @@ class GateModal extends PureComponent<IProps, IState> {
           this.handlerSubmit();
         }}
       >
-        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 7)}</Row>
+        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 11)}</Row>
         <Form.Item
           {...submitFormLayout}
           style={{
@@ -68,5 +71,5 @@ class GateModal extends PureComponent<IProps, IState> {
   }
 }
 
-const GateModalForm = Form.create<IProps>({ name: 'gateModalForm' })(GateModal);
-export default GateModalForm;
+const FacilityModalForm = Form.create<IProps>({ name: 'facilityModal' })(FacilityModal);
+export default FacilityModalForm;

@@ -1,5 +1,6 @@
 import { FormType } from '@/constants/form';
 import {
+  delYnOpt,
   EDelYn,
   ESearchLable,
   ETicketSearchType,
@@ -292,7 +293,7 @@ export function NewTicketFields(ticket?: ITicketObj): IFormFieldConfig<keyof ITi
       },
       fieldOption: {
         initialValue: ticket ? ticket.vehicleNo : null,
-        rules: [{ required: true, whitespace: true, message: 'input something' }]
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       component: {
         type: FormType.Input
@@ -509,7 +510,7 @@ export function NewTicketFields(ticket?: ITicketObj): IFormFieldConfig<keyof ITi
         option: {
           placeholder: '선택하세요'
         },
-        selectOptions: useOrUnuseOpt
+        selectOptions: delYnOpt
       }
     },
     {

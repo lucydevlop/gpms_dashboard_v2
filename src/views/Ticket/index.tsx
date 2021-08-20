@@ -1,6 +1,7 @@
 import PageWrapper from '@/components/PageWrapper';
 import SearchForm from '@/components/StandardTable/SearchForm';
 import {
+  delYnOpt,
   ETicketSearchDateType,
   ETicketType,
   ticketTypeOpt,
@@ -313,9 +314,28 @@ class Ticket extends PureComponent<any, IState> {
     const { localeObj } = localeStore;
     const columns: ColumnProps<ITicketObj>[] = [
       {
+        title: '사용여부',
+        key: 'delYn',
+        width: 110,
+        align: 'center',
+        fixed: 'left',
+        filters: delYnOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.delYn.indexOf(value as string) === 0,
+        render: (test: string, record: ITicketObj) => {
+          const type = conversionEnumValue(record.delYn, delYnOpt);
+          return {
+            props: {
+              style: {
+                color: type.color
+              }
+            },
+            children: <div>{type.label}</div>
+          };
+        }
+      },
+      {
         title: '차량번호',
         key: 'vehiclNo',
-        fixed: 'left',
         width: 110,
         align: 'center',
         render: (text: string, record: ITicketObj) => record.vehicleNo
@@ -355,6 +375,8 @@ class Ticket extends PureComponent<any, IState> {
         key: 'ticketType',
         width: 110,
         align: 'center',
+        filters: ticketTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.ticketType.indexOf(value as string) === 0,
         render: (test: string, record: ITicketObj) => {
           const type = conversionEnumValue(record.ticketType, ticketTypeOpt);
           return {
@@ -368,25 +390,8 @@ class Ticket extends PureComponent<any, IState> {
         }
       },
       {
-        title: '사용여부',
-        key: 'delYn',
-        width: 110,
-        align: 'center',
-        render: (test: string, record: ITicketObj) => {
-          const type = conversionEnumValue(record.delYn, useOrUnuseOpt);
-          return {
-            props: {
-              style: {
-                color: type.color
-              }
-            },
-            children: <div>{type.label}</div>
-          };
-        }
-      },
-      {
         title: '차량타입',
-        key: 'carType',
+        key: 'vehicleType',
         width: 110,
         align: 'center',
         render: (test: string, record: ITicketObj) => {
