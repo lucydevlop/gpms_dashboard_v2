@@ -37,7 +37,7 @@ interface IProps {
 interface IState {
   detailModal: boolean;
   createModal: boolean;
-  floweSettingModal: boolean;
+  flowSettingModal: boolean;
   selected?: IDisplayMsgObj;
   line1Status: ELineStatus;
   line2Status: ELineStatus;
@@ -49,7 +49,7 @@ class DisplayTab extends PureComponent<IProps, IState> {
     this.state = {
       createModal: false,
       detailModal: false,
-      floweSettingModal: false,
+      flowSettingModal: false,
       line1Status: ELineStatus.FIX,
       line2Status: ELineStatus.FIX
     };
@@ -62,8 +62,8 @@ class DisplayTab extends PureComponent<IProps, IState> {
     });
   }
 
-  handleUpdateFloweSettingClick = () => {
-    this.setState({ floweSettingModal: true });
+  handleUpdateFlowSettingClick = () => {
+    this.setState({ flowSettingModal: true });
   };
 
   handleCreateClick() {
@@ -221,7 +221,7 @@ class DisplayTab extends PureComponent<IProps, IState> {
             type="primary"
             onClick={(e: any) => {
               e.stopPropagation();
-              this.handleUpdateFloweSettingClick();
+              this.handleUpdateFlowSettingClick();
             }}
             style={{ marginLeft: '1rem' }}
           >
@@ -278,24 +278,24 @@ class DisplayTab extends PureComponent<IProps, IState> {
             ></DisplayModal>
           </DraggableModal>
         ) : null}
-        {this.state.floweSettingModal ? (
+        {this.state.flowSettingModal ? (
           <DraggableModal
-            visible={this.state.floweSettingModal}
+            visible={this.state.flowSettingModal}
             title={localeObj['label.display.flowSetting' || '전광판 흐름설정']}
             onOk={(): void => {
-              this.setState({ floweSettingModal: false });
+              this.setState({ flowSettingModal: false });
             }}
             onCancel={(): void => {
-              this.setState({ floweSettingModal: false });
+              this.setState({ flowSettingModal: false });
             }}
             width={800}
           >
             <DisplayModal
               onSubmit={(value) => {
-                this.setState({ floweSettingModal: false });
+                this.setState({ flowSettingModal: false });
                 this.updateFlowSetting(value);
               }}
-              floweSettingModal={true}
+              flowSettingModal={true}
               line1Status={this.state.line1Status}
               line2Status={this.state.line2Status}
             ></DisplayModal>

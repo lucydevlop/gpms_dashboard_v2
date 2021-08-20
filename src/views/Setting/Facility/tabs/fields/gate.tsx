@@ -167,7 +167,7 @@ export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] 
         children: null
       },
       fieldOption: {
-        initialValue: gate ? gate.relaySvr : 'http://192.168.20.201:13000/v1',
+        initialValue: gate ? gate.relaySvr : 'http://192.168.20.201:9999/v1',
         rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {
