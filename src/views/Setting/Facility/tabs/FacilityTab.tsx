@@ -59,13 +59,6 @@ class FacilityTab extends PureComponent<IProps, IState> {
     this.gateListInit();
     this.setState({ detailModal: false, createModal: true });
   }
-  closeCreateModal = () => {
-    this.setState({ createModal: false });
-  };
-
-  closeDetailModal = () => {
-    this.setState({ detailModal: false });
-  };
 
   handleBtnClick = (info: IFacilityObj, key: string) => {
     const { localeObj } = localeStore;
@@ -240,8 +233,10 @@ class FacilityTab extends PureComponent<IProps, IState> {
             width={800}
           >
             <FacilityModal
-              onSubmit={this.props.onCreate}
-              modalEvent={this.closeCreateModal}
+              onSubmit={(value) => {
+                this.setState({ createModal: false });
+                this.props.onCreate(value);
+              }}
               gate={this.state.selectOptGates}
             ></FacilityModal>
           </DraggableModal>
@@ -259,8 +254,10 @@ class FacilityTab extends PureComponent<IProps, IState> {
             width={800}
           >
             <FacilityModal
-              onSubmit={this.props.onUpdate}
-              modalEvent={this.closeDetailModal}
+              onSubmit={(value) => {
+                this.setState({ detailModal: false });
+                this.props.onUpdate(value);
+              }}
               gate={this.state.selectOptGates}
               facility={this.state.selected}
             ></FacilityModal>

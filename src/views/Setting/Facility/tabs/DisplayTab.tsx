@@ -37,7 +37,7 @@ interface IProps {
 interface IState {
   detailModal: boolean;
   createModal: boolean;
-  flowerSettingModal: boolean;
+  floweSettingModal: boolean;
   selected?: IDisplayMsgObj;
   line1Status: ELineStatus;
   line2Status: ELineStatus;
@@ -49,7 +49,7 @@ class DisplayTab extends PureComponent<IProps, IState> {
     this.state = {
       createModal: false,
       detailModal: false,
-      flowerSettingModal: false,
+      floweSettingModal: false,
       line1Status: ELineStatus.FIX,
       line2Status: ELineStatus.FIX
     };
@@ -62,28 +62,20 @@ class DisplayTab extends PureComponent<IProps, IState> {
     });
   }
 
-  closeDetailModal = () => {
-    this.setState({ detailModal: false });
+  handleUpdateFloweSettingClick = () => {
+    this.setState({ floweSettingModal: true });
   };
 
-  closeFloweSettingModal = () => {
-    this.setState({ flowerSettingModal: false });
-  };
+  handleCreateClick() {
+    this.setState({ detailModal: false, createModal: true });
+  }
 
   handleBtnClick = (info: IDisplayMsgObj) => {
     const { localeObj } = localeStore;
     this.setState({ detailModal: true, createModal: false, selected: info });
   };
 
-  handleFloweSettingOpen = () => {
-    this.setState({ flowerSettingModal: true });
-  };
-
-  handleFloweSettingClose = () => {
-    this.setState({ flowerSettingModal: false });
-  };
-
-  createFlowSetting = (req: any) => {
+  updateFlowSetting = (req: any) => {
     displayflowSetting(req).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'success') {
@@ -93,14 +85,6 @@ class DisplayTab extends PureComponent<IProps, IState> {
         });
       }
     });
-  };
-
-  handleCreateClick() {
-    this.setState({ detailModal: false, createModal: true });
-  }
-
-  closeCreateModal = () => {
-    this.setState({ createModal: false });
   };
 
   /*
@@ -237,7 +221,7 @@ class DisplayTab extends PureComponent<IProps, IState> {
             type="primary"
             onClick={(e: any) => {
               e.stopPropagation();
-              this.handleFloweSettingOpen();
+              this.handleUpdateFloweSettingClick();
             }}
             style={{ marginLeft: '1rem' }}
           >
@@ -266,8 +250,10 @@ class DisplayTab extends PureComponent<IProps, IState> {
             width={800}
           >
             <DisplayModal
-              onSubmit={this.props.onCreate}
-              modalEvent={this.closeCreateModal}
+              onSubmit={(value) => {
+                this.setState({ createModal: false });
+                this.props.onCreate(value);
+              }}
             ></DisplayModal>
           </DraggableModal>
         ) : null}
@@ -284,28 +270,32 @@ class DisplayTab extends PureComponent<IProps, IState> {
             width={800}
           >
             <DisplayModal
-              onSubmit={this.props.onUpdate}
-              modalEvent={this.closeDetailModal}
+              onSubmit={(value) => {
+                this.props.onUpdate(value);
+                this.setState({ detailModal: false });
+              }}
               display={this.state.selected}
             ></DisplayModal>
           </DraggableModal>
         ) : null}
-        {this.state.flowerSettingModal ? (
+        {this.state.floweSettingModal ? (
           <DraggableModal
-            visible={this.state.flowerSettingModal}
+            visible={this.state.floweSettingModal}
             title={localeObj['label.display.flowSetting' || '전광판 흐름설정']}
             onOk={(): void => {
-              this.setState({ flowerSettingModal: false });
+              this.setState({ floweSettingModal: false });
             }}
             onCancel={(): void => {
-              this.setState({ flowerSettingModal: false });
+              this.setState({ floweSettingModal: false });
             }}
             width={800}
           >
             <DisplayModal
-              onSubmit={this.createFlowSetting}
-              modalEvent={this.handleFloweSettingClose}
-              flowerModal={true}
+              onSubmit={(value) => {
+                this.setState({ floweSettingModal: false });
+                this.updateFlowSetting(value);
+              }}
+              floweSettingModal={true}
               line1Status={this.state.line1Status}
               line2Status={this.state.line2Status}
             ></DisplayModal>

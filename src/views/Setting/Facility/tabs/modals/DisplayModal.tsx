@@ -15,9 +15,8 @@ import { ELineStatus } from '@/constants/list';
 
 interface IProps extends FormComponentProps {
   onSubmit: (display: IDisplayMsgObj) => void;
-  modalEvent: () => void;
   display?: IDisplayMsgObj;
-  flowerModal?: boolean;
+  floweSettingModal?: boolean;
   line1Status?: ELineStatus;
   line2Status?: ELineStatus;
 }
@@ -34,7 +33,6 @@ class DisplayModal extends PureComponent<IProps, IState> {
       console.log('handlerSubmit', fieldsValue);
       if (!err) {
         this.props.onSubmit(fieldsValue);
-        this.props.modalEvent();
       }
     });
   }
@@ -43,7 +41,7 @@ class DisplayModal extends PureComponent<IProps, IState> {
     const { localeObj } = localeStore;
     const { getFieldDecorator } = this.props.form;
     const gateFieldsConfig =
-      this.props.flowerModal === true
+      this.props.floweSettingModal === true
         ? flowSettingFields(this.props.line1Status, this.props.line2Status)
         : displayFields(this.props.display);
     const submitFormLayout = {

@@ -11,7 +11,6 @@ import { gateFields } from '@views/Setting/Facility/tabs/fields/gate';
 interface IProps extends FormComponentProps {
   onSubmit: (user: IGateObj) => void;
   gate?: IGateObj;
-  modalEvent: () => void;
 }
 
 interface IState {}
@@ -26,7 +25,6 @@ class GateModal extends PureComponent<IProps, IState> {
       // console.log('handlerSubmit', fieldsValue);
       if (!err) {
         this.props.onSubmit(fieldsValue);
-        this.props.modalEvent();
       }
     });
   }

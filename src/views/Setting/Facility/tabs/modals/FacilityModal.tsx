@@ -13,7 +13,6 @@ import { facilityFields } from '@views/Setting/Facility/tabs/fields/facility';
 interface IProps extends FormComponentProps {
   onSubmit: (user: IFacilityObj) => void;
   gate?: any[];
-  modalEvent: () => void;
   facility?: IFacilityObj;
 }
 
@@ -29,7 +28,6 @@ class FacilityModal extends PureComponent<IProps, IState> {
       // console.log('handlerSubmit', fieldsValue);
       if (!err) {
         this.props.onSubmit(fieldsValue);
-        this.props.modalEvent();
       }
     });
   }

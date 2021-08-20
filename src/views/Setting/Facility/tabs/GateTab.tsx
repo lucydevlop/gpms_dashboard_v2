@@ -39,15 +39,6 @@ class GateTab extends PureComponent<IProps, IState> {
   handleCreateClick() {
     this.setState({ detailModal: false, createModal: true });
   }
-
-  closeCreateModal = () => {
-    this.setState({ createModal: false });
-  };
-
-  closeDetailModal = () => {
-    this.setState({ detailModal: false });
-  };
-
   handleBtnClick = (info: IGateObj, key: string) => {
     const { localeObj } = localeStore;
     //console.log('handleBtnClick', info);
@@ -190,7 +181,12 @@ class GateTab extends PureComponent<IProps, IState> {
             }}
             width={800}
           >
-            <GateModal modalEvent={this.closeCreateModal} onSubmit={this.props.onCreate} />
+            <GateModal
+              onSubmit={(value) => {
+                this.setState({ createModal: false });
+                this.props.onCreate(value);
+              }}
+            />
           </DraggableModal>
         ) : null}
         {this.state.detailModal ? (
@@ -207,8 +203,10 @@ class GateTab extends PureComponent<IProps, IState> {
           >
             <GateModal
               gate={this.state.selected}
-              onSubmit={this.props.onUpdate}
-              modalEvent={this.closeDetailModal}
+              onSubmit={(value) => {
+                this.setState({ detailModal: false });
+                this.props.onUpdate(value);
+              }}
             />
           </DraggableModal>
         ) : null}
