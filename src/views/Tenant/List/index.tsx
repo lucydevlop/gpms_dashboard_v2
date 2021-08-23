@@ -1,17 +1,17 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
 import PageWrapper from '@components/PageWrapper';
-import { ICorpObj, ICorpSearchReq, IFileCorpObj } from '@models/corp';
+import { ICorpObj, ICorpSearchReq } from '@models/corp';
 import { corpStore } from '@store/corpStore';
 import { runInAction } from 'mobx';
 import { localeStore } from '@store/localeStore';
 import { conversionDate, conversionDateTime, conversionEnumValue } from '@utils/conversion';
 import { delYnOpt, ECorpSearchCondition, EDelYn, useOrUnuseOpt } from '@/constants/list';
-import { Button, Divider } from 'antd';
+import { Button, Col, Divider, Row, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, DownloadOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/es/table';
 import StandardTable from '@components/StandardTable';
-import { getCorpList } from '@api/ticket';
+import { deleteTikcet, getCorpList } from '@api/ticket';
 import SearchForm from '@/components/StandardTable/SearchForm';
 import { searchCorpFields } from '@views/Tenant/fields/tenant';
 import DraggableModal from '@components/DraggableModal';
@@ -27,9 +27,14 @@ interface IState {
   detailModal: boolean;
   createModal: boolean;
   selected?: ICorpObj;
-  corpList: any[];
+  list: ICorpObj[];
   searchParam?: ICorpSearchReq;
   uploadModal: boolean;
+  deleteList: any[];
+  current: number;
+  pageSize: number;
+  total: number;
+  loading: boolean;
 }
 @inject('localeStore', 'corpStore')
 @observer
@@ -37,9 +42,14 @@ class TenantList extends PureComponent<any, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
+      loading: true,
+      total: 0,
+      current: 1,
+      pageSize: 20,
       detailModal: false,
       createModal: false,
-      corpList: [],
+      list: [],
+      deleteList: [],
       searchParam: {
         searchLabel: undefined,
         searchText: '',
@@ -50,18 +60,24 @@ class TenantList extends PureComponent<any, IState> {
   }
 
   componentDidMount() {
+    this.setState({ loading: true });
     this.getTenantCorpList();
   }
 
   getTenantCorpList = () => {
-    getCorpList(this.state.searchParam).then((res: any) => {
-      const { msg, data } = res;
-      if (msg === 'success') {
-        runInAction(() => {
-          this.setState({ corpList: data });
-        });
-      }
-    });
+    getCorpList(this.state.searchParam)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ list: data });
+          });
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        this.setState({ loading: false });
+      });
   };
 
   getSearchData = (info: ICorpSearchReq) => {
@@ -85,6 +101,10 @@ class TenantList extends PureComponent<any, IState> {
     }
   };
 
+  paginationChange = (pagination: TablePaginationConfig) => {
+    this.setState({ current: pagination.current || 1 });
+  };
+
   async handleDownloadClick() {
     const headers = [
       '사용여부',
@@ -97,7 +117,7 @@ class TenantList extends PureComponent<any, IState> {
       '수정일자'
     ].join(',');
 
-    const downLoadData = this.state.corpList.map((tenant: ICorpObj) => {
+    const downLoadData = this.state.list.map((tenant: ICorpObj) => {
       const data: any = {};
       data.delYn = conversionEnumValue(tenant.delYn, delYnOpt).label;
       data.corpId = tenant.corpId;
@@ -119,7 +139,7 @@ class TenantList extends PureComponent<any, IState> {
       fileReader.onload = () => {
         const rawData = (fileReader.result as string).replace(/[="]/g, '');
         console.log(rawData);
-        const parsedPassengerData: IFileCorpObj[] = readCorpObj(rawData);
+        const parsedPassengerData: ICorpObj[] = readCorpObj(rawData);
         createTenantByFile(parsedPassengerData)
           .then((res: any) => {
             const { msg, data } = res;
@@ -167,54 +187,91 @@ class TenantList extends PureComponent<any, IState> {
         if (msg === 'success') {
           runInAction(() => {
             const changeData = data;
-            const corpList = this.state.corpList.map((e) => {
+            const corpList = this.state.list.map((e) => {
               if (e.sn === changeData.sn) {
                 return { ...changeData };
               } else {
                 return { ...e };
               }
             });
-            this.setState({ corpList: corpList });
+            this.setState({ list: corpList });
           });
         }
       })
       .catch(() => {});
   };
 
+  async delete() {
+    let count = 0;
+    this.state.deleteList.forEach((data: any) => {
+      corpDelete(data.sn).then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            count++;
+            if (count === this.state.deleteList.length) {
+              this.setState({ deleteList: [] });
+              this.getTenantCorpList();
+            }
+          });
+        }
+      });
+    });
+    await this.getTenantCorpList();
+  }
+
   addProdRender = () => {
     const { localeObj } = localeStore;
     return (
-      <>
-        <Button
-          type="primary"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            this.handleCreateClick();
-          }}
-        >
-          + {localeObj['label.create'] || '신규 등록'}
-        </Button>
-        <Button
-          style={{ marginLeft: '1rem' }}
-          type="primary"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            this.handleDownloadClick();
-          }}
-        >
-          <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
-        </Button>
-        <Button
-          style={{ marginLeft: '1rem' }}
-          type="primary"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            this.handleUploadClick();
-          }}
-        >
-          <UploadOutlined /> {localeObj['label.upload' || '업로드']}
-        </Button>
-      </>
+      <Row>
+        <Col xs={6}>
+          <Button
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleCreateClick();
+            }}
+          >
+            + {localeObj['label.create'] || '신규 등록'}
+          </Button>
+        </Col>
+        <Col xs={5}>
+          <Button
+            type="ghost"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.delete();
+            }}
+            style={{ marginLeft: '1rem' }}
+          >
+            - {localeObj['label.delete'] || '삭제'}
+          </Button>
+        </Col>
+        <Col xs={7}>
+          <Button
+            style={{ marginLeft: '1rem' }}
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleDownloadClick();
+            }}
+          >
+            <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
+          </Button>
+        </Col>
+        <Col xs={1}>
+          <Button
+            style={{ marginLeft: '1rem' }}
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleUploadClick();
+            }}
+          >
+            <UploadOutlined /> {localeObj['label.upload' || '업로드']}
+          </Button>
+        </Col>
+      </Row>
     );
   };
 
@@ -282,7 +339,7 @@ class TenantList extends PureComponent<any, IState> {
         width: 100,
         align: 'center',
         render: (text: string, record: ICorpObj) =>
-          conversionDateTime(record.updateDate, '{y}-{m}-{d} {h}:{i}') || '--'
+          conversionDateTime(record.updateDate!!, '{y}-{m}-{d} {h}:{i}') || '--'
       },
       {
         title: 'Action',
@@ -312,7 +369,9 @@ class TenantList extends PureComponent<any, IState> {
         )
       }
     ];
+    const { list, total, current, pageSize } = this.state;
     const searchFields = searchCorpFields();
+    // @ts-ignore
     return (
       <PageWrapper>
         <SearchForm
@@ -324,10 +383,27 @@ class TenantList extends PureComponent<any, IState> {
         <StandardTable
           scroll={{ x: 'max-content' }}
           columns={columns}
+          loading={this.state.loading}
           // @ts-ignore
           rowKey={(record: ICorpObj) => String(record.sn)}
-          data={{ list: this.state.corpList }}
-          hidePagination
+          data={{
+            list,
+            pagination: {
+              total,
+              current,
+              pageSize,
+              showSizeChanger: true,
+              onShowSizeChange: (currentNum: any, size: any) => {
+                this.setState({ pageSize: size });
+                this.setState({ current: currentNum });
+              }
+            }
+          }}
+          onSelectRow={(row: ICorpObj[]) => {
+            this.setState({ deleteList: row });
+          }}
+          onChange={this.paginationChange}
+          isSelected
         />
         {this.state.createModal ? (
           <DraggableModal

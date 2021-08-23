@@ -1,4 +1,4 @@
-import { ICorpCreateReq, ICorpObj } from '@models/corp';
+import { ICorpObj } from '@models/corp';
 import { FormComponentProps } from '@ant-design/compatible/es/form';
 import React, { BaseSyntheticEvent, PureComponent } from 'react';
 import { localeStore } from '@store/localeStore';

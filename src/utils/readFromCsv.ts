@@ -2,7 +2,7 @@ import { ITicketObj } from '@models/ticket';
 import * as Papa from 'papaparse';
 import { conversionEnumLabel, convertDateToDateTime } from '@utils/conversion';
 import { EDelYn, ETicketType, EVehicleType, ticketTypeOpt, vehicleTypeOpt } from '@/constants/list';
-import { ICorpObj, IFileCorpObj } from '@models/corp';
+import { ICorpObj } from '@models/corp';
 import { string2mobile } from '@utils/tools';
 
 export const readTicketObj = (textData: string): ITicketObj[] => {
@@ -59,7 +59,7 @@ const buildTicketFromRows = (parsedData: string[][]): ITicketObj[] => {
   }));
 };
 
-export const readCorpObj = (textData: string): IFileCorpObj[] => {
+export const readCorpObj = (textData: string): ICorpObj[] => {
   let parsedOutput = Papa.parse(textData, { skipEmptyLines: true });
   const knownDelimiters = ['\t', ' ', ','];
   knownDelimiters.forEach((knownDelimiters) => {
@@ -89,10 +89,10 @@ export const readCorpObj = (textData: string): IFileCorpObj[] => {
   return buildTenantFormRows(parsedData);
 };
 
-const buildTenantFormRows = (parsedData: string[][]): IFileCorpObj[] => {
+const buildTenantFormRows = (parsedData: string[][]): ICorpObj[] => {
   console.log('buildTenant' + parsedData);
 
-  return parsedData.map<IFileCorpObj>((row) => ({
+  return parsedData.map<ICorpObj>((row) => ({
     delYn: EDelYn.Y,
     password: row[0],
     corpName: row[1],
@@ -100,7 +100,6 @@ const buildTenantFormRows = (parsedData: string[][]): IFileCorpObj[] => {
     dong: row[3],
     ho: row[4],
     userPhone: row[5] ? string2mobile(row[5]) : row[5],
-    updateDate: new Date(),
     userRole: 'STORE'
   }));
 };

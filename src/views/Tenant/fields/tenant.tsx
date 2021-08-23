@@ -1,5 +1,5 @@
 import { IFormFieldConfig } from '@utils/form';
-import { ICorpCreateReq, ICorpObj, ICorpSearchReq } from '@models/corp';
+import { ICorpObj, ICorpSearchReq } from '@models/corp';
 import { localeStore } from '@store/localeStore';
 import {
   corpSearchOpt,
@@ -59,14 +59,17 @@ export function searchCorpFields(): IFormFieldConfig<keyof ICorpSearchReq>[] {
       formSubItemProps: {
         id: 'searchText',
         component: {
-          type: FormType.Input
+          type: FormType.Input,
+          option: {
+            placeholder: '전화번호 검색시 끝 4자리'
+          }
         }
       }
     }
   ];
 }
 
-export function CorpRegisterFields(): IFormFieldConfig<keyof ICorpCreateReq>[] {
+export function CorpRegisterFields(): IFormFieldConfig<keyof ICorpObj>[] {
   return [
     {
       id: 'corpName',
