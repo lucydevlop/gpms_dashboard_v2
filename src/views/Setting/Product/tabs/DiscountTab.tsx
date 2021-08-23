@@ -152,7 +152,7 @@ class DiscountTab extends PureComponent<IProps, IState> {
           loading={this.props.loading}
           columns={columns}
           // @ts-ignore
-          rowKey={(record: IFacilityObj) => String(record.sn)}
+          rowKey={(record: IDiscountClassObj) => String(record.sn)}
           data={{ list: this.props.discountClasses }}
           hidePagination
         />

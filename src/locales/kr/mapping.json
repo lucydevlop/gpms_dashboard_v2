@@ -85,6 +85,7 @@
   "label.farePolicy.info": "요금제",
   "label.fareBasic.info": "요금 정책",
   "label.fareInfo.info": "요금 블록",
+  "label.ticketClass.info": "주차 상품",
 
   "label.ticket.create": "정기권 등록",
   "label.ticket.update": "정기권 상세",

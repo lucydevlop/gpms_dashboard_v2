@@ -7,8 +7,6 @@ import RenderRoutes from '@components/RenderRoutes';
 import { Store } from '@/store';
 import '@styles/index.less';
 
-// import '@ant-design/compatible/assets/index.css';
-
 const App = () => (
   <Provider {...Store}>
     <RenderRoutes />
