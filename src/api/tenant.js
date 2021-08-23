@@ -17,3 +17,9 @@ export function corpDelete(data) {
     data
   });
 }
+
+export function createTenantByFile(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/auth/user/registers`, {
+    data
+  });
+}

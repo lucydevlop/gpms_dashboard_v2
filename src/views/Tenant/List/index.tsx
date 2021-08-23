@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
 import PageWrapper from '@components/PageWrapper';
-import { ICorpObj, ICorpSearchReq } from '@models/corp';
+import { ICorpObj, ICorpSearchReq, IFileCorpObj } from '@models/corp';
 import { corpStore } from '@store/corpStore';
 import { runInAction } from 'mobx';
 import { localeStore } from '@store/localeStore';
@@ -17,8 +17,11 @@ import { searchCorpFields } from '@views/Tenant/fields/tenant';
 import DraggableModal from '@components/DraggableModal';
 import TenantListModal from '@views/Tenant/modals/TenantListModal';
 import zdsTips from '@utils/tips';
-import { corpRegister, corpUpdate, corpDelete } from '@api/tenant';
+import { corpRegister, corpUpdate, corpDelete, createTenantByFile } from '@api/tenant';
 import { generateCsv } from '@utils/downloadUtil';
+import { string2mobile } from '@utils/tools';
+import UploadModal from '@components/UploadModal';
+import { readCorpObj } from '@utils/readFromCsv';
 
 interface IState {
   detailModal: boolean;
@@ -26,6 +29,7 @@ interface IState {
   selected?: ICorpObj;
   corpList: any[];
   searchParam?: ICorpSearchReq;
+  uploadModal: boolean;
 }
 @inject('localeStore', 'corpStore')
 @observer
@@ -40,7 +44,8 @@ class TenantList extends PureComponent<any, IState> {
         searchLabel: undefined,
         searchText: '',
         useStatus: undefined
-      }
+      },
+      uploadModal: false
     };
   }
 
@@ -94,20 +99,49 @@ class TenantList extends PureComponent<any, IState> {
 
     const downLoadData = this.state.corpList.map((tenant: ICorpObj) => {
       const data: any = {};
-      data.delYn = tenant.delYn;
+      data.delYn = conversionEnumValue(tenant.delYn, delYnOpt).label;
       data.corpId = tenant.corpId;
       data.corpName = tenant.corpName;
       data.ceoName = tenant.ceoName;
       data.dong = tenant.dong;
       data.ho = tenant.ho;
-      data.tel = tenant.tel;
+      data.tel = tenant.tel ? string2mobile(tenant.tel) : null;
       data.updateDate = conversionDate(tenant.updateDate as Date, '{y}-{m}-{d}');
       return data;
     });
     await generateCsv(downLoadData, headers, '입주사리스트');
   }
 
-  handleUploadClick = () => {};
+  handleUploadData = (file: any): boolean => {
+    if (file !== undefined) {
+      const fileReader = new FileReader();
+      fileReader.readAsText(file, 'euc-kr');
+      fileReader.onload = () => {
+        const rawData = (fileReader.result as string).replace(/[="]/g, '');
+        console.log(rawData);
+        const parsedPassengerData: IFileCorpObj[] = readCorpObj(rawData);
+        createTenantByFile(parsedPassengerData)
+          .then((res: any) => {
+            const { msg, data } = res;
+            if (msg === 'success') {
+              runInAction(() => {
+                this.getTenantCorpList();
+              });
+            }
+          })
+          .catch(() => {
+            return false;
+          });
+      };
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  handleUploadClick = () => {
+    this.setState({ uploadModal: true });
+  };
 
   handleCreateClick = () => {
     this.setState({ createModal: true, detailModal: false });
@@ -240,7 +274,7 @@ class TenantList extends PureComponent<any, IState> {
         key: 'tel',
         width: 100,
         align: 'center',
-        render: (text: string, record: ICorpObj) => record.tel
+        render: (text: string, record: ICorpObj) => (record.tel ? string2mobile(record.tel) : null)
       },
       {
         title: '수정일자',
@@ -335,6 +369,14 @@ class TenantList extends PureComponent<any, IState> {
               tenant={this.state.selected}
             />
           </DraggableModal>
+        ) : null}
+        {this.state.uploadModal ? (
+          <UploadModal
+            visiable={this.state.uploadModal}
+            onOk={() => this.setState({ uploadModal: false })}
+            onCancel={() => this.setState({ uploadModal: false })}
+            onChange={(file) => this.handleUploadData(file)}
+          />
         ) : null}
       </PageWrapper>
     );

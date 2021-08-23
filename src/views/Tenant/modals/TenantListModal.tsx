@@ -6,6 +6,7 @@ import { Form } from '@ant-design/compatible';
 import { CorpRegisterFields, CorpUpdateFields } from '@views/Tenant/fields/tenant';
 import { getFormFields } from '@utils/form';
 import { Button, Row } from 'antd';
+import { string2mobile } from '@utils/tools';
 
 interface IProps extends FormComponentProps {
   onSubmit: (tenant: ICorpObj) => void;
@@ -22,6 +23,7 @@ class TenantListModal extends PureComponent<IProps, IState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
       console.log('handlerSubmit', fieldsValue);
+      fieldsValue.tel ? string2mobile(fieldsValue.tel) : null;
       if (!err) {
         this.props.onSubmit(fieldsValue);
       }

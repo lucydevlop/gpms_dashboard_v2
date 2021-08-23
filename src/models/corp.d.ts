@@ -1,20 +1,39 @@
 import { ECorpSearchCondition, EDelYn } from '@/constants/list';
 
 export interface ICorpObj {
-  sn: number;
+  sn?: number;
   corpId: string;
   corpName: string;
-  createdBy: Date;
+  createdBy?: string;
   delYn: EDelYn;
   dong: string;
-  form: number;
+  form?: number;
   ho: string;
-  resident: number;
+  resident?: number;
   tel: string;
-  updateBy: string;
+  updateBy?: string;
   updateDate: Date;
   ceoName: string;
-  userRole: string;
+  userRole?: string;
+  userName: string;
+}
+
+export interface IFileCorpObj {
+  sn?: number;
+  corpId?: string;
+  createdBy?: string;
+  delYn: EDelYn;
+  dong: string;
+  form?: number;
+  ho: string;
+  resident?: number;
+  tel?: string;
+  updateBy?: string;
+  updateDate: Date;
+  corpName: string;
+  userRole?: string;
+  userName: string;
+  userPhone: string;
 }
 
 export interface ICorpSearchReq {
