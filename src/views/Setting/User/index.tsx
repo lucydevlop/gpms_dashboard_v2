@@ -8,15 +8,15 @@
 // import { Badge, Button, Tag } from 'antd';
 // import { localeStore } from '@store/localeStore';
 // import { searchUserFields } from '@views/Setting/User/SearchFields';
-// import CreateProjectModal from '@views/Setting/ProjectSetting/Modal/CreateProjectModal';
+// import CreateProjectModal from '@views/Setting/ProjectSetting/modals/CreateProjectModal';
 // import DraggableModal from '@components/DraggableModal';
 // import { IProjectObj } from '@models/project';
 // import { projectStore } from '@store/projectStore';
-// import CreateUserModal from '@views/Setting/User/Modal/CreateUserModal';
+// import CreateUserModal from '@views/Setting/User/modals/CreateUserModal';
 // import { IAgencyObj } from '@models/agency';
 // import { conversionDate } from '@utils/conversion';
 // import { IEventObj } from '@models/event';
-// import DetailModal from '@views/Setting/User/Modal/DetailModal';
+// import DetailModal from '@views/Setting/User/modals/DetailModal';
 //
 // interface IProps {}
 // interface IState {
