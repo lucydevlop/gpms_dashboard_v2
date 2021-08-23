@@ -1,4 +1,4 @@
-import { EDelYn } from '@/constants/list';
+import { ECorpSearchCondition, EDelYn } from '@/constants/list';
 
 export interface ICorpObj {
   sn: number;
@@ -13,4 +13,22 @@ export interface ICorpObj {
   tel: string;
   updateBy: string;
   updateDate: Date;
+  ceoName: string;
+  userRole: string;
+}
+
+export interface ICorpSearchReq {
+  searchLabel?: ECorpSearchCondition;
+  searchText?: string;
+  useStatus?: EDelYn;
+}
+
+export interface ICorpCreateReq {
+  corpName: string;
+  dong: string;
+  ho: string;
+  password: string;
+  userName: string;
+  userPhone: string;
+  userRole: string;
 }
