@@ -145,7 +145,7 @@ export const ticketTypeOpt: ISelectOptions[] = [
   { value: ETicketType.VISITTICKET, label: '방문권', color: 'black' },
   { value: ETicketType.NORMAL, label: '일반차량', color: 'black' },
   { value: ETicketType.UNRECOGNIZED, label: '미인식', color: 'red' },
-  { value: ETicketType.DISCOUNT, label: '미인식', color: 'red' }
+  { value: ETicketType.DISCOUNT, label: '할인', color: 'red' }
 ];
 
 export enum ETicketSearchDateType {
@@ -414,4 +414,18 @@ export enum EFareType {
 export const fareTypeOpt: ISelectOptions[] = [
   { value: EFareType.BASIC, label: '기본', color: 'black' },
   { value: EFareType.ADD, label: '추가', color: 'black' }
+];
+
+export enum ETicketAplyType {
+  FULL = 'FULL',
+  DAY = 'DAY',
+  NIGHT = 'NIGHT',
+  TIME = 'TIME'
+}
+
+export const ticketAplyTypeOpt: ISelectOptions[] = [
+  { value: ETicketAplyType.FULL, label: '전일', color: 'black' },
+  { value: ETicketAplyType.DAY, label: '주간', color: 'black' },
+  { value: ETicketAplyType.NIGHT, label: '야간', color: 'black' },
+  { value: ETicketAplyType.TIME, label: '시간', color: 'black' }
 ];

@@ -254,7 +254,7 @@ class DisplayTab extends PureComponent<IProps, IState> {
                 this.setState({ createModal: false });
                 this.props.onCreate(value);
               }}
-            ></DisplayModal>
+            />
           </DraggableModal>
         ) : null}
         {this.state.detailModal ? (
@@ -275,7 +275,7 @@ class DisplayTab extends PureComponent<IProps, IState> {
                 this.setState({ detailModal: false });
               }}
               display={this.state.selected}
-            ></DisplayModal>
+            />
           </DraggableModal>
         ) : null}
         {this.state.flowSettingModal ? (
