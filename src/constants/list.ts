@@ -416,6 +416,18 @@ export const fareTypeOpt: ISelectOptions[] = [
   { value: EFareType.ADD, label: '추가', color: 'black' }
 ];
 
+export enum ECorpSearchCondition {
+  NAME = 'NAME',
+  ID = 'ID',
+  MOBILE = 'MOBILE'
+}
+
+export const corpSearchOpt: ISelectOptions[] = [
+  { value: ECorpSearchCondition.ID, label: '입주사ID', color: 'black' },
+  { value: ECorpSearchCondition.NAME, label: '입주사명', color: 'black' },
+  { value: ECorpSearchCondition.MOBILE, label: '전화번호', color: 'black' }
+];
+
 export enum ETicketAplyType {
   FULL = 'FULL',
   DAY = 'DAY',

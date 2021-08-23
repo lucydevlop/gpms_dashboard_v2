@@ -1,7 +1,7 @@
 import React, { BaseSyntheticEvent, PureComponent } from 'react';
 // import { FormComponentProps } from '@ant-design/compatible/lib/form';
 // import { Form } from '@ant-design/compatible';
-// import CreateProjectModalForm from '@views/Setting/ProjectSetting/Modal/CreateProjectModal';
+// import CreateProjectModalForm from '@views/Setting/ProjectSetting/modals/CreateProjectModal';
 // import { Button, Row } from 'antd';
 // import { IProjectObj } from '@models/project';
 // import { getFormFields } from '@utils/form';

@@ -97,5 +97,7 @@
   "label.facility.info": "시설물 상세",
   "label.gate.info": "게이트 상세",
   "label.display.info": "전광판 상세",
-  "label.display.flowSetting": "전광판 흐름설정"
+  "label.display.flowSetting": "전광판 흐름설정",
+
+  "label.tenant.info": "입주사 상세"
 }

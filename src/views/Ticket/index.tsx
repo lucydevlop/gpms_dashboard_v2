@@ -18,7 +18,7 @@ import {
 import { ITicketObj, ITicketSelectReq } from '@/models/ticket';
 import { localeStore } from '@/store/localeStore';
 import { conversionDate, conversionDateTime, conversionEnumValue } from '@/utils/conversion';
-import { Button, TablePaginationConfig } from 'antd';
+import { Button, Col, Row, TablePaginationConfig } from 'antd';
 import Table, { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import React from 'react';
@@ -191,47 +191,55 @@ class Ticket extends PureComponent<any, IState> {
   addProdRender = () => {
     const { localeObj } = localeStore;
     return (
-      <>
-        <Button
-          type="primary"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            this.handleCreateClick();
-          }}
-        >
-          + {localeObj['label.create'] || '신규 등록'}
-        </Button>
-        <Button
-          type="ghost"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            this.delete();
-          }}
-          style={{ marginLeft: '1rem' }}
-        >
-          - {localeObj['label.delete'] || '삭제'}
-        </Button>
-        <Button
-          style={{ marginLeft: '1rem' }}
-          type="primary"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            this.handleDownloadClick();
-          }}
-        >
-          <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
-        </Button>
-        <Button
-          style={{ marginLeft: '1rem' }}
-          type="primary"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            this.handleUploadClick();
-          }}
-        >
-          <UploadOutlined /> {localeObj['label.upload'] || '업로드'}
-        </Button>
-      </>
+      <Row>
+        <Col xs={6}>
+          <Button
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleCreateClick();
+            }}
+          >
+            + {localeObj['label.create'] || '신규 등록'}
+          </Button>
+        </Col>
+        <Col xs={5}>
+          <Button
+            type="ghost"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.delete();
+            }}
+            style={{ marginLeft: '1rem' }}
+          >
+            - {localeObj['label.delete'] || '삭제'}
+          </Button>
+        </Col>
+        <Col xs={7}>
+          <Button
+            style={{ marginLeft: '1rem' }}
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleDownloadClick();
+            }}
+          >
+            <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
+          </Button>
+        </Col>
+        <Col xs={1}>
+          <Button
+            style={{ marginLeft: '1rem' }}
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleUploadClick();
+            }}
+          >
+            <UploadOutlined /> {localeObj['label.upload'] || '업로드'}
+          </Button>
+        </Col>
+      </Row>
     );
   };
 

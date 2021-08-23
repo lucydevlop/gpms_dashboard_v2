@@ -1,9 +1,12 @@
 import { ITicketObj } from '@models/ticket';
 import * as Papa from 'papaparse';
-import { conversionEnumLabel, conversionEnumValue, convertDateToDateTime } from '@utils/conversion';
+import { conversionEnumLabel, convertDateToDateTime } from '@utils/conversion';
 import { EDelYn, ETicketType, EVehicleType, ticketTypeOpt, vehicleTypeOpt } from '@/constants/list';
+import { ICorpObj } from '@models/corp';
+import { string2mobile } from '@utils/tools';
 
 export const readTicketObj = (textData: string): ITicketObj[] => {
+  console.log(textData);
   let parsedOutput = Papa.parse(textData, { skipEmptyLines: true });
   const knownDelimiters = ['\t', ' ', ','];
   knownDelimiters.forEach((knownDelimiter) => {
@@ -53,5 +56,50 @@ const buildTicketFromRows = (parsedData: string[][]): ITicketObj[] => {
     etc1: row[10],
     delYn: EDelYn.N,
     sn: Number(row[11])
+  }));
+};
+
+export const readCorpObj = (textData: string): ICorpObj[] => {
+  let parsedOutput = Papa.parse(textData, { skipEmptyLines: true });
+  const knownDelimiters = ['\t', ' ', ','];
+  knownDelimiters.forEach((knownDelimiters) => {
+    if (parsedOutput.errors.length > 0) {
+      parsedOutput = Papa.parse(textData, {
+        delimiter: knownDelimiters,
+        skipEmptyLines: true
+      });
+    }
+  });
+  let parsedData: any = parsedOutput.data;
+  if (parsedOutput.data.length === 0) {
+    throw new Error('Unable to parse data');
+  }
+  const maybeColumnHeader: any = parsedData[0][0];
+  if (maybeColumnHeader === '패스워드' || maybeColumnHeader === '패스 워드') {
+    parsedData.shift();
+  } else if (maybeColumnHeader.indexOf('입주사 리스트')) {
+    parsedData.shift();
+    const parseData: any = [];
+    for (let columnIndex = 0; columnIndex < parsedData.length; columnIndex++) {
+      //     if (String(headers[headerIndex]).trim() === String(parsedData[columnIndex]).trim()) {
+      parseData.push(parsedData[columnIndex]);
+    }
+    parsedData = parseData;
+  }
+  return buildTenantFormRows(parsedData);
+};
+
+const buildTenantFormRows = (parsedData: string[][]): ICorpObj[] => {
+  console.log('buildTenant' + parsedData);
+
+  return parsedData.map<ICorpObj>((row) => ({
+    delYn: EDelYn.Y,
+    password: row[0],
+    corpName: row[1],
+    userName: row[2],
+    dong: row[3],
+    ho: row[4],
+    userPhone: row[5] ? string2mobile(row[5]) : row[5],
+    userRole: 'STORE'
   }));
 };
