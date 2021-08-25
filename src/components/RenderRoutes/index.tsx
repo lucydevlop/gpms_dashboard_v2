@@ -65,7 +65,7 @@ const RenderRoutes: React.FC = (props) => {
                 <Redirect
                   key={key || i}
                   from={path}
-                  to={'/visitor/list'}
+                  to={'/storeDiscount/apply'}
                   exact={exact}
                   strict={strict}
                 />

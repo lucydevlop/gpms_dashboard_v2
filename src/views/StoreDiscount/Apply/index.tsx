@@ -3,15 +3,17 @@ import { inject, observer } from 'mobx-react';
 import PageWrapper from '@components/PageWrapper';
 import { Card, Col, Input, Row } from 'antd';
 import { Form } from '@ant-design/compatible';
-import VehicleSearch from '@views/Users/Discount/Apply/VehicleSearch';
-import { getCorpAllTickets, getVehicleSearch } from '@/api/corp';
+import VehicleSearch from '@views/StoreDiscount/Apply/VehicleSearch';
+import { applyCorpDiscountTicket, getCorpAllTickets, getVehicleSearch } from '@api/corp';
 import { runInAction } from 'mobx';
 import { ICorpTicketObj, ICorpSearchVehicleObj } from '@models/corp';
-import TicketSummary from '@views/Users/Discount/Apply/TicketSummary';
-import VehicleList from '@views/Users/Discount/Apply/VehicleList';
+import TicketSummary from '@views/StoreDiscount/Apply/TicketSummary';
+import VehicleList from '@views/StoreDiscount/Apply/VehicleList';
 import DraggableModal from '@components/DraggableModal';
 import { localeStore } from '@store/localeStore';
-import TicketAplyModal from '@views/Users/Discount/Apply/TicketAplyModal';
+import TicketAplyModal from '@views/StoreDiscount/Apply/TicketAplyModal';
+import { userStore } from '@store/userStore';
+import zdsTips from '@utils/tips';
 
 interface IState {
   loading: boolean;
@@ -22,10 +24,11 @@ interface IState {
   resultMessage?: string;
   selecteTicket: ICorpTicketObj[];
   selectModal: boolean;
-  selected?: ICorpSearchVehicleObj;
+  selected?: ICorpSearchVehicleObj | null;
+  corpSn: number;
 }
 
-@inject('localeStore')
+@inject('localeStore', 'userStore')
 @observer
 class StoreDiscountAply extends React.PureComponent<any, IState> {
   constructor(props: any) {
@@ -36,17 +39,21 @@ class StoreDiscountAply extends React.PureComponent<any, IState> {
       ticketsSummary: [],
       searchResult: [],
       selectModal: false,
-      selecteTicket: []
+      selecteTicket: [],
+      corpSn: 0
     };
   }
 
   componentDidMount() {
+    const { userInfo } = userStore;
+    console.log('user', userInfo);
+    this.setState({ corpSn: userInfo.corpSn }, () => this.pollCorpTickets('ALL'));
     this.pollCorpTickets('ALL');
   }
 
   pollCorpTickets(mode: string) {
     this.setState({ loading: true });
-    getCorpAllTickets(339, mode)
+    getCorpAllTickets(this.state.corpSn, mode)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -91,6 +98,51 @@ class StoreDiscountAply extends React.PureComponent<any, IState> {
 
   handleDiscountAply = (values: ICorpTicketObj[]) => {
     console.log('handleDiscountAply', values);
+    const data = values
+      .filter((v) => v.applyCnt !== undefined && v.applyCnt > 0)
+      .map((v) => {
+        return {
+          inSn: this.state.selected ? this.state.selected.sn : 0,
+          cnt: v.applyCnt,
+          discountClassSn: v.discountClassSn,
+          corpSn: this.state.corpSn
+        };
+      });
+    applyCorpDiscountTicket(data)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState(
+              {
+                selected: null,
+                selecteTicket: [],
+                ticketsSummary: [],
+                display: 'default'
+              },
+              () => {
+                zdsTips.success('주차 할인 등록 완료'), this.pollCorpTickets('ALL');
+              }
+            );
+          });
+        }
+      })
+      .catch(() => {
+        this.setState(
+          {
+            selected: null,
+            selecteTicket: [],
+            ticketsSummary: [],
+            display: 'default'
+          },
+          () => {
+            zdsTips.error('방문권 등록 오류'), this.pollCorpTickets('ALL');
+          }
+        );
+      })
+      .finally(() => {
+        this.setState({ selectModal: false });
+      });
   };
 
   render() {

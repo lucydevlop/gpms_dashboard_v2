@@ -151,10 +151,20 @@ class VisitorRegister extends PureComponent<IProps, IState> {
     const visitorDateFieldsConfig = VisitorRegisterDateFields();
     return (
       <PageWrapper>
-        <Row gutter={24} style={{ justifyContent: 'center' }}>
-          <Col xl={8} lg={12} md={24} sm={24} xs={24}>
+        <Row
+          // gutter={24}
+          style={{
+            justifyContent: 'center',
+            backgroundColor: '#fff',
+            marginTop: '10px',
+            border: '1px solid #777A8B',
+            borderRadius: '3px',
+            boxShadow: '0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%)'
+          }}
+        >
+          <Col xl={8} lg={12} md={24} sm={24} xs={24} style={{ padding: 0 }}>
             <Form
-              className="action-error-modal-form"
+              // className="action-error-modal-form"
               onSubmit={(e: BaseSyntheticEvent) => {
                 e.preventDefault();
                 this.handleSubmit();
@@ -164,7 +174,7 @@ class VisitorRegister extends PureComponent<IProps, IState> {
                 <Card
                   title="방문권 등록"
                   type="inner"
-                  headStyle={{ fontSize: 18, fontWeight: 700 }}
+                  headStyle={{ fontSize: 18, fontWeight: 700, textAlign: 'center' }}
                   size="default"
                   bordered={false}
                   extra={
