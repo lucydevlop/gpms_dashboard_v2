@@ -5,7 +5,10 @@ import {
   CarOutlined,
   ShopOutlined,
   UserOutlined,
-  SettingOutlined
+  SettingOutlined,
+  HomeOutlined,
+  CreditCardOutlined,
+  AuditOutlined
 } from '@ant-design/icons';
 import { RouteChild, RouteRoot } from '@models/global';
 
@@ -61,7 +64,7 @@ export const asyncRouteConfig: RouteChild[] = [
   },
   {
     name: 'tickets',
-    icon: <CarOutlined />,
+    icon: <AuditOutlined />,
     path: '/tickets',
     component: ['/views/Ticket'],
     authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
@@ -94,8 +97,24 @@ export const asyncRouteConfig: RouteChild[] = [
     ]
   },
   {
+    name: 'storeDiscount',
+    icon: <HomeOutlined />,
+    path: '/storeDiscount',
+    localeKey: 'menu.storeDiscount',
+    authority: ['ADMIN', 'SUPER_ADMIN', 'ROLE_SUPER', 'STORE'],
+    routes: [
+      {
+        name: 'apply',
+        path: '/storeDiscount/apply',
+        component: ['/views/StoreDiscount/Apply'],
+        loading: true,
+        localeKey: 'menu.storeDiscount.apply'
+      }
+    ]
+  },
+  {
     name: 'visitor',
-    icon: <ShopOutlined />,
+    icon: <CreditCardOutlined />,
     path: '/visitor',
     localeKey: 'menu.visitor',
     authority: ['STORE'],
@@ -188,26 +207,10 @@ export const asyncRouteConfig: RouteChild[] = [
     ]
   },
   {
-    name: 'users',
-    icon: <UserOutlined />,
-    path: '/store',
-    localeKey: 'menu.users',
-    authority: ['ADMIN', 'SUPER_ADMIN', 'ROLE_SUPER'],
-    routes: [
-      {
-        name: 'discount',
-        path: '/store/discount/apply',
-        component: ['/views/Users/Discount/Apply'],
-        loading: true,
-        localeKey: 'menu.store.discountApply'
-      }
-    ]
-  },
-  {
     name: 'setting',
     icon: <SettingOutlined />,
     path: '/parkinglotsetting',
-    component: ['/views/Users'],
+    component: ['/views/StoreDiscount'],
     authority: ['admin', 'ROLE_SUPER'],
     localeKey: 'menu.setting'
   }

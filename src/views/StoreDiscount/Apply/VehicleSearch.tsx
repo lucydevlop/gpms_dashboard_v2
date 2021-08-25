@@ -24,6 +24,7 @@ class VehicleSearch extends PureComponent<IProps, IState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
       if (!err) this.props.onSubmit(fieldsValue.vehicleNo);
+      this.props.form.resetFields();
     });
   }
 

@@ -42,7 +42,8 @@ class TicketAplyModal extends PureComponent<IProps, IState> {
 
   handlerSubmit(e: any) {
     e.stopPropagation();
-    console.log('TicketAplyModal', this.state.ableTickets);
+    this.props.onSubmit(this.state.ableTickets);
+    // console.log('TicketAplyModal', this.state.ableTickets);
   }
 
   onClickMinusButton = async (info: ICorpTicketObj) => {
