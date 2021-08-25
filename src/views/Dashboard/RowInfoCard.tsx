@@ -51,10 +51,10 @@ class RowInfoCard extends React.Component<IProps, any> {
     }));
   }
 
-  handleResetClick(name: string) {
+  handleResetClick(name: string, category: string) {
     const { localeObj } = localeStore;
     zdsTips.confirm(localeObj['alert.cs.complete'] || name + ' 리셋 하시겠습니까?', () => {
-      actionReset(this.props.item.gateId, name).then((res: any) => {
+      actionReset(this.props.item.gateId, category).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
         }
@@ -85,6 +85,9 @@ class RowInfoCard extends React.Component<IProps, any> {
       case '정산기':
         category = 'PAYSTATION';
         break;
+      case '전광판':
+        category = 'DISPLAY';
+        break;
       default:
         category = 'LPR';
         break;
@@ -99,7 +102,7 @@ class RowInfoCard extends React.Component<IProps, any> {
         </h5>
         <span
           style={{ paddingRight: '2px', color: '#85868A' }}
-          onClick={() => this.handleResetClick(category)}
+          onClick={() => this.handleResetClick(name, category)}
         >
           {name}
         </span>
@@ -149,7 +152,7 @@ class RowInfoCard extends React.Component<IProps, any> {
                   )}
                   {this.props.item.paystationStatus && this.props.item.gateType !== 'IN'
                     ? this.renderFacilityStatus(
-                        '차단기',
+                        '정산기',
                         this.props.item.paystationStatus ? this.props.item.paystationStatus : 'NONE'
                       )
                     : null}
@@ -247,7 +250,7 @@ class RowInfoCard extends React.Component<IProps, any> {
             labelStyle={{ fontWeight: 600, textAlign: 'center' }}
             style={{ textAlign: 'center' }}
           >
-            <Descriptions.Item label="차량구분">
+            <Descriptions.Item label="차량구분" style={{ textAlign: 'center' }}>
               {
                 conversionEnumValue(
                   this.props.item.carType ? this.props.item.carType : 'NONE',
@@ -255,8 +258,10 @@ class RowInfoCard extends React.Component<IProps, any> {
                 ).label
               }
             </Descriptions.Item>
-            <Descriptions.Item label="차량번호">{this.props.item.vehicleNo}</Descriptions.Item>
-            <Descriptions.Item label="시간">
+            <Descriptions.Item label="차량번호" style={{ textAlign: 'center' }}>
+              {this.props.item.vehicleNo}
+            </Descriptions.Item>
+            <Descriptions.Item label="시간" style={{ textAlign: 'center' }}>
               {conversionDateTime(this.props.item.date, '{y}-{m}-{d} {h}:{i}') || '--'}
             </Descriptions.Item>
           </Descriptions>
