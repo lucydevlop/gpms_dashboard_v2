@@ -1,4 +1,4 @@
-import { getAdminList, postLogin } from '@api/user';
+import { adminLogin, getAdminList, userLogin } from '@api/user';
 import { action, configure, observable, runInAction, toJS } from 'mobx';
 import io from '@utils/io';
 
@@ -38,9 +38,34 @@ class UserStore {
   };
 
   // 用户登录事件
+  @action handleAdminLogin(name: string, password: number): Promise<boolean> {
+    this.identifyStatus = 'identifying';
+    return adminLogin(name, password)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          this.setUserInfo(data.userInfo);
+          this.setAuthority(data.userInfo.role);
+          this.setAuthorization(data.token);
+          runInAction(() => {
+            this.identifyStatus = 'identifyPass';
+          });
+          return true;
+        }
+        return false;
+      })
+      .catch((err) => {
+        runInAction(() => {
+          this.identifyStatus = 'unauthorized';
+        });
+        this.setAuthority([]);
+        return false;
+      });
+  }
+
   @action handleUserLogin(name: string, password: number): Promise<boolean> {
     this.identifyStatus = 'identifying';
-    return postLogin(name, password)
+    return userLogin(name, password)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {

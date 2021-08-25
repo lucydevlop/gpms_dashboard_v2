@@ -16,6 +16,8 @@ interface LoginFormProps {
 
 interface IState {
   loading: boolean;
+  isUser: boolean;
+  isAdmin: boolean;
 }
 
 @inject('userStore')
@@ -23,7 +25,7 @@ interface IState {
 class LoginForm extends React.Component<LoginFormProps, IState> {
   constructor(props: LoginFormProps) {
     super(props);
-    this.state = { loading: false };
+    this.state = { loading: false, isAdmin: false, isUser: false };
 
     this.handleError = this.handleError.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
@@ -39,9 +41,6 @@ class LoginForm extends React.Component<LoginFormProps, IState> {
   // state = {
   //   loading: false
   // };
-  public state: IState = {
-    loading: false
-  };
 
   handleError = () => {
     const { handleError: propsHandleError } = this.props;
@@ -52,8 +51,14 @@ class LoginForm extends React.Component<LoginFormProps, IState> {
   };
 
   handleSuccess = () => {
-    const { handleSuccess: propsHandleSuccess } = this.props;
-    propsHandleSuccess();
+    const { handleSuccess: propsHandleSuccess, history: history } = this.props;
+    console.log(this.props);
+    if (this.state.isAdmin) {
+      propsHandleSuccess();
+    } else {
+      history.push('/');
+    }
+
     // let history = useHistory();
     // history.push('/dashboard');
     // this.props.history.push('/dashboard');
@@ -71,21 +76,49 @@ class LoginForm extends React.Component<LoginFormProps, IState> {
     // }));
     this.handleLogin();
 
-    const { username, password } = values;
-    return new Promise(() => {
-      userStore.handleUserLogin(username, password).then((res) => {
-        // console.log('handleSubmit', res);
-        if (res) {
-          message.success('login success');
-          setTimeout(() => {
-            this.handleSuccess();
-          }, 800);
-        } else {
-          this.handleError();
-        }
+    const { username, password, admin, user } = values;
+    if (admin) {
+      return new Promise(() => {
+        userStore.handleAdminLogin(username, password).then((res) => {
+          // console.log('handleSubmit', res);
+          if (res) {
+            message.success('login success');
+            setTimeout(() => {
+              this.handleSuccess();
+            }, 800);
+          } else {
+            this.handleError();
+          }
+        });
       });
-    });
+    } else {
+      return new Promise(() => {
+        userStore.handleUserLogin(username, password).then((res) => {
+          // console.log('handleSubmit', res);
+          if (res) {
+            message.success('login success');
+            setTimeout(() => {
+              this.handleSuccess();
+            }, 800);
+          } else {
+            this.handleError();
+          }
+        });
+      });
+    }
   };
+
+  handleLoginUserCheck = (value: boolean) => {
+    console.log('user: ', value);
+    this.setState({ isUser: !value, isAdmin: value });
+    console.log('admin: ', this.state.isAdmin, ' user: ', this.state.isUser);
+  };
+
+  handleLoginAdminCheck(value: boolean) {
+    console.log('admin: ', value);
+    this.setState({ isAdmin: !value, isUser: value });
+    console.log('admin: ', this.state.isAdmin, ' user: ', this.state.isUser);
+  }
 
   render() {
     return (
@@ -125,17 +158,17 @@ class LoginForm extends React.Component<LoginFormProps, IState> {
             />
           </Form.Item>
           <Form.Item>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Form.Item name="admin" valuePropName="checked" noStyle>
               <Checkbox>
-                <span>Remember me</span>
+                <span>어드민 계정</span>
               </Checkbox>
             </Form.Item>
-
-            <a className="login-form-forgot" href="">
-              Forgot password
-            </a>
+            <Form.Item name="user" valuePropName="checked" noStyle>
+              <Checkbox>
+                <span>사용자 계정</span>
+              </Checkbox>
+            </Form.Item>
           </Form.Item>
-
           <Form.Item>
             <Button
               id="login_button"
@@ -146,8 +179,8 @@ class LoginForm extends React.Component<LoginFormProps, IState> {
             >
               Log in
             </Button>
-            <span> Or </span>
-            <a href="">register now!</a>
+            {/*            <span> Or </span>
+            <a href="">register now!</a>*/}
           </Form.Item>
         </Form>
       </Fragment>

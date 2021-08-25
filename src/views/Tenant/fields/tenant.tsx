@@ -17,7 +17,7 @@ export function searchCorpFields(): IFormFieldConfig<keyof ICorpSearchReq>[] {
       id: 'useStatus',
       label: '조회 기준',
       fieldOption: {
-        initialValue: EDelYn.N
+        initialValue: useOrUnuseOpt[2].value
       },
       formItemProps: {
         labelCol: {
@@ -32,7 +32,7 @@ export function searchCorpFields(): IFormFieldConfig<keyof ICorpSearchReq>[] {
       },
       component: {
         type: FormType.Select,
-        selectOptions: delYnOpt
+        selectOptions: useOrUnuseOpt
       }
     },
     {
