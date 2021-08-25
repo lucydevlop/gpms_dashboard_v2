@@ -91,14 +91,14 @@ export enum EBreakerStatus {
   UP = 'UP',
   DOWN = 'DOWN',
   UNLOCK = 'UNLOCK',
-  LOCK = 'LOCK',
+  UPLOCK = 'UPLOCK',
   XUPLOCK = 'XUPLOCK',
   NONE = 'NONE'
 }
 
 export const breakerStatusOpt: ISelectOptions[] = [
   { value: EBreakerStatus.UP, label: '열림', color: 'blue' },
-  { value: EBreakerStatus.LOCK, label: '열림고정', color: 'yellow' },
+  { value: EBreakerStatus.UPLOCK, label: '열림고정', color: 'black' },
   { value: EBreakerStatus.UNLOCK, label: '고정해제', color: 'cyan' },
   { value: EBreakerStatus.DOWN, label: '닫힘', color: 'magenta' },
   { value: EBreakerStatus.XUPLOCK, label: '열림고정(수동)', color: 'gray' },
