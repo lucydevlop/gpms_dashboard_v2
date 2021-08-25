@@ -383,7 +383,7 @@ export function ParkinglotSettingFields(
       }
     },
     {
-      id: 'rcsParkId',
+      id: 'parkId',
       label: 'PARKID',
       colProps: {
         span: 24,
@@ -404,8 +404,39 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot ? parkinglot.rcsParkId : '',
+        initialValue: parkinglot ? parkinglot.parkId : '',
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '입력하세요'
+        }
+      }
+    },
+    {
+      id: 'rcsParkId',
+      label: 'rcsParkId',
+      colProps: {
+        span: 24,
+        xs: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5,
+          xs: 9,
+          xl: 8
+        },
+        wrapperCol: {
+          span: 15,
+          xs: 15,
+          xl: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: parkinglot ? parkinglot.rcsParkId : ''
       },
       component: {
         type: FormType.Input,

@@ -462,6 +462,12 @@ class Inout extends PureComponent<any, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={5}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    무료주차권:{' '}
+                    {list.filter((l) => l.parkcartype === ETicketType.FREETICKET).length}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={6}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     미인식: {list.filter((l) => l.parkcartype === ETicketType.UNRECOGNIZED).length}
                   </span>
                 </Table.Summary.Cell>
