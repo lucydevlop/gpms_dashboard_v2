@@ -101,7 +101,7 @@ export const asyncRouteConfig: RouteChild[] = [
     icon: <HomeOutlined />,
     path: '/storeDiscount',
     localeKey: 'menu.storeDiscount',
-    authority: ['ADMIN', 'SUPER_ADMIN', 'ROLE_SUPER', 'STORE'],
+    authority: ['STORE'],
     routes: [
       {
         name: 'apply',
