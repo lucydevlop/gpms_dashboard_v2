@@ -28,3 +28,9 @@ export function getVehicleSearch(no) {
     }
   );
 }
+
+export function applyCorpDiscountTicket(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/parking/discount/add/ticket`, {
+    data: data
+  });
+}
