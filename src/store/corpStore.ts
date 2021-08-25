@@ -1,5 +1,6 @@
-import { action, configure, observable, toJS } from 'mobx';
+import { action, configure, observable, runInAction, toJS } from 'mobx';
 import { getCorpList } from '@/api/ticket';
+import { getCorps } from '@api/corp';
 import { ISelectOptions } from '@/utils/form';
 import { EDelYn } from '@/constants/list';
 configure({ enforceActions: 'observed' });
@@ -15,16 +16,28 @@ class CorpStore {
   constructor() {
     this.initCorp();
   }
+
   async initCorp(): Promise<any> {
     const corpRequestData = {
-      searchLabel: '',
-      searchText: '',
-      useStatus: null
+      sn: '',
+      corpName: '',
+      corpId: '',
+      tel: ''
     };
-    const data = await getCorpList(corpRequestData);
-    this.setCorpAllList(data.data);
-    this.setCorpList(data.data.filter((v1: any) => v1.delYn === 'N'));
+    // const data = await getCorpList(corpRequestData);
+    getCorps(corpRequestData)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setCorpAllList(data);
+            this.setCorpList(data.filter((v1: any) => v1.delYn === 'N'));
+          });
+        }
+      })
+      .catch(() => {});
   }
+
   @action setCorpList(data: any) {
     this.corpList = data;
     data.forEach((element: any) => {

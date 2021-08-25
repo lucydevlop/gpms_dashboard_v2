@@ -32,6 +32,7 @@ export interface IInoutSelectReq {
   endDate: string;
   createTm: number[];
   vehicleNo?: string;
+  parkcartype?: ETicketType;
 }
 
 export interface IInoutDiscountAplyObj {

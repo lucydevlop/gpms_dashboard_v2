@@ -8,7 +8,8 @@ export function getInouts(data) {
       fromDate: moment(data.startDate).format('yyyy-MM-DD'),
       toDate: moment(data.endDate).format('yyyy-MM-DD'),
       searchLabel: 'CARNUM',
-      searchText: data.vehicleNo
+      searchText: data.vehicleNo,
+      parkcartype: data.parkcartype === 'ALL' ? '' : data.parkcartype
     }
   });
 }

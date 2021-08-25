@@ -7,7 +7,7 @@ import {
   getInouts
 } from '@/api/Inout';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
-import { runInAction, toJS } from 'mobx';
+import { runInAction } from 'mobx';
 import Table, { ColumnProps } from 'antd/lib/table';
 import { localeStore } from '@/store/localeStore';
 import PageWrapper from '@/components/PageWrapper';
@@ -16,14 +16,18 @@ import StandardTable from '@/components/StandardTable';
 import { TablePaginationConfig } from 'antd/es/table';
 import { Button } from 'antd';
 import { searchInoutFields } from '@views/Inout/FormFields/FormFields';
-import { conversionDate, conversionDateTime, conversionEnumValue } from '@utils/conversion';
-import { EInoutType, ticketTypeOpt } from '@/constants/list';
+import {
+  conversionDate,
+  conversionDateTime,
+  conversionEnumValue,
+  convertNumberWithCommas
+} from '@utils/conversion';
+import { EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
 import moment from 'moment';
 import DraggableModal from '@/components/DraggableModal';
 import InoutCreateModalForm from '@/views/Inout/Modal/InoutCreateModal';
 import InoutDetailModalForm from './Modal/InoutDetailModal';
 import { parkinglotStore } from '@/store/parkinglotStore';
-import { deleteTikcet } from '@/api/ticket';
 import { ITicketObj } from '@models/ticket';
 import { DownloadOutlined } from '@ant-design/icons';
 import { generateCsv } from '@utils/downloadUtil';
@@ -67,7 +71,6 @@ class Inout extends PureComponent<any, IState> {
       });
       this.setState({ gates: unique });
     });
-    this.setState({ loading: true });
     const createTm = [moment(new Date()).subtract(3, 'days'), moment(new Date())];
     const searchParam: IInoutSelectReq = {
       startDate: createTm[0].format('YYYY-MM-DD'),
@@ -113,6 +116,7 @@ class Inout extends PureComponent<any, IState> {
   }
 
   async pollData() {
+    this.setState({ loading: true });
     getInouts(this.state.searchParam)
       .then((res: any) => {
         const { msg, data } = res;
@@ -129,12 +133,14 @@ class Inout extends PureComponent<any, IState> {
   }
 
   getSearchData = (info: IInoutSelectReq) => {
+    console.log('getSearchData', info);
     const searchParam: IInoutSelectReq = {
       dateType: info.dateType,
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),
       endDate: conversionDate(info.createTm[1]), //info.createTm[1].format('YYYY-MM-DD'),
       createTm: info.createTm,
-      vehicleNo: info.vehicleNo
+      vehicleNo: info.vehicleNo,
+      parkcartype: info.parkcartype
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };
@@ -237,6 +243,12 @@ class Inout extends PureComponent<any, IState> {
     this.setState({ detailModal: true, createModal: false, selected: info });
   };
 
+  sum = (array: any[], key: string) => {
+    return array.reduce((sum, item) => {
+      return (sum += item[key]);
+    }, 0);
+  };
+
   render() {
     const { localeObj } = localeStore;
     const columns: ColumnProps<IInoutObj>[] = [
@@ -303,6 +315,11 @@ class Inout extends PureComponent<any, IState> {
         key: 'inDate',
         width: 110,
         align: 'center',
+        sorter: (a, b) => {
+          let atime = new Date(a.inDate).getTime();
+          let btime = new Date(b.inDate).getTime();
+          return atime - btime;
+        },
         render: (text: string, record: IInoutObj) =>
           conversionDateTime(record.inDate, '{y}-{m}-{d} {h}:{i}') || '--'
       },
@@ -428,7 +445,42 @@ class Inout extends PureComponent<any, IState> {
                 <Table.Summary.Cell index={1}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>Total: {total}</span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={2}>{total}</Table.Summary.Cell>
+                <Table.Summary.Cell index={2}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    일반: {list.filter((l) => l.parkcartype === ETicketType.NORMAL).length}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={3}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    정기권: {list.filter((l) => l.parkcartype === ETicketType.SEASONTICKET).length}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={4}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    방문권: {list.filter((l) => l.parkcartype === ETicketType.VISITTICKET).length}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={5}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    미인식: {list.filter((l) => l.parkcartype === ETicketType.UNRECOGNIZED).length}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={6}></Table.Summary.Cell>
+                <Table.Summary.Cell index={7}></Table.Summary.Cell>
+                <Table.Summary.Cell index={8}></Table.Summary.Cell>
+                <Table.Summary.Cell index={9}></Table.Summary.Cell>
+                <Table.Summary.Cell index={10}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    {convertNumberWithCommas(this.sum(list, 'parkfee'))}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={11}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    {convertNumberWithCommas(
+                      this.sum(list, 'discountfee') + this.sum(list, 'dayDiscountfee')
+                    )}
+                  </span>
+                </Table.Summary.Cell>
               </Table.Summary.Row>
             </Table.Summary>
           )}

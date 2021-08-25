@@ -2,13 +2,6 @@ import React from 'react';
 import {
   DashboardOutlined,
   PieChartOutlined,
-  AppstoreOutlined,
-  FormOutlined,
-  UnorderedListOutlined,
-  HeatMapOutlined,
-  PictureOutlined,
-  CheckCircleOutlined,
-  InfoCircleOutlined,
   CarOutlined,
   ShopOutlined,
   UserOutlined,
@@ -197,10 +190,18 @@ export const asyncRouteConfig: RouteChild[] = [
   {
     name: 'users',
     icon: <UserOutlined />,
-    path: '/users',
-    component: ['/views/Users'],
-    authority: ['admin', 'ROLE_SUPER'],
-    localeKey: 'menu.users'
+    path: '/store',
+    localeKey: 'menu.users',
+    authority: ['ADMIN', 'SUPER_ADMIN', 'ROLE_SUPER'],
+    routes: [
+      {
+        name: 'discount',
+        path: '/store/discount/apply',
+        component: ['/views/Users/Discount/Apply'],
+        loading: true,
+        localeKey: 'menu.store.discountApply'
+      }
+    ]
   },
   {
     name: 'setting',
