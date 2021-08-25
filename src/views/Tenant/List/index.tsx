@@ -6,22 +6,22 @@ import { corpStore } from '@store/corpStore';
 import { runInAction } from 'mobx';
 import { localeStore } from '@store/localeStore';
 import { conversionDate, conversionDateTime, conversionEnumValue } from '@utils/conversion';
-import { delYnOpt, ECorpSearchCondition, EDelYn, useOrUnuseOpt } from '@/constants/list';
+import { delYnOpt, EDelYn } from '@/constants/list';
 import { Button, Col, Divider, Row, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, DownloadOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/es/table';
 import StandardTable from '@components/StandardTable';
-import { deleteTikcet, getCorpList } from '@api/ticket';
 import SearchForm from '@/components/StandardTable/SearchForm';
 import { searchCorpFields } from '@views/Tenant/fields/tenant';
 import DraggableModal from '@components/DraggableModal';
 import TenantListModal from '@views/Tenant/modals/TenantListModal';
 import zdsTips from '@utils/tips';
-import { corpRegister, corpUpdate, corpDelete, createTenantByFile } from '@api/tenant';
+import { corpDelete, corpRegister, corpUpdate, createTenantByFile } from '@api/tenant';
 import { generateCsv } from '@utils/downloadUtil';
 import { string2mobile } from '@utils/tools';
 import UploadModal from '@components/UploadModal';
 import { readCorpObj } from '@utils/readFromCsv';
+import { getCorps } from '@api/corp';
 
 interface IState {
   detailModal: boolean;
@@ -65,7 +65,30 @@ class TenantList extends PureComponent<any, IState> {
   }
 
   getTenantCorpList = () => {
-    getCorpList(this.state.searchParam)
+    const data = {
+      corpName: this.state.searchParam
+        ? this.state.searchParam.searchLabel === 'NAME'
+          ? this.state.searchParam.searchText
+          : ''
+        : '',
+      corpId: this.state.searchParam
+        ? this.state.searchParam.searchLabel === 'ID'
+          ? this.state.searchParam.searchText
+          : ''
+        : '',
+      tel: this.state.searchParam
+        ? this.state.searchParam.searchLabel === 'MOBILE'
+          ? this.state.searchParam.searchText
+          : ''
+        : '',
+      delYn: this.state.searchParam
+        ? this.state.searchParam.useStatus === EDelYn.ALL
+          ? ''
+          : this.state.searchParam.useStatus
+        : ''
+    };
+
+    getCorps(data)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {

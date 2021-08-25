@@ -116,6 +116,10 @@ export const convertDateToDateTime = (
     'YYYY-MM-DD HH:mm:ss'
   );
 };
+
+export const convertNumberWithCommas = (x: any) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
 //
 // /**
 //  * @method conversionNumberToMoment

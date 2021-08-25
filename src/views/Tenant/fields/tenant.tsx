@@ -17,7 +17,7 @@ export function searchCorpFields(): IFormFieldConfig<keyof ICorpSearchReq>[] {
       id: 'useStatus',
       label: '조회 기준',
       fieldOption: {
-        initialValue: EDelYn.N
+        initialValue: EDelYn.ALL
       },
       formItemProps: {
         labelCol: {

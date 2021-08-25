@@ -23,6 +23,8 @@
 
   "menu.statistics.inout": "입출차통계",
 
+  "menu.store.discountApply": "주차할인",
+
   "dashboard.rowInfo0.title": "주차장수",
   "dashboard.rowInfo1.title": "호출건수",
   "dashboard.rowInfo2.title": "장애건수",
