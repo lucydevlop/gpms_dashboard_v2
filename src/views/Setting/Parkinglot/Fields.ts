@@ -404,7 +404,8 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot ? parkinglot.rcsParkId : ''
+        initialValue: parkinglot ? parkinglot.rcsParkId : '',
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       component: {
         type: FormType.Input,

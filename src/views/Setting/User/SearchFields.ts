@@ -447,7 +447,7 @@ export function newUserFields(user?: IUserObj): IFormFieldConfig<keyof IUserObj>
     },
     {
       id: 'password',
-      label: 'NEW PASSWORD',
+      label: '비밀번호',
       colProps: {
         xl: 12,
         xs: 24
@@ -473,7 +473,7 @@ export function newUserFields(user?: IUserObj): IFormFieldConfig<keyof IUserObj>
     },
     {
       id: 'passwordCnfirm',
-      label: 'CONFIRM PASSWORD',
+      label: '비밀번호 확인',
       hidden: user ? true : false,
       colProps: {
         xl: 12,

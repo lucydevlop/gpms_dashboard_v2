@@ -6,6 +6,7 @@
   "menu.users": "사용자관리",
   "menu.setting": "설정관리",
   "menu.statistics": "통계",
+  "menu.visitor": "방문권",
 
   "menu.parkinglot.statistics": "주차장통계",
   "menu.parkinglot.parkinglot": "주차장목록",
@@ -20,6 +21,9 @@
   "menu.setting.fee": "요금정보",
   "menu.setting.product": "상품정보",
   "menu.setting.user": "사용자정보",
+
+  "menu.visitor.register": "방문권등록",
+  "menu.visitor.list": "방문권리스트",
 
   "menu.statistics.inout": "입출차통계",
 

@@ -46,6 +46,7 @@ export const asyncRouteConfig: RouteChild[] = [
     icon: <DashboardOutlined />,
     path: '/dashboard',
     component: ['/views/Dashboard'],
+    authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
     loading: true,
     localeKey: 'menu.dashboard'
   },
@@ -93,6 +94,61 @@ export const asyncRouteConfig: RouteChild[] = [
     ]
   },
   {
+    name: 'visitor',
+    icon: <ShopOutlined />,
+    path: '/visitor',
+    localeKey: 'menu.visitor',
+    authority: ['STORE'],
+    routes: [
+      {
+        name: 'register',
+        path: '/visitor/register',
+        component: ['/views/Visitor/Register'],
+        loading: true,
+        localeKey: 'menu.visitor.register'
+      },
+      {
+        name: 'list',
+        path: '/visitor/list',
+        component: ['/views/Visitor/List'],
+        loading: true,
+        localeKey: 'menu.visitor.list'
+      }
+    ]
+  },
+  {
+    name: 'statistics',
+    icon: <PieChartOutlined />,
+    path: '/statistics',
+    localeKey: 'menu.statistics',
+    authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
+    routes: [
+      {
+        name: 'inout',
+        path: '/statistics/inout',
+        component: ['/views/Statistics/Inout'],
+        loading: true,
+        localeKey: 'menu.statistics.inout'
+      },
+      {
+        name: 'erros',
+        path: '/parkinglot/error',
+        component: ['/views/ParkingLot/Error'],
+        authority: ['admin', 'ROLE_SUPER'],
+        loading: true,
+        localeKey: 'menu.parkinglot.error'
+      },
+      {
+        name: 'list',
+        path: '/parkinglot/parkinglot',
+        component: ['/views/ParkingLot/Parkinglot'],
+        authority: ['admin', 'ROLE_SUPER'],
+        loading: true,
+        localeKey: 'menu.parkinglot.parkinglot'
+      }
+    ]
+  },
+  {
     name: 'setting',
     icon: <SettingOutlined />,
     authority: ['ADMIN', 'SUPER_ADMIN'],
@@ -128,38 +184,6 @@ export const asyncRouteConfig: RouteChild[] = [
         path: '/setting/user',
         component: ['/views/Setting/User'],
         localeKey: 'menu.setting.user'
-      }
-    ]
-  },
-  {
-    name: 'statistics',
-    icon: <PieChartOutlined />,
-    path: '/statistics',
-    localeKey: 'menu.statistics',
-    authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
-    routes: [
-      {
-        name: 'inout',
-        path: '/statistics/inout',
-        component: ['/views/Statistics/Inout'],
-        loading: true,
-        localeKey: 'menu.statistics.inout'
-      },
-      {
-        name: 'erros',
-        path: '/parkinglot/error',
-        component: ['/views/ParkingLot/Error'],
-        authority: ['admin', 'ROLE_SUPER'],
-        loading: true,
-        localeKey: 'menu.parkinglot.error'
-      },
-      {
-        name: 'list',
-        path: '/parkinglot/parkinglot',
-        component: ['/views/ParkingLot/Parkinglot'],
-        authority: ['admin', 'ROLE_SUPER'],
-        loading: true,
-        localeKey: 'menu.parkinglot.parkinglot'
       }
     ]
   },

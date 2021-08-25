@@ -285,6 +285,7 @@ import UserDetailModalForm from '@views/Setting/User/Modal/UserDetailModal';
 import { createUser, deleteUser, editUser, getAdminList } from '@api/user';
 import { deleteTikcet } from '@api/ticket';
 import { ITicketObj } from '@models/ticket';
+import { string2mobile } from '@utils/tools';
 
 type IState = {
   loading: boolean;
@@ -395,6 +396,7 @@ class UserSetting extends PureComponent<any, IState> {
             e.stopPropagation();
             this.delete();
           }}
+          style={{ marginLeft: '1rem' }}
         >
           - {localeObj['label.delete'] || '삭제'}
         </Button>
@@ -466,7 +468,8 @@ class UserSetting extends PureComponent<any, IState> {
         width: 100,
         key: 'userName',
         align: 'center',
-        render: (text: string, record: IUserObj) => record.userPhone
+        render: (text: string, record: IUserObj) =>
+          record.userPhone ? string2mobile(record.userPhone) : null
       },
       {
         title: '권한',

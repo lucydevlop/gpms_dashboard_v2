@@ -33,9 +33,19 @@ const userInfo = Mock.mock({
 
 Mock.mock('/get/userInfo', userInfo);
 
-export function postLogin(userName, password) {
+export function adminLogin(userName, password) {
   // console.log('login', process.env.REACT_APP_API_DOMAIN_URL + '/login');
   return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/admin/login', {
+    data: {
+      id: userName,
+      password: password
+    }
+  });
+}
+
+export function userLogin(userName, password) {
+  // console.log('login', process.env.REACT_APP_API_DOMAIN_URL + '/login');
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/user/login', {
     data: {
       id: userName,
       password: password

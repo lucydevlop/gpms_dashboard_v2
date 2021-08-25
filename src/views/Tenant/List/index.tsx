@@ -93,7 +93,10 @@ class TenantList extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            this.setState({ list: data });
+            const storeList = data.filter((e: ICorpObj) => {
+              return e.corpName !== 'RCS';
+            });
+            this.setState({ list: storeList });
           });
         }
       })
@@ -107,7 +110,9 @@ class TenantList extends PureComponent<any, IState> {
     const searchParam: ICorpSearchReq = {
       searchText: info.searchText ? info.searchText : '',
       searchLabel: info.searchLabel,
-      useStatus: info.useStatus
+      useStatus:
+        // @ts-ignore
+        info.useStatus === undefined || info.useStatus === 'ALL' ? undefined : info.useStatus
     };
     this.setState({ searchParam: searchParam }, () => this.getTenantCorpList());
   };
@@ -137,7 +142,7 @@ class TenantList extends PureComponent<any, IState> {
       '동',
       '호수',
       '전화번호',
-      '수정일자'
+      '입주사seq'
     ].join(',');
 
     const downLoadData = this.state.list.map((tenant: ICorpObj) => {
@@ -149,7 +154,7 @@ class TenantList extends PureComponent<any, IState> {
       data.dong = tenant.dong;
       data.ho = tenant.ho;
       data.tel = tenant.tel ? string2mobile(tenant.tel) : null;
-      data.updateDate = conversionDate(tenant.updateDate as Date, '{y}-{m}-{d}');
+      data.sn = tenant.sn;
       return data;
     });
     await generateCsv(downLoadData, headers, '입주사리스트');

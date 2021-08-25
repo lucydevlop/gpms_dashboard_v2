@@ -33,6 +33,7 @@ import { generateCsv } from '@utils/downloadUtil';
 import TicketModal from './Modal/TicketModal';
 import UploadModal from '@components/UploadModal';
 import { readTicketObj } from '@utils/readFromCsv';
+import { FormComponentProps } from '@ant-design/compatible/lib/form';
 
 type IState = {
   loading: boolean;
