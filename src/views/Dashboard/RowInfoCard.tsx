@@ -121,11 +121,11 @@ class RowInfoCard extends React.Component<IProps, any> {
         <Row gutter={24}>
           <Col span={8}>
             <Row>
-              <span style={{ fontSize: '1.1vw' }}>{this.props.item.gateName}</span>
-              <span style={{ fontSize: '1vw', color: gateType.color }}>({gateType.label})</span>
+              <span style={{ fontSize: '18px' }}>{this.props.item.gateName}</span>
+              <span style={{ fontSize: '17px', color: gateType.color }}>({gateType.label})</span>
             </Row>
             <Row>
-              <span style={{ fontSize: '1vw', color: breakerStatus.color }}>
+              <span style={{ fontSize: '15px', color: breakerStatus.color }}>
                 {breakerStatus.label}
               </span>
             </Row>
@@ -133,7 +133,7 @@ class RowInfoCard extends React.Component<IProps, any> {
           <Col span={16}>
             <Row style={{ backgroundColor: '#EBECEC', justifyContent: 'center' }}>
               <Card
-                style={{ padding: 0, backgroundColor: '#EBECEC', fontSize: '.9vw' }}
+                style={{ padding: 0, backgroundColor: '#EBECEC', fontSize: '14px' }}
                 bodyStyle={{ padding: '0.2vw 0.4vw' }}
                 bordered={false}
               >
@@ -161,13 +161,13 @@ class RowInfoCard extends React.Component<IProps, any> {
             </Row>
             <Row style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
               <Button
-                size="large"
+                size="middle"
                 style={{
                   backgroundColor: '#5C9AD2',
                   letterSpacing: '1px',
                   fontWeight: 700,
                   color: '#fff',
-                  borderRadius: '5px'
+                  borderRadius: '3px'
                 }}
                 onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                   this.handleGateActionClick(e, 'open');
@@ -176,13 +176,13 @@ class RowInfoCard extends React.Component<IProps, any> {
                 열 림
               </Button>
               <Button
-                size="large"
+                size="middle"
                 style={{
                   backgroundColor: '#A7A7A7',
                   letterSpacing: '1px',
                   fontWeight: 700,
                   color: '#fff',
-                  borderRadius: '5px'
+                  borderRadius: '3px'
                 }}
                 onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                   this.handleGateActionClick(
@@ -194,13 +194,13 @@ class RowInfoCard extends React.Component<IProps, any> {
                 {this.props.item.breakerAction === 'UPLOCK' ? '고정해제' : '열림고정'}
               </Button>
               <Button
-                size="large"
+                size="middle"
                 style={{
                   backgroundColor: '#FF7C86',
                   letterSpacing: '1px',
                   fontWeight: 700,
                   color: '#fff',
-                  borderRadius: '5px'
+                  borderRadius: '3px'
                 }}
                 onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                   this.handleGateActionClick(e, 'close');
@@ -229,7 +229,7 @@ class RowInfoCard extends React.Component<IProps, any> {
           cover={
             this.props.item.image ? (
               <Image
-                src={`${process.env.REACT_APP_IMAGE_URL}/${this.props.item.image}`}
+                src={`${this.props.item.image}`}
                 ratio={1.8}
                 // src={
                 //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'

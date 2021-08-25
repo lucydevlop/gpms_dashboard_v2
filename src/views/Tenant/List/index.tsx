@@ -16,12 +16,12 @@ import { searchCorpFields } from '@views/Tenant/fields/tenant';
 import DraggableModal from '@components/DraggableModal';
 import TenantListModal from '@views/Tenant/modals/TenantListModal';
 import zdsTips from '@utils/tips';
-import { corpDelete, corpRegister, corpUpdate, createTenantByFile } from '@api/tenant';
+import { corpDelete, corpRegister, createTenantByFile } from '@api/tenant';
 import { generateCsv } from '@utils/downloadUtil';
 import { string2mobile } from '@utils/tools';
 import UploadModal from '@components/UploadModal';
 import { readCorpObj } from '@utils/readFromCsv';
-import { getCorps } from '@api/corp';
+import { getCorps, updateCorp } from '@api/corp';
 
 interface IState {
   detailModal: boolean;
@@ -209,7 +209,7 @@ class TenantList extends PureComponent<any, IState> {
   };
 
   handleUpdateTenant = (value: ICorpObj) => {
-    corpUpdate(value)
+    updateCorp(value)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -232,7 +232,8 @@ class TenantList extends PureComponent<any, IState> {
   async delete() {
     let count = 0;
     this.state.deleteList.forEach((data: any) => {
-      corpDelete(data.sn).then((res: any) => {
+      data.delYn = EDelYn.Y;
+      updateCorp(data).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
