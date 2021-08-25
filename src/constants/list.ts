@@ -3,11 +3,13 @@ import { localeStore } from '@store/localeStore';
 
 export enum EDelYn {
   Y = 'Y',
-  N = 'N'
+  N = 'N',
+  ALL = 'ALL'
 }
 export const delYnOpt: ISelectOptions[] = [
   { value: EDelYn.Y, label: '비활성', color: 'red' },
-  { value: EDelYn.N, label: '활성', color: 'blue' }
+  { value: EDelYn.N, label: '활성', color: 'blue' },
+  { value: EDelYn.ALL, label: '전체', color: 'blue' }
 ];
 
 export enum EStatus {
@@ -145,7 +147,8 @@ export const ticketTypeOpt: ISelectOptions[] = [
   { value: ETicketType.VISITTICKET, label: '방문권', color: 'black' },
   { value: ETicketType.NORMAL, label: '일반차량', color: 'black' },
   { value: ETicketType.UNRECOGNIZED, label: '미인식', color: 'red' },
-  { value: ETicketType.DISCOUNT, label: '할인', color: 'red' }
+  { value: ETicketType.DISCOUNT, label: '할인', color: 'red' },
+  { value: ETicketType.ALL, label: '전체', color: 'red' }
 ];
 
 export enum ETicketSearchDateType {

@@ -23,7 +23,7 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
       // console.log('Ticket', fieldsValue);
       fieldsValue.effectDate = conversionDateTime(fieldsValue.effectDate, '{y}-{m}-{d} 00:00:00');
       fieldsValue.expireDate = conversionDateTime(fieldsValue.expireDate, '{y}-{m}-{d} 23:59:59');
-      fieldsValue.tel = string2mobile(fieldsValue.tel);
+      fieldsValue.tel = fieldsValue.tel ? string2mobile(fieldsValue.tel) : '';
       // console.log('Ticket', fieldsValue);
       if (!err) this.props.onSubmit(fieldsValue);
     });

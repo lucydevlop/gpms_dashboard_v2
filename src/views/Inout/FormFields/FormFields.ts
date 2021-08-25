@@ -33,6 +33,12 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
       fieldOption: {
         initialValue: EInoutType.IN
       },
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 8
+      },
       formItemProps: {
         labelCol: {
           span: 5,
@@ -73,11 +79,48 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
       }
     },
     {
+      id: 'parkcartype',
+      label: '차량타입',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5,
+          xl: 5,
+          md: 5,
+          xs: 5
+        },
+        wrapperCol: {
+          span: 15,
+          xs: 19,
+          md: 15,
+          xl: 15
+        }
+      },
+      fieldOption: {
+        initialValue: ETicketType.ALL
+      },
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: localeObj['label.choose'] || '선택해주세요',
+          allowClear: true
+        },
+        selectOptions: ticketTypeOpt
+      }
+    },
+    {
       id: 'vehicleNo',
       label: '차량번호',
       colProps: {
-        xl: 12,
-        xs: 24
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 8
       },
       formItemProps: {
         labelCol: {
