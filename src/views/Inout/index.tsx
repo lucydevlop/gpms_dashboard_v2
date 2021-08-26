@@ -213,6 +213,7 @@ class Inout extends PureComponent<any, IState> {
       '주차요금',
       '할인요금',
       '결제요금',
+      '정산요금',
       '미납요금',
       '메모'
     ].join(',');
@@ -231,8 +232,9 @@ class Inout extends PureComponent<any, IState> {
         ? conversionDateTime(inout.outDate, '{y}-{m}-{d} {h}:{i}') || '--'
         : null;
       data.parkfee = inout.parkfee;
-      data.discountfee = inout.discountfee;
+      data.discountfee = inout.discountfee!! + inout.dayDiscountfee!!;
       data.payfee = inout.payfee;
+      data.paymentAmount = inout.paymentAmount;
       data.nonPayment = inout.nonPayment;
       data.memo = inout.memo;
       return data;
@@ -374,6 +376,13 @@ class Inout extends PureComponent<any, IState> {
         render: (text: string, record: IInoutObj) => <span>{record.payfee}</span>
       },
       {
+        title: '정산요금',
+        key: 'payfee',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IInoutObj) => <span>{record.paymentAmount}</span>
+      },
+      {
         title: '미납요금',
         key: 'nonPayment',
         width: 100,
@@ -502,6 +511,11 @@ class Inout extends PureComponent<any, IState> {
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={12}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={13}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
                   </span>
