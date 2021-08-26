@@ -2,7 +2,9 @@ import { ITicketClassObj } from '@models/ticketClass';
 import { IFormFieldConfig } from '@utils/form';
 import {
   dayRangeTypeOpt,
+  delYnOpt,
   EDayRangeType,
+  EDelYn,
   ETicketAplyType,
   ETicketType,
   EVehicleType,
@@ -240,6 +242,32 @@ export function ticketClassFields(
       },
       component: {
         type: FormType.Input
+      }
+    },
+    {
+      id: 'delYn',
+      label: '활성',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: ticketClass ? ticketClass.delYn : null
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: delYnOpt.filter((d) => d.value !== EDelYn.ALL)
       }
     }
   ];

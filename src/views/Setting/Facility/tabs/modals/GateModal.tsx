@@ -52,7 +52,7 @@ class GateModal extends PureComponent<IProps, IState> {
           this.handlerSubmit();
         }}
       >
-        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 7)}</Row>
+        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 9)}</Row>
         <Form.Item
           {...submitFormLayout}
           style={{

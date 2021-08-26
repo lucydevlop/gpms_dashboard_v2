@@ -22,6 +22,7 @@ import { string2mobile } from '@utils/tools';
 import UploadModal from '@components/UploadModal';
 import { readCorpObj } from '@utils/readFromCsv';
 import { getCorps, updateCorp } from '@api/corp';
+import moment from 'moment';
 
 interface IState {
   detailModal: boolean;
@@ -93,9 +94,13 @@ class TenantList extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            const storeList = data.filter((e: ICorpObj) => {
-              return e.corpName !== 'RCS';
-            });
+            const storeList = data
+              .filter((e: ICorpObj) => {
+                return e.corpName !== 'RCS';
+              })
+              .sort((v1: ICorpObj, v2: ICorpObj) => {
+                return v2.updateDate!! > v1.updateDate!! ? 1 : -1;
+              });
             this.setState({ list: storeList });
           });
         }
@@ -135,20 +140,22 @@ class TenantList extends PureComponent<any, IState> {
 
   async handleDownloadClick() {
     const headers = [
-      '사용여부',
-      '입주사ID',
+      '사용여부(미입력 가능)',
+      '입주사ID(미입력 가능)',
+      '패스워드',
       '입주사명',
       '대표자명',
-      '동',
-      '호수',
-      '전화번호',
-      '입주사seq'
+      '동(미입력 가능)',
+      '호수(미입력 가능)',
+      '전화번호(미입력 가능)',
+      '입주사seq(수정금지)'
     ].join(',');
 
     const downLoadData = this.state.list.map((tenant: ICorpObj) => {
       const data: any = {};
       data.delYn = conversionEnumValue(tenant.delYn, delYnOpt).label;
       data.corpId = tenant.corpId;
+      data.password = '';
       data.corpName = tenant.corpName;
       data.ceoName = tenant.ceoName;
       data.dong = tenant.dong;
@@ -209,6 +216,7 @@ class TenantList extends PureComponent<any, IState> {
   };
 
   handleUpdateTenant = (value: ICorpObj) => {
+    value.updateDate = new Date();
     updateCorp(value)
       .then((res: any) => {
         const { msg, data } = res;
@@ -217,6 +225,7 @@ class TenantList extends PureComponent<any, IState> {
             const changeData = data;
             const corpList = this.state.list.map((e) => {
               if (e.sn === changeData.sn) {
+                changeData.updateDate = value.updateDate;
                 return { ...changeData };
               } else {
                 return { ...e };

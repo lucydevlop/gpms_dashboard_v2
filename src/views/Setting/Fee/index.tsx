@@ -28,6 +28,7 @@ import FarePolicyModal from '@views/Setting/Fee/Modal/FarePolicyModal';
 import FareInfoModal from '@views/Setting/Fee/Modal/FareInfoModal';
 import { v4 as generateUUID } from 'uuid';
 import { EDelYn, fareTypeOpt } from '@/constants/list';
+import zdsTips from '@utils/tips';
 
 interface IState {
   loading: boolean;
@@ -75,8 +76,29 @@ class FeeSetting extends PureComponent<any, IState> {
   };
 
   handleFarePolicyClick(key: string, info?: IFarePolicyObj) {
+    const { localeObj } = localeStore;
     // console.log('handleFarePolicyClick', key);
-    this.setState({ selectedFarePolicy: info, farePolicyModal: true });
+    if (key === 'delete') {
+      zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
+        info !== null || true ? (info!!.delYn = EDelYn.Y) : null;
+        updateFarePolicy(info).then((res: any) => {
+          const { msg, data } = res;
+          runInAction(() => {
+            if (msg === 'success') {
+              runInAction(() => {
+                this.setState({
+                  farePolicies: this.state.farePolicies.filter((e) => {
+                    return data.sn !== e.sn;
+                  })
+                });
+              });
+            }
+          });
+        });
+      });
+    } else {
+      this.setState({ selectedFarePolicy: info, farePolicyModal: true });
+    }
   }
 
   handleFarePolicySubmit = (info: IFarePolicyObj) => {
@@ -199,6 +221,7 @@ class FeeSetting extends PureComponent<any, IState> {
         if (msg === 'success') {
           runInAction(() => {
             this.setState({ farePolicies: data });
+            console.log(this.state.farePolicies);
           });
         }
       })
@@ -363,6 +386,15 @@ class FeeSetting extends PureComponent<any, IState> {
                 }}
               >
                 <EditOutlined />
+              </a>
+              <Divider type="vertical" />
+              <a
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  this.handleFarePolicyClick('delete', f);
+                }}
+              >
+                <DeleteOutlined />
               </a>
             </div>
           }

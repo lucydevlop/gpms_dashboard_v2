@@ -109,6 +109,13 @@ export const asyncRouteConfig: RouteChild[] = [
         component: ['/views/StoreDiscount/Apply'],
         loading: true,
         localeKey: 'menu.storeDiscount.apply'
+      },
+      {
+        name: 'list',
+        path: '/storeDiscount/list',
+        component: ['/views/StoreDiscount/list'],
+        loading: true,
+        localeKey: 'menu.storeDiscount.list'
       }
     ]
   },

@@ -75,7 +75,10 @@ export const readCorpObj = (textData: string): ICorpObj[] => {
     throw new Error('Unable to parse data');
   }
   const maybeColumnHeader: any = parsedData[0][0];
-  if (maybeColumnHeader === '패스워드' || maybeColumnHeader === '패스 워드') {
+  if (
+    maybeColumnHeader === '사용여부(미입력 가능)' ||
+    maybeColumnHeader === '입주사ID(업로드시 입력금지)'
+  ) {
     parsedData.shift();
   } else if (maybeColumnHeader.indexOf('입주사 리스트')) {
     parsedData.shift();
@@ -93,13 +96,14 @@ const buildTenantFormRows = (parsedData: string[][]): ICorpObj[] => {
   console.log('buildTenant' + parsedData);
 
   return parsedData.map<ICorpObj>((row) => ({
-    delYn: EDelYn.Y,
-    password: row[0],
-    corpName: row[1],
-    userName: row[2],
-    dong: row[3],
-    ho: row[4],
-    userPhone: row[5] ? string2mobile(row[5]) : row[5],
+    delYn: row[0] ? row[0] : EDelYn.N,
+    corpId: row[1] ? row[1] : '',
+    password: row[2],
+    corpName: row[3],
+    userName: row[4],
+    dong: row[5],
+    ho: row[6],
+    userPhone: row[7] ? string2mobile(row[7]) : row[7],
     userRole: 'STORE'
   }));
 };

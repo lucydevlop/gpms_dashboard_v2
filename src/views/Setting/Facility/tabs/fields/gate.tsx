@@ -2,8 +2,10 @@ import { IGateObj } from '@models/gate';
 import { IFormFieldConfig } from '@utils/form';
 import { FormType } from '@/constants/form';
 import {
+  EGateActionType,
   EGateOpenActionType,
   EGateType,
+  gateActionTypeOpt,
   gateOpenActionTypeOpt,
   gateTypeOpt
 } from '@/constants/list';
@@ -30,6 +32,35 @@ export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] 
       },
       fieldOption: {
         initialValue: gate ? gate.gateId : '',
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '입력하세요'
+        }
+      }
+    },
+    {
+      id: 'udpGateid',
+      label: 'UDP게이트ID',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.udpGateid : '',
         rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {
@@ -93,6 +124,33 @@ export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] 
       component: {
         type: FormType.Select,
         selectOptions: gateTypeOpt
+      }
+    },
+    {
+      id: 'takeAction',
+      label: 'takeAction',
+      colProps: {
+        xs: 24,
+        xl: 12
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.takeAction : EGateActionType.GATE,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: gateActionTypeOpt
       }
     },
     {
