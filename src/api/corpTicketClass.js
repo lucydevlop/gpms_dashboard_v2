@@ -15,3 +15,13 @@ export function updateCorpTicketClasses(data) {
     data: data
   });
 }
+
+export function getAllCorpTicketsSummary() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/corps/ALL/tickets/info`);
+}
+
+export function addCorpTicket(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/corps/add/tickets`, {
+    data: data
+  });
+}

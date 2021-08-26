@@ -55,7 +55,7 @@ class TicketAplyModal extends PureComponent<IProps, IState> {
     });
     this.setState({
       ableTickets: tickets,
-      total: this.state.total + info.discountClass.unitTime * -1
+      total: this.state.total + info.corpTicketClass.discountClass.unitTime * -1
     });
   };
 
@@ -68,7 +68,10 @@ class TicketAplyModal extends PureComponent<IProps, IState> {
       if (t.sn === info.sn) return { ...info };
       return { ...t };
     });
-    this.setState({ ableTickets: tickets, total: this.state.total + info.discountClass.unitTime });
+    this.setState({
+      ableTickets: tickets,
+      total: this.state.total + info.corpTicketClass.discountClass.unitTime
+    });
   };
 
   render() {
@@ -78,7 +81,7 @@ class TicketAplyModal extends PureComponent<IProps, IState> {
         key: 'discountName',
         width: 100,
         align: 'center',
-        render: (text: string, record: ICorpTicketObj) => record.discountClass.discountNm
+        render: (text: string, record: ICorpTicketObj) => record.corpTicketClass.name
       },
       {
         title: '사용가능/잔여',
