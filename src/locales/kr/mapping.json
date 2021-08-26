@@ -29,6 +29,7 @@
   "menu.statistics.inout": "입출차통계",
 
   "menu.storeDiscount.apply": "주차할인",
+  "menu.storeDiscount.list": "주차할인리스트",
 
   "dashboard.rowInfo0.title": "주차장수",
   "dashboard.rowInfo1.title": "호출건수",
