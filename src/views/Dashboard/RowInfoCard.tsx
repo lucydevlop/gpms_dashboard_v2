@@ -8,6 +8,7 @@ import { breakerStatusOpt, gateTypeOpt, ticketTypeOpt } from '@/constants/list';
 import zdsTips from '@utils/tips';
 import { localeStore } from '@store/localeStore';
 import { actionGate, actionReset } from '@api/dashboard';
+import { ICorpTicketObj } from '@models/corp';
 
 interface InfoCardProps {
   icon: any;
@@ -21,34 +22,24 @@ interface IProps {
   key: number;
 }
 
-class RowInfoCard extends React.Component<IProps, any> {
+interface IState {
+  item?: IDashboardObj;
+}
+
+class RowInfoCard extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = {
-      parkingLots: []
-    };
-
-    this.initializeState = this.initializeState.bind(this);
+    this.state = {};
   }
-
-  UNSAFE_componentWillMount() {
-    this.initializeState();
-  }
-
-  initializeState = () => {
-    let image = 24;
-    for (let index = 1; index < 26; index++) {
-      // @ts-ignore
-      import(`../../assets/images/gallery/24.webp`).then((res) => {
-        this.setState((parkingLots: any) => ({ ...parkingLots, [index]: res.default }));
-      });
-    }
-  };
 
   componentDidMount() {
-    this.setState(() => ({
-      loading: false
-    }));
+    this.setState({ item: this.props.item });
+  }
+
+  componentDidUpdate(prevProps: { item: IDashboardObj }, prevState: any) {
+    if (this.props.item !== prevProps.item) {
+      this.setState({ item: this.props.item });
+    }
   }
 
   handleResetClick(name: string, category: string) {
@@ -226,10 +217,12 @@ class RowInfoCard extends React.Component<IProps, any> {
           className="fat-card monitor-list-card"
           bordered={false}
           hoverable
-          cover={
-            this.props.item.image ? (
+        >
+          <div>
+            {/*{this.state.item ? (*/}
+            {this.props.item.image ? (
               <Image
-                src={`${this.props.item.image}`}
+                src={`${this.props.item.image}+?+${new Date()}`}
                 ratio={1.8}
                 // src={
                 //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
@@ -241,9 +234,9 @@ class RowInfoCard extends React.Component<IProps, any> {
                 // @ts-ignore
                 src={emptyImage}
               />
-            )
-          }
-        >
+            )}
+            {/*// ) : null}*/}
+          </div>
           <Descriptions
             layout="vertical"
             bordered

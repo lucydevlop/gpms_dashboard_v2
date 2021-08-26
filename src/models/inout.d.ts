@@ -20,6 +20,7 @@ export interface IInoutObj {
   ticketCorpName?: string;
   memo?: string;
   paymentAmount?: number;
+  nonPayment?: number;
   dayDiscountfee?: number;
   addDiscountClasses?: IInoutDiscountAplyObj[];
   aplyDiscountClasses?: IInoutDiscountObj[];
