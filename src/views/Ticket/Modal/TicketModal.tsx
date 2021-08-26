@@ -4,14 +4,16 @@ import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import { Form } from '@ant-design/compatible';
 import { ITicketObj } from '@models/ticket';
 import { Button, Row } from 'antd';
-import { getFormFields } from '@utils/form';
+import { getFormFields, ISelectOptions } from '@utils/form';
 import { NewTicketFields } from '../FormFields/FormFields';
 import { conversionDateTime } from '@/utils/conversion';
 import { string2mobile } from '@utils/tools';
+import { IDiscountClassObj } from '@models/discountClass';
 
 interface ITicketModalProps extends FormComponentProps {
   ticket?: ITicketObj;
   onSubmit: (ticket: ITicketObj) => void;
+  ticketClasses: ISelectOptions[];
 }
 interface ITicketDetailModalState {}
 
@@ -30,7 +32,7 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const ticketDetailFields = NewTicketFields(this.props.ticket);
+    const ticketDetailFields = NewTicketFields(this.props.ticket, this.props.ticketClasses!!);
     return (
       <>
         <Row style={{ marginTop: '10px' }}>
@@ -40,7 +42,7 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
               this.handlerSubmit();
             }}
           >
-            <Row gutter={24}>{getFormFields(getFieldDecorator, ticketDetailFields, true, 12)}</Row>
+            <Row gutter={24}>{getFormFields(getFieldDecorator, ticketDetailFields, true, 13)}</Row>
             <Button
               type="primary"
               htmlType="submit"

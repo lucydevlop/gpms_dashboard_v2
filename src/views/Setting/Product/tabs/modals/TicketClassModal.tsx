@@ -36,7 +36,7 @@ class TicketClassModal extends PureComponent<IProps, IState> {
         fieldsValue.expireDate = this.props.ticketClass
           ? this.props.ticketClass.expireDate
           : moment(new Date(9999, 11, 31)).format('yyyy-MM-DD 23:59:59');
-        fieldsValue.delYn = this.props.ticketClass ? this.props.ticketClass.delYn : EDelYn.N;
+        //fieldsValue.delYn = this.props.ticketClass ? this.props.ticketClass.delYn : EDelYn.N;
         this.props.onSubmit(fieldsValue);
       }
     });
