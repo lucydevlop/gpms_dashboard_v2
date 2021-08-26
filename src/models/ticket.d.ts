@@ -19,6 +19,7 @@ export interface ITicketObj {
   etc1?: string;
   corpName?: string;
   corpSn?: number;
+  ticketSn?: number;
 }
 
 export interface ITicketSelectReq {

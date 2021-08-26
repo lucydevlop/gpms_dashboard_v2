@@ -5,12 +5,18 @@ import DiscountTab from '@views/Setting/Product/tabs/DiscountTab';
 import CorpTicketClassTab from '@views/Setting/Product/tabs/CorpTicketClassTab';
 import TicketClassTab from '@views/Setting/Product/tabs/TicketClassTab';
 import { IDiscountClassObj } from '@models/discountClass';
-import { getDiscountClasses } from '@api/discountClass';
-import { getCorpTicketClasses } from '@api/corpTicketClass';
+import { createDiscountClasses, getDiscountClasses } from '@api/discountClass';
+import {
+  createCorpTicketClasses,
+  getCorpTicketClasses,
+  updateCorpTicketClasses
+} from '@api/corpTicketClass';
 import { createTicketClasses, getTicketClasses, updateTicketClasses } from '@api/ticketClass';
 import { runInAction } from 'mobx';
 import { ITicketClassObj } from '@models/ticketClass';
 import { ICorpTicketClassObj } from '@models/corpTicketClass';
+import { ISelectOptions } from '@utils/form';
+import { EDelYn } from '@/constants/list';
 
 interface IProps {}
 interface IState {
@@ -18,6 +24,7 @@ interface IState {
   discountClasses: IDiscountClassObj[];
   ticketClasses: ITicketClassObj[];
   corpTicketClasses: ICorpTicketClassObj[];
+  discountSelectClasses: ISelectOptions[];
 }
 
 class ProductSetting extends PureComponent<IProps, IState> {
@@ -27,7 +34,8 @@ class ProductSetting extends PureComponent<IProps, IState> {
       loading: true,
       discountClasses: [],
       ticketClasses: [],
-      corpTicketClasses: []
+      corpTicketClasses: [],
+      discountSelectClasses: []
     };
   }
   componentDidMount() {
@@ -39,6 +47,13 @@ class ProductSetting extends PureComponent<IProps, IState> {
         if (msg === 'success') {
           runInAction(() => {
             this.setState({ discountClasses: data });
+            const unique: ISelectOptions[] = [];
+            this.state.discountClasses.forEach((e) => {
+              unique.push({ value: String(e.sn), label: e.discountNm });
+            });
+            this.setState({ discountSelectClasses: unique }, () =>
+              console.log(this.state.discountSelectClasses)
+            );
           });
         }
       })
@@ -103,8 +118,73 @@ class ProductSetting extends PureComponent<IProps, IState> {
     }
   };
 
+  handleDiscount = (info: IDiscountClassObj) => {
+    console.log('handleDiscount', info);
+    if (info.sn === null) {
+      info.delYn = EDelYn.N;
+      createDiscountClasses(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const discountClasses = [...this.state.discountClasses, data];
+              this.setState({ discountClasses: discountClasses });
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      createDiscountClasses(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const discountClasses = this.state.discountClasses.map((t) => {
+                if (t.sn === data.sn) {
+                  return { ...data };
+                }
+                return { ...t };
+              });
+              this.setState({ discountClasses: discountClasses });
+            });
+          }
+        })
+        .catch(() => {});
+    }
+  };
+
   handleCorpTicketClasses = (info: ICorpTicketClassObj) => {
     console.log('handleCorpTicketClasses', info);
+    if (info.sn === null) {
+      createCorpTicketClasses(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const corpTicketClasses = [...this.state.corpTicketClasses, data];
+              this.setState({ corpTicketClasses: corpTicketClasses });
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      updateCorpTicketClasses(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const corpTicketClasses = this.state.corpTicketClasses.map((t) => {
+                if (t.sn === data.sn) {
+                  return { ...data };
+                }
+                return { ...t };
+              });
+              this.setState({ corpTicketClasses: corpTicketClasses });
+            });
+          }
+        })
+        .catch(() => {});
+    }
   };
 
   render() {
@@ -124,18 +204,26 @@ class ProductSetting extends PureComponent<IProps, IState> {
           {/*  <TimePassTab />*/}
           {/*</TabPane>*/}
           <TabPane tab="할인/감면" key="3">
-            <DiscountTab discountClasses={discountClasses} loading={this.state.loading} />
+            <DiscountTab
+              discountClasses={discountClasses}
+              loading={this.state.loading}
+              onSubmit={this.handleDiscount}
+            />
           </TabPane>
           <TabPane tab="입주사할인권" key="4">
             <CorpTicketClassTab
+              discountSelectClasses={this.state.discountSelectClasses}
               corpTicketClasses={corpTicketClasses}
+              discountClasses={discountClasses}
               loading={this.state.loading}
               onSubmit={this.handleCorpTicketClasses}
             />
           </TabPane>
           <TabPane tab="바코드할인권" key="5">
             <CorpTicketClassTab
+              discountSelectClasses={this.state.discountSelectClasses}
               corpTicketClasses={corpTicketClasses}
+              discountClasses={discountClasses}
               loading={this.state.loading}
               onSubmit={this.handleCorpTicketClasses}
             />

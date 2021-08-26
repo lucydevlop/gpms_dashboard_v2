@@ -24,11 +24,13 @@ import {
   formColProps24Config,
   formColProps2Config,
   formColProps6Config,
-  IFormFieldConfig
+  IFormFieldConfig,
+  ISelectOptions
 } from '@/utils/form';
 import Form from 'antd/lib/form/Form';
 import { toJS } from 'mobx';
 import moment from 'moment';
+import { IDiscountClassObj } from '@models/discountClass';
 
 const regisDateRangeConfig = {
   rules: [
@@ -84,7 +86,12 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
           placeholder: localeObj['label.choose'] || '선택해주세요',
           allowClear: true
         },
-        selectOptions: ticketTypeOpt
+        selectOptions: ticketTypeOpt.filter(
+          (d) =>
+            d.value !== ETicketType.NORMAL &&
+            d.value !== ETicketType.UNRECOGNIZED &&
+            d.value !== ETicketType.DISCOUNT
+        )
       }
     },
     {
@@ -208,7 +215,10 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
   ];
 }
 
-export function NewTicketFields(ticket?: ITicketObj): IFormFieldConfig<keyof ITicketObj>[] {
+export function NewTicketFields(
+  ticket?: ITicketObj,
+  ticketClasses?: ISelectOptions[]
+): IFormFieldConfig<keyof ITicketObj>[] {
   const { corpSelectList } = corpStore;
   return [
     {
@@ -237,7 +247,41 @@ export function NewTicketFields(ticket?: ITicketObj): IFormFieldConfig<keyof ITi
         option: {
           placeholder: '선택하세요'
         },
-        selectOptions: ticketTypeOpt
+        selectOptions: ticketTypeOpt.filter(
+          (d) =>
+            d.value !== ETicketType.NORMAL &&
+            d.value !== ETicketType.UNRECOGNIZED &&
+            d.value !== ETicketType.DISCOUNT
+        )
+      }
+    },
+    {
+      id: 'ticketSn',
+      label: '정기권정보',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 8,
+        xl: 12
+      },
+      formItemProps: {
+        labelCol: {
+          span: 8
+        },
+        wrapperCol: {
+          span: 12
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: ticket?.ticketSn ? ticket.ticketSn : null
+      },
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: '선택하세요'
+        },
+        selectOptions: ticketClasses
       }
     },
     {
@@ -510,7 +554,7 @@ export function NewTicketFields(ticket?: ITicketObj): IFormFieldConfig<keyof ITi
         option: {
           placeholder: '선택하세요'
         },
-        selectOptions: delYnOpt
+        selectOptions: delYnOpt.filter((d) => d.value !== EDelYn.ALL)
       }
     },
     {
