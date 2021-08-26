@@ -10,6 +10,7 @@ import { IInoutObj } from '@/models/inout';
 import { newInoutDetailFileds } from '../FormFields/FormFields';
 import Meta from 'antd/lib/card/Meta';
 import { EInoutType } from '@/constants/list';
+import emptyImage from '@views/Dashboard/images/empty.svg';
 
 interface IInoutDetailModalProps extends FormComponentProps {
   inout: IInoutObj;
@@ -58,7 +59,12 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IInoutDetai
                   cover={
                     <img
                       alt={this.props.inout.vehicleNo}
-                      src={`https://pip-thumb.zumst.com/api/v1/mxjki_VC002_66950569_content.jpeg?w=880&h=495`}
+                      // @ts-ignore
+                      src={
+                        this.props.inout.inImgBase64Str
+                          ? `${this.props.inout.inImgBase64Str}`
+                          : emptyImage
+                      }
                     />
                   }
                 >
@@ -72,7 +78,12 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IInoutDetai
                   cover={
                     <img
                       alt={this.props.inout.vehicleNo}
-                      src={`https://pip-thumb.zumst.com/api/v1/mxjki_VC002_66950569_content.jpeg?w=880&h=495`}
+                      // @ts-ignore
+                      src={
+                        this.props.inout.outImgBase64Str
+                          ? `${this.props.inout.outImgBase64Str}`
+                          : emptyImage
+                      }
                     />
                   }
                 >

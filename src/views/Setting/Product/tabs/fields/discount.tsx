@@ -45,6 +45,32 @@ export function DiscountFields(
       }
     },
     {
+      id: 'discountType',
+      label: '할인타입',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: discount ? discount.discountType : EDiscountType.DISCOUNT
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: discountTypeOpt
+      }
+    },
+    {
       id: 'effectDate',
       label: '시작일',
       colProps: {
@@ -92,32 +118,6 @@ export function DiscountFields(
       },
       component: {
         type: FormType.DatePicker
-      }
-    },
-    {
-      id: 'discountType',
-      label: '할인타입',
-      colProps: {
-        xl: 12,
-        xs: 24
-      },
-      formItemProps: {
-        labelCol: {
-          xl: 9,
-          xs: 9
-        },
-        wrapperCol: {
-          xl: 15,
-          xs: 15
-        },
-        children: null
-      },
-      fieldOption: {
-        initialValue: discount ? discount.discountType : EDiscountType.DISCOUNT
-      },
-      component: {
-        type: FormType.Select,
-        selectOptions: discountTypeOpt
       }
     },
     {

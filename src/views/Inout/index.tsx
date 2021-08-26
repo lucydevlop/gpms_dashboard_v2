@@ -122,6 +122,7 @@ class Inout extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
+            console.log(data);
             this.setState({ list: data, total: data.length });
           });
         }
