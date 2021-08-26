@@ -6,7 +6,7 @@ export interface ICorpObj {
   corpId?: string;
   corpName: string;
   createdBy?: string;
-  delYn: EDelYn;
+  delYn: string;
   dong: string;
   form?: number;
   ho: string;

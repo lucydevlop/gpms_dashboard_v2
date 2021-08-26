@@ -68,11 +68,18 @@ class GateTab extends PureComponent<IProps, IState> {
         }
       },
       {
-        title: '게이트 ID',
+        title: '게이트ID',
         key: 'gateId',
         width: 110,
         align: 'center',
         render: (text: string, record: IGateObj) => record.gateId
+      },
+      {
+        title: 'UDP게이트ID',
+        key: 'udpGateid',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IGateObj) => record.udpGateid
       },
       {
         title: '게이트이름',
@@ -88,6 +95,14 @@ class GateTab extends PureComponent<IProps, IState> {
         align: 'center',
         render: (text: string, record: IGateObj) =>
           conversionEnumValue(record.gateType as string, gateTypeOpt).label
+      },
+      {
+        title: 'takeAction',
+        key: 'takeAction',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IGateObj) =>
+          conversionEnumValue(record.takeAction as string, gateTypeOpt).label
       },
       {
         title: '오픈타입',
