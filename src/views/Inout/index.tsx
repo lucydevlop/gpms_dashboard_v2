@@ -172,16 +172,16 @@ class Inout extends PureComponent<any, IState> {
         >
           + {localeObj['label.create'] || '신규 등록'}
         </Button>
-        <Button
-          type="ghost"
-          onClick={(e: any) => {
-            e.stopPropagation();
-            this.delete();
-          }}
-          style={{ marginLeft: '1rem' }}
-        >
-          -{localeObj['label.delete'] || '삭제'}
-        </Button>
+        {/*<Button*/}
+        {/*  type="ghost"*/}
+        {/*  onClick={(e: any) => {*/}
+        {/*    e.stopPropagation();*/}
+        {/*    this.delete();*/}
+        {/*  }}*/}
+        {/*  style={{ marginLeft: '1rem' }}*/}
+        {/*>*/}
+        {/*  -{localeObj['label.delete'] || '삭제'}*/}
+        {/*</Button>*/}
         <Button
           style={{ marginLeft: '1rem' }}
           type="primary"
@@ -213,6 +213,7 @@ class Inout extends PureComponent<any, IState> {
       '주차요금',
       '할인요금',
       '결제요금',
+      '미납요금',
       '메모'
     ].join(',');
 
@@ -232,6 +233,7 @@ class Inout extends PureComponent<any, IState> {
       data.parkfee = inout.parkfee;
       data.discountfee = inout.discountfee;
       data.payfee = inout.payfee;
+      data.nonPayment = inout.nonPayment;
       data.memo = inout.memo;
       return data;
     });
@@ -369,15 +371,23 @@ class Inout extends PureComponent<any, IState> {
         key: 'payfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) => (
-          <span>
-            {record.payfee === record.paymentAmount ? (
-              record.paymentAmount
-            ) : (
-              <span style={{ color: 'red' }}>{record.payfee}</span>
-            )}
-          </span>
-        )
+        render: (text: string, record: IInoutObj) => <span>{record.payfee}</span>
+      },
+      {
+        title: '미납요금',
+        key: 'nonPayment',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IInoutObj) => {
+          return {
+            props: {
+              style: {
+                color: record.nonPayment === 0 ? 'black' : 'red'
+              }
+            },
+            children: <div>{record.nonPayment}</div>
+          };
+        }
       },
       {
         title: '메모',
@@ -471,20 +481,29 @@ class Inout extends PureComponent<any, IState> {
                     미인식: {list.filter((l) => l.parkcartype === ETicketType.UNRECOGNIZED).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={6}></Table.Summary.Cell>
-                <Table.Summary.Cell index={7}></Table.Summary.Cell>
-                <Table.Summary.Cell index={8}></Table.Summary.Cell>
-                <Table.Summary.Cell index={9}></Table.Summary.Cell>
-                <Table.Summary.Cell index={10}>
+                <Table.Summary.Cell index={6} />
+                <Table.Summary.Cell index={7} />
+                <Table.Summary.Cell index={8} />
+                <Table.Summary.Cell index={9}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'parkfee'))}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={11}>
+                <Table.Summary.Cell index={10}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(
                       this.sum(list, 'discountfee') + this.sum(list, 'dayDiscountfee')
                     )}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={11}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    {convertNumberWithCommas(this.sum(list, 'payfee'))}
+                  </span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={12}>
+                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                    {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
                   </span>
                 </Table.Summary.Cell>
               </Table.Summary.Row>

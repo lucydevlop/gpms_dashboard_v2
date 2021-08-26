@@ -83,14 +83,25 @@ class Image extends PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    this.setState({ src: this.props.src, src2x: this.props.src2x });
     if (this.image && this.image.complete) {
       this.onLoad();
     }
   }
 
+  UNSAFE_componentWillMount() {
+    this.setState({ src: this.props.src, src2x: this.props.src2x });
+  }
+
+  UNSAFE_componentWillReceiveProps(props: Props) {
+    if (props.src !== this.props.src) {
+      this.setState({ src: this.props.src, src2x: this.props.src2x });
+    }
+  }
+
   onLoad() {
     const { onLoad } = this.props;
-    this.image.style.opacity = '1';
+    // this.image.style.opacity = '1';
     if (onLoad) {
       onLoad();
     }
