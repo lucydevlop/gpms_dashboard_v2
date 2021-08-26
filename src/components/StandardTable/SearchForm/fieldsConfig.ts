@@ -2,7 +2,6 @@ import { formColProps6Config, IFormFieldConfig, disabledDateAfterToday } from '@
 import { FormType } from '@/constants/form';
 // import { IRegionObj } from '@/interface/common';
 import { IParkinglotListReq } from '@models/parkinglot';
-import { statusOpt } from '@/constants/list';
 import moment, { Moment } from 'moment';
 import { datePickerFormat } from '@/constants';
 import { localeStore } from '@store/localeStore';

@@ -1,16 +1,26 @@
 import React, { PureComponent } from 'react';
 import { IDiscountClassObj } from '@models/discountClass';
 import { ColumnProps } from 'antd/lib/table';
-import { dayRangeTypeOpt, delYnOpt, discountApplyTypeOpt, discountTypeOpt } from '@/constants/list';
+import {
+  dayRangeTypeOpt,
+  delYnOpt,
+  discountApplyTypeOpt,
+  discountTypeOpt,
+  EDelYn
+} from '@/constants/list';
 import { conversionDate, conversionEnumValue } from '@utils/conversion';
 import StandardTable from '@components/StandardTable';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Row } from 'antd';
 import { localeStore } from '@store/localeStore';
+import DraggableModal from '@components/DraggableModal';
+import DiscountModal from '@views/Setting/Product/tabs/modals/DiscountModal';
+import zdsTips from '@utils/tips';
 
 interface IProps {
   loading: boolean;
   discountClasses: IDiscountClassObj[];
+  onSubmit: (info: IDiscountClassObj) => void;
 }
 interface IState {
   detailModal: boolean;
@@ -32,7 +42,15 @@ class DiscountTab extends PureComponent<IProps, IState> {
   };
 
   handleBtnClick = (info: IDiscountClassObj, key: string) => {
-    this.setState({ detailModal: true, createModal: false, selected: info });
+    const { localeObj } = localeStore;
+    if (key === 'delete') {
+      zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
+        info.delYn = EDelYn.Y;
+        this.props.onSubmit(info);
+      });
+    } else {
+      this.setState({ detailModal: true, createModal: false, selected: info });
+    }
   };
 
   render() {
@@ -125,7 +143,7 @@ class DiscountTab extends PureComponent<IProps, IState> {
             <a
               onClick={(e: any) => {
                 e.stopPropagation();
-                this.handleBtnClick(item, 'edit');
+                this.handleBtnClick(item, 'delete');
               }}
             >
               <DeleteOutlined />
@@ -156,6 +174,37 @@ class DiscountTab extends PureComponent<IProps, IState> {
           data={{ list: this.props.discountClasses }}
           hidePagination
         />
+        {this.state.createModal ? (
+          <DraggableModal
+            visible={this.state.createModal}
+            title={localeObj['label.discount.create'] || '신규 등록'}
+            width={800}
+            onOk={() => this.setState({ createModal: false })}
+            onCancel={() => this.setState({ createModal: false })}
+          >
+            <DiscountModal
+              onSubmit={(value) => {
+                this.setState({ createModal: false }), this.props.onSubmit(value);
+              }}
+            />
+          </DraggableModal>
+        ) : null}
+        {this.state.detailModal ? (
+          <DraggableModal
+            visible={this.state.detailModal}
+            title={localeObj['label.discount.detail'] || '할인권 상세'}
+            width={800}
+            onOk={() => this.setState({ detailModal: false })}
+            onCancel={() => this.setState({ detailModal: false })}
+          >
+            <DiscountModal
+              onSubmit={(value) => {
+                this.setState({ detailModal: false }), this.props.onSubmit(value);
+              }}
+              discount={this.state.selected}
+            />
+          </DraggableModal>
+        ) : null}
       </>
     );
   }
