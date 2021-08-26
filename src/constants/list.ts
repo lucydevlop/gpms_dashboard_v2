@@ -16,9 +16,20 @@ export enum EStatus {
   On = 'On',
   Off = 'Off'
 }
-export const statusOpt: ISelectOptions[] = [
-  { value: EStatus.On, label: '开启', color: 'blue' },
-  { value: EStatus.Off, label: '关闭', color: 'red' }
+
+export const radioSelectOpt: ISelectOptions[] = [
+  { value: EStatus.On, label: '사용', color: 'black' },
+  { value: EStatus.Off, label: '사용안함', color: 'black' }
+];
+
+export enum EOnOff {
+  ON = 'ON',
+  OFF = 'OFF'
+}
+
+export const onOffSelectOpt: ISelectOptions[] = [
+  { value: EOnOff.ON, label: '사용', color: 'black' },
+  { value: EOnOff.OFF, label: '사용안함', color: 'black' }
 ];
 
 export enum ECity {
@@ -294,11 +305,6 @@ export enum EVehiclDayType {
   DAY2 = 'DAY2',
   DAY5 = 'DAY5'
 }
-
-export const radioSelectOpt: ISelectOptions[] = [
-  { value: EStatus.On, label: '사용', color: 'black' },
-  { value: EStatus.Off, label: '사용안함', color: 'black' }
-];
 
 export const ticketSearchTypeOpt: ISelectOptions[] = [
   { value: ETicketSearchType.EFFECT, label: '시작일', color: 'black' },

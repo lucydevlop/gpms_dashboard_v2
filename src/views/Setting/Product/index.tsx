@@ -1,21 +1,23 @@
 import React, { PureComponent } from 'react';
 import { Tabs } from 'antd';
 import PageWrapper from '@components/PageWrapper';
-import TimePassTab from '@views/Setting/Product/tabs/TimePassTab';
 import DiscountTab from '@views/Setting/Product/tabs/DiscountTab';
-import TenantDiscountTab from '@views/Setting/Product/tabs/TenantDiscountTab';
+import CorpTicketClassTab from '@views/Setting/Product/tabs/CorpTicketClassTab';
 import TicketClassTab from '@views/Setting/Product/tabs/TicketClassTab';
 import { IDiscountClassObj } from '@models/discountClass';
 import { getDiscountClasses } from '@api/discountClass';
+import { getCorpTicketClasses } from '@api/corpTicketClass';
 import { createTicketClasses, getTicketClasses, updateTicketClasses } from '@api/ticketClass';
 import { runInAction } from 'mobx';
 import { ITicketClassObj } from '@models/ticketClass';
+import { ICorpTicketClassObj } from '@models/corpTicketClass';
 
 interface IProps {}
 interface IState {
   loading: boolean;
   discountClasses: IDiscountClassObj[];
   ticketClasses: ITicketClassObj[];
+  corpTicketClasses: ICorpTicketClassObj[];
 }
 
 class ProductSetting extends PureComponent<IProps, IState> {
@@ -24,7 +26,8 @@ class ProductSetting extends PureComponent<IProps, IState> {
     this.state = {
       loading: true,
       discountClasses: [],
-      ticketClasses: []
+      ticketClasses: [],
+      corpTicketClasses: []
     };
   }
   componentDidMount() {
@@ -47,6 +50,17 @@ class ProductSetting extends PureComponent<IProps, IState> {
         if (msg === 'success') {
           runInAction(() => {
             this.setState({ ticketClasses: data });
+          });
+        }
+      })
+      .catch(() => {});
+
+    getCorpTicketClasses()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ corpTicketClasses: data });
           });
         }
       })
@@ -89,9 +103,13 @@ class ProductSetting extends PureComponent<IProps, IState> {
     }
   };
 
+  handleCorpTicketClasses = (info: ICorpTicketClassObj) => {
+    console.log('handleCorpTicketClasses', info);
+  };
+
   render() {
     const { TabPane } = Tabs;
-    const { discountClasses, ticketClasses } = this.state;
+    const { discountClasses, ticketClasses, corpTicketClasses } = this.state;
     return (
       <PageWrapper>
         <Tabs type="card">
@@ -109,10 +127,18 @@ class ProductSetting extends PureComponent<IProps, IState> {
             <DiscountTab discountClasses={discountClasses} loading={this.state.loading} />
           </TabPane>
           <TabPane tab="입주사할인권" key="4">
-            <TenantDiscountTab />
+            <CorpTicketClassTab
+              corpTicketClasses={corpTicketClasses}
+              loading={this.state.loading}
+              onSubmit={this.handleCorpTicketClasses}
+            />
           </TabPane>
           <TabPane tab="바코드할인권" key="5">
-            <TenantDiscountTab />
+            <CorpTicketClassTab
+              corpTicketClasses={corpTicketClasses}
+              loading={this.state.loading}
+              onSubmit={this.handleCorpTicketClasses}
+            />
           </TabPane>
         </Tabs>
       </PageWrapper>

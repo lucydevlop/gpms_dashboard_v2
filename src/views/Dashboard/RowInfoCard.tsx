@@ -222,7 +222,7 @@ class RowInfoCard extends React.Component<IProps, IState> {
             {/*{this.state.item ? (*/}
             {this.props.item.image ? (
               <Image
-                src={`${this.props.item.image}+?+${new Date()}`}
+                src={`${this.props.item.image}`}
                 ratio={1.8}
                 // src={
                 //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
