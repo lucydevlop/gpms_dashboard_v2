@@ -263,7 +263,8 @@ export function ticketClassFields(
         children: null
       },
       fieldOption: {
-        initialValue: ticketClass ? ticketClass.delYn : null
+        initialValue: ticketClass ? ticketClass.delYn : null,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {
         type: FormType.Select,

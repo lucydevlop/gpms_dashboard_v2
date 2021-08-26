@@ -376,13 +376,6 @@ class Inout extends PureComponent<any, IState> {
         render: (text: string, record: IInoutObj) => <span>{record.payfee}</span>
       },
       {
-        title: '정산요금',
-        key: 'payfee',
-        width: 100,
-        align: 'center',
-        render: (text: string, record: IInoutObj) => <span>{record.paymentAmount}</span>
-      },
-      {
         title: '미납요금',
         key: 'nonPayment',
         width: 100,
@@ -397,6 +390,13 @@ class Inout extends PureComponent<any, IState> {
             children: <div>{record.nonPayment}</div>
           };
         }
+      },
+      {
+        title: '정산요금',
+        key: 'payfee',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IInoutObj) => <span>{record.paymentAmount}</span>
       },
       {
         title: '메모',
@@ -512,12 +512,12 @@ class Inout extends PureComponent<any, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={12}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
+                    {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={13}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
+                    {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
                   </span>
                 </Table.Summary.Cell>
               </Table.Summary.Row>

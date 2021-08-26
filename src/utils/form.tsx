@@ -24,6 +24,7 @@ import { InputProps, TextAreaProps } from 'antd/lib/input';
 import { FormType } from '@/constants/form';
 import { GetFieldDecoratorOptions } from '@ant-design/compatible/lib/form/Form';
 import { DatePickerProps, RangePickerProps } from 'antd/lib/date-picker';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;

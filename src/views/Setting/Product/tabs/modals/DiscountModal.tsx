@@ -5,34 +5,30 @@ import { Form } from '@ant-design/compatible';
 import { ITicketObj } from '@models/ticket';
 import { Button, Row } from 'antd';
 import { getFormFields, ISelectOptions } from '@utils/form';
-import { NewTicketFields } from '../FormFields/FormFields';
-import { conversionDateTime } from '@/utils/conversion';
+import { conversionDate, conversionDateTime } from '@/utils/conversion';
 import { string2mobile } from '@utils/tools';
 import { IDiscountClassObj } from '@models/discountClass';
+import { DiscountFields } from '@views/Setting/Product/tabs/fields/discount';
 
-interface ITicketModalProps extends FormComponentProps {
-  ticket?: ITicketObj;
-  onSubmit: (ticket: ITicketObj) => void;
-  ticketClasses: ISelectOptions[];
+interface IDiscounttModalProps extends FormComponentProps {
+  discount?: IDiscountClassObj;
+  onSubmit: (discount: IDiscountClassObj) => void;
 }
-interface ITicketDetailModalState {}
+interface IDiscountModalState {}
 
 @inject('localeStore')
 @observer
-class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalState> {
+class DiscountModal extends PureComponent<IDiscounttModalProps, IDiscountModalState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
-      // console.log('Ticket', fieldsValue);
       fieldsValue.effectDate = conversionDateTime(fieldsValue.effectDate, '{y}-{m}-{d} 00:00:00');
       fieldsValue.expireDate = conversionDateTime(fieldsValue.expireDate, '{y}-{m}-{d} 23:59:59');
-      fieldsValue.tel = fieldsValue.tel ? string2mobile(fieldsValue.tel) : '';
-      // console.log('Ticket', fieldsValue);
       if (!err) this.props.onSubmit(fieldsValue);
     });
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const ticketDetailFields = NewTicketFields(this.props.ticket, this.props.ticketClasses!!);
+    const discountFields = DiscountFields(this.props.discount);
     return (
       <>
         <Row style={{ marginTop: '10px' }}>
@@ -42,13 +38,13 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
               this.handlerSubmit();
             }}
           >
-            <Row gutter={24}>{getFormFields(getFieldDecorator, ticketDetailFields, true, 13)}</Row>
+            <Row gutter={24}>{getFormFields(getFieldDecorator, discountFields, true, 6)}</Row>
             <Button
               type="primary"
               htmlType="submit"
               style={{ marginTop: '10px', width: '20%', left: '40%' }}
             >
-              수정
+              등록
             </Button>
           </Form>
         </Row>
@@ -57,6 +53,8 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
   }
 }
 
-const TicketModalForm = Form.create<ITicketModalProps>({ name: 'ticketModal' })(TicketModal);
+const DiscountModalForm = Form.create<IDiscounttModalProps>({ name: 'discountModal' })(
+  DiscountModal
+);
 
-export default TicketModalForm;
+export default DiscountModalForm;

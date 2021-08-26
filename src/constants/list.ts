@@ -91,7 +91,7 @@ export const categoryOpt: ISelectOptions[] = [
 export enum EGateType {
   IN = 'IN',
   OUT = 'OUT',
-  INOUT = 'IN-OUT'
+  INOUT = 'IN_OUT'
 }
 
 export const gateTypeOpt: ISelectOptions[] = [

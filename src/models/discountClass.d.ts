@@ -39,6 +39,7 @@ export interface ICorpDiscountClassObj {
   corp: ICorpObj;
   ableCnt: number;
   aplyCnt?: number;
+  name: string;
 }
 
 export interface IAbleDiscountClassReq {

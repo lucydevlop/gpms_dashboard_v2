@@ -34,6 +34,11 @@ import TicketModal from './Modal/TicketModal';
 import UploadModal from '@components/UploadModal';
 import { readTicketObj } from '@utils/readFromCsv';
 import { FormComponentProps } from '@ant-design/compatible/lib/form';
+import { IDiscountClassObj } from '@models/discountClass';
+import { getDiscountClasses } from '@api/discountClass';
+import { getTicketClasses } from '@api/ticketClass';
+import { ISelectOptions } from '@utils/form';
+import { ITicketClassObj } from '@models/ticketClass';
 
 type IState = {
   loading: boolean;
@@ -49,6 +54,7 @@ type IState = {
   deleteList: any[];
   clear: boolean;
   uploadModa: boolean;
+  ticketClassesSelect: ISelectOptions[];
 };
 
 class Ticket extends PureComponent<any, IState> {
@@ -64,7 +70,8 @@ class Ticket extends PureComponent<any, IState> {
       detailModal: false,
       deleteList: [],
       clear: false,
-      uploadModa: false
+      uploadModa: false,
+      ticketClassesSelect: []
     };
   }
 
@@ -80,6 +87,7 @@ class Ticket extends PureComponent<any, IState> {
       dateType: ETicketSearchDateType.VALIDATE,
       ticketType: ETicketType.ALL
     };
+    this.getTicketClasses();
     this.setState(
       {
         searchParam: searchParam
@@ -87,6 +95,24 @@ class Ticket extends PureComponent<any, IState> {
       () => this.pollData()
     );
   }
+
+  getTicketClasses = () => {
+    getTicketClasses()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const unique: ISelectOptions[] = [];
+            data.forEach((e: ITicketClassObj) => {
+              unique.push({ value: e.sn, label: e.ticketName });
+            });
+            this.setState({ ticketClassesSelect: unique });
+            console.log(this.state.ticketClassesSelect);
+          });
+        }
+      })
+      .catch(() => {});
+  };
 
   getSearchData = (info: ITicketSelectReq) => {
     const searchParam: ITicketSelectReq = {
@@ -399,6 +425,24 @@ class Ticket extends PureComponent<any, IState> {
         }
       },
       {
+        title: '정기권정보',
+        key: 'ticketSn',
+        width: 110,
+        align: 'center',
+        render: (test: string, record: ITicketObj) => {
+          // @ts-ignore
+          const type = conversionEnumValue(record.ticketSn, this.state.ticketClassesSelect);
+          return {
+            props: {
+              style: {
+                color: type.color
+              }
+            },
+            children: <div>{type.label}</div>
+          };
+        }
+      },
+      {
         title: '차량타입',
         key: 'vehicleType',
         width: 110,
@@ -537,7 +581,10 @@ class Ticket extends PureComponent<any, IState> {
               this.setState({ createModal: false });
             }}
           >
-            <TicketModal onSubmit={(value) => this.create(value)} />
+            <TicketModal
+              onSubmit={(value) => this.create(value)}
+              ticketClasses={this.state.ticketClassesSelect}
+            />
           </DraggableModal>
         ) : null}
         {this.state.detailModal ? (
@@ -550,7 +597,11 @@ class Ticket extends PureComponent<any, IState> {
               this.setState({ detailModal: false });
             }}
           >
-            <TicketModal onSubmit={(value) => this.update(value)} ticket={this.state.selected!!} />
+            <TicketModal
+              onSubmit={(value) => this.update(value)}
+              ticket={this.state.selected!!}
+              ticketClasses={this.state.ticketClassesSelect}
+            />
           </DraggableModal>
         ) : null}
         {this.state.uploadModa ? (
