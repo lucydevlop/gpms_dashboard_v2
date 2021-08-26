@@ -107,5 +107,6 @@
   "label.display.info": "전광판 상세",
   "label.display.flowSetting": "전광판 흐름설정",
 
-  "label.tenant.info": "입주사 상세"
+  "label.tenant.info": "입주사 상세",
+  "label.tenant.discount": "입주사 할인"
 }

@@ -1,5 +1,6 @@
 import { ECorpSearchCondition, EDayRangeType, EDelYn } from '@/constants/list';
 import { IDiscountClassObj } from '@models/discountClass';
+import { ICorpTicketClassObj } from '@models/corpTicketClass';
 
 export interface ICorpObj {
   sn?: number;
@@ -30,12 +31,12 @@ export interface ICorpSearchReq {
 export interface ICorpTicketObj {
   sn?: number;
   corpSn: number;
-  discountClassSn: number;
+  classSn: number;
   totalQuantity: number;
   useQuantity?: number;
   orderNum?: number;
   delYn: EDelYn;
-  discountClass: IDiscountClassObj;
+  corpTicketClass: ICorpTicketClassObj;
   corp: ICorpObj;
   totalCnt: number;
   ableCnt: number;

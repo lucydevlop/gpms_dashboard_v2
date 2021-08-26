@@ -104,7 +104,7 @@ class StoreDiscountAply extends React.PureComponent<any, IState> {
         return {
           inSn: this.state.selected ? this.state.selected.sn : 0,
           cnt: v.applyCnt,
-          discountClassSn: v.discountClassSn,
+          classSn: v.corpTicketClass.sn,
           corpSn: this.state.corpSn
         };
       });

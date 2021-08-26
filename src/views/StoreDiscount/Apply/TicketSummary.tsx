@@ -16,7 +16,7 @@ class TicketSummary extends PureComponent<IProps, IState> {
     const rows = this.props.ableTickets.map((t) => {
       return (
         <Row style={{ marginBottom: '7px' }}>
-          <Card style={{ width: '100%' }} title={t.discountClass.discountNm}>
+          <Card style={{ width: '100%' }} title={t.corpTicketClass.name}>
             <Row style={{ justifyContent: 'space-between', display: 'flex', marginBottom: '5px' }}>
               <div>금일 사용</div>
               <div>{t.todayUse}</div>
