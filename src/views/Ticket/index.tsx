@@ -107,7 +107,6 @@ class Ticket extends PureComponent<any, IState> {
               unique.push({ value: e.sn, label: e.ticketName });
             });
             this.setState({ ticketClassesSelect: unique });
-            console.log(this.state.ticketClassesSelect);
           });
         }
       })
@@ -186,7 +185,7 @@ class Ticket extends PureComponent<any, IState> {
             if (t.sn === ticket.sn) return { ...ticket };
             return { ...t };
           });
-          this.setState({ list: tickets });
+          this.setState({ list: tickets }, () => console.log(this.state.list));
         });
       }
     });
@@ -472,7 +471,11 @@ class Ticket extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (test: string, record: ITicketObj) =>
-          record.corp === undefined || record.corp === null ? null : record.corp.corpName
+          record.corp === undefined || record.corp === null
+            ? record.corpName
+              ? record.corpName
+              : null
+            : record.corp.corpName
       },
       {
         title: '정보1',

@@ -56,7 +56,7 @@ class TenantListModal extends PureComponent<IProps, IState> {
       >
         <Row>
           {this.props.tenant
-            ? getFormFields(getFieldDecorator, tenantFieldsConfig, true, 7)
+            ? getFormFields(getFieldDecorator, tenantFieldsConfig, true, 8)
             : getFormFields(getFieldDecorator, tenantFieldsConfig, true, 6)}
         </Row>
         <Form.Item
