@@ -54,6 +54,7 @@ class InoutByDay extends PureComponent<IProps, IState> {
         if (msg === 'success') {
           runInAction(() => {
             this.setState({ list: data, total: data.length });
+            console.log(this.state.list);
           });
         }
       })

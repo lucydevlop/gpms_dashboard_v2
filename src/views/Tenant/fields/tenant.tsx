@@ -117,9 +117,6 @@ export function CorpRegisterFields(): IFormFieldConfig<keyof ICorpObj>[] {
         },
         children: null
       },
-      fieldOption: {
-        rules: [{ required: true, message: '필수 입력값 입니다' }]
-      },
       component: {
         type: FormType.Input,
         option: {
@@ -173,10 +170,13 @@ export function CorpRegisterFields(): IFormFieldConfig<keyof ICorpObj>[] {
         },
         children: null
       },
+      fieldOption: {
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
       component: {
         type: FormType.Input,
         option: {
-          placeholder: '전화번호'
+          placeholder: '- 포함 입력'
         }
       }
     },
@@ -349,12 +349,13 @@ export function CorpUpdateFields(corp: ICorpObj): IFormFieldConfig<keyof ICorpOb
         children: null
       },
       fieldOption: {
-        initialValue: corp.tel ? corp.tel : null
+        initialValue: corp ? corp.tel : null,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {
         type: FormType.Input,
         option: {
-          placeholder: '전화번호'
+          placeholder: '- 포함 입력'
         }
       }
     },
@@ -438,6 +439,31 @@ export function CorpUpdateFields(corp: ICorpObj): IFormFieldConfig<keyof ICorpOb
       component: {
         type: FormType.Select,
         selectOptions: delYnOpt
+      }
+    },
+    {
+      id: 'password',
+      label: '패스워드',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '패스워드 변경'
+        }
       }
     },
     {

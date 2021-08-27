@@ -43,6 +43,7 @@ class Dashboard extends React.Component<any, IDashboardState> {
         if (msg === 'success') {
           runInAction(() => {
             this.setState({ dashboardObjs: data });
+            console.log(this.state.dashboardObjs);
           });
         }
       })
