@@ -3,6 +3,7 @@ import { getCorpList } from '@/api/ticket';
 import { getCorps } from '@api/corp';
 import { ISelectOptions } from '@/utils/form';
 import { EDelYn } from '@/constants/list';
+import { ICorpObj } from '@models/corp';
 configure({ enforceActions: 'observed' });
 class CorpStore {
   @observable corpList: any = {};
@@ -40,9 +41,13 @@ class CorpStore {
 
   @action setCorpList(data: any) {
     this.corpList = data;
-    data.forEach((element: any) => {
-      this.corpSelectList.push({ value: element.sn, label: element.corpName });
-    });
+    data
+      .filter((element: ICorpObj) => {
+        return element.delYn === EDelYn.N;
+      })
+      .forEach((element: any) => {
+        this.corpSelectList.push({ value: element.sn, label: element.corpName });
+      });
   }
 
   @action setCorpAllList(data: any) {

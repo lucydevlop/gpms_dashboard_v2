@@ -4,6 +4,7 @@ import { conversionEnumLabel, convertDateToDateTime } from '@utils/conversion';
 import { EDelYn, ETicketType, EVehicleType, ticketTypeOpt, vehicleTypeOpt } from '@/constants/list';
 import { ICorpObj } from '@models/corp';
 import { string2mobile } from '@utils/tools';
+import Exception from '@components/Exception';
 
 export const readTicketObj = (textData: string): ITicketObj[] => {
   console.log(textData);
@@ -98,7 +99,7 @@ const buildTenantFormRows = (parsedData: string[][]): ICorpObj[] => {
   return parsedData.map<ICorpObj>((row) => ({
     delYn: row[0] ? row[0] : EDelYn.N,
     corpId: row[1] ? row[1] : '',
-    password: row[2],
+    password: row[2] ? row[2] : 'store123!@#',
     corpName: row[3],
     userName: row[4],
     dong: row[5],

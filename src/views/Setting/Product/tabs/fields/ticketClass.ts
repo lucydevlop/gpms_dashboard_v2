@@ -45,7 +45,12 @@ export function ticketClassFields(
       },
       component: {
         type: FormType.Select,
-        selectOptions: ticketTypeOpt
+        selectOptions: ticketTypeOpt.filter(
+          (d) =>
+            d.value !== ETicketType.NORMAL &&
+            d.value !== ETicketType.UNRECOGNIZED &&
+            d.value !== ETicketType.DISCOUNT
+        )
       }
     },
     {

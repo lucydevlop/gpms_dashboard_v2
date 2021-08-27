@@ -12,25 +12,16 @@ import {
   useOrUnuseOpt,
   vehicleTypeOpt
 } from '@/constants/list';
-import { IInoutSelectReq } from '@/models/inout';
 import { ITicketObj, ITicketSelectReq } from '@/models/ticket';
 import { corpStore } from '@/store/corpStore';
 import { localeStore } from '@/store/localeStore';
 import {
-  disabledDateAfterToday,
   disabledThreeMonth,
-  formColProps13Config,
   formColProps16Config,
-  formColProps24Config,
-  formColProps2Config,
-  formColProps6Config,
   IFormFieldConfig,
   ISelectOptions
 } from '@/utils/form';
-import Form from 'antd/lib/form/Form';
-import { toJS } from 'mobx';
 import moment from 'moment';
-import { IDiscountClassObj } from '@models/discountClass';
 
 const regisDateRangeConfig = {
   rules: [

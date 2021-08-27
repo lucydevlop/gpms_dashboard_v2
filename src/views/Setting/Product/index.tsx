@@ -48,9 +48,13 @@ class ProductSetting extends PureComponent<IProps, IState> {
           runInAction(() => {
             this.setState({ discountClasses: data });
             const unique: ISelectOptions[] = [];
-            this.state.discountClasses.forEach((e) => {
-              unique.push({ value: String(e.sn), label: e.discountNm });
-            });
+            this.state.discountClasses
+              .filter((e) => {
+                return e.delYn != EDelYn.Y;
+              })
+              .forEach((e) => {
+                unique.push({ value: String(e.sn), label: e.discountNm });
+              });
             this.setState({ discountSelectClasses: unique }, () =>
               console.log(this.state.discountSelectClasses)
             );
@@ -83,6 +87,30 @@ class ProductSetting extends PureComponent<IProps, IState> {
 
     this.setState({ loading: false });
   }
+
+  initDiscountClasses = () => {
+    getDiscountClasses()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ discountClasses: data });
+            const unique: ISelectOptions[] = [];
+            this.state.discountClasses
+              .filter((e) => {
+                return e.delYn != EDelYn.Y;
+              })
+              .forEach((e) => {
+                unique.push({ value: String(e.sn), label: e.discountNm });
+              });
+            this.setState({ discountSelectClasses: unique }, () =>
+              console.log(this.state.discountSelectClasses)
+            );
+          });
+        }
+      })
+      .catch(() => {});
+  };
 
   handleTicketClass = (info: ITicketClassObj) => {
     console.log('handleTicketClass', info);
@@ -128,7 +156,7 @@ class ProductSetting extends PureComponent<IProps, IState> {
           if (msg === 'success') {
             runInAction(() => {
               const discountClasses = [...this.state.discountClasses, data];
-              this.setState({ discountClasses: discountClasses });
+              this.setState({ discountClasses: discountClasses }, () => this.initDiscountClasses());
             });
           }
         })
@@ -145,7 +173,7 @@ class ProductSetting extends PureComponent<IProps, IState> {
                 }
                 return { ...t };
               });
-              this.setState({ discountClasses: discountClasses });
+              this.setState({ discountClasses: discountClasses }, () => this.initDiscountClasses());
             });
           }
         })
