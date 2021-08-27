@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import { ICorpTicketObj } from '@models/corp';
 import { Card, Row } from 'antd';
 import moment from 'moment';
+import { ICorpTicketObj } from '@models/corpTicket';
 
 interface IProps {
   ableTickets: ICorpTicketObj[];

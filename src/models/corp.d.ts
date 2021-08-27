@@ -1,6 +1,4 @@
-import { ECorpSearchCondition, EDayRangeType, EDelYn } from '@/constants/list';
-import { IDiscountClassObj } from '@models/discountClass';
-import { ICorpTicketClassObj } from '@models/corpTicketClass';
+import { ECorpSearchCondition, EDelYn } from '@/constants/list';
 
 export interface ICorpObj {
   sn?: number;
@@ -26,23 +24,6 @@ export interface ICorpSearchReq {
   searchLabel?: ECorpSearchCondition;
   searchText?: string;
   useStatus?: EDelYn;
-}
-
-export interface ICorpTicketObj {
-  sn?: number;
-  corpSn: number;
-  classSn: number;
-  totalQuantity: number;
-  useQuantity?: number;
-  orderNum?: number;
-  delYn: EDelYn;
-  corpTicketClass: ICorpTicketClassObj;
-  corp: ICorpObj;
-  totalCnt: number;
-  ableCnt: number;
-  todayUse: number;
-  // non entity
-  applyCnt?: number;
 }
 
 export interface ICorpSearchVehicleObj {

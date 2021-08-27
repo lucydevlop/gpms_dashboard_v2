@@ -31,6 +31,9 @@ import { parkinglotStore } from '@/store/parkinglotStore';
 import { ITicketObj } from '@models/ticket';
 import { DownloadOutlined } from '@ant-design/icons';
 import { generateCsv } from '@utils/downloadUtil';
+import { getDiscountClasses } from '@api/discountClass';
+import { ISelectOptions } from '@utils/form';
+import { IDiscountClassObj } from '@models/discountClass';
 
 interface IState {
   loading: boolean;
@@ -44,6 +47,7 @@ interface IState {
   gates: any[];
   selected?: IInoutObj;
   deleteList: any[];
+  discountClasses: IDiscountClassObj[];
 }
 @inject('parkinglotStore', 'localeStore')
 @observer
@@ -59,7 +63,8 @@ class Inout extends PureComponent<any, IState> {
       createModal: false,
       gates: [],
       detailModal: false,
-      deleteList: []
+      deleteList: [],
+      discountClasses: []
     };
   }
 
@@ -71,6 +76,18 @@ class Inout extends PureComponent<any, IState> {
       });
       this.setState({ gates: unique });
     });
+
+    getDiscountClasses()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ discountClasses: data });
+          });
+        }
+      })
+      .catch(() => {});
+
     const createTm = [moment(new Date()).subtract(3, 'days'), moment(new Date())];
     const searchParam: IInoutSelectReq = {
       startDate: createTm[0].format('YYYY-MM-DD'),
@@ -461,62 +478,60 @@ class Inout extends PureComponent<any, IState> {
           summary={() => (
             <Table.Summary fixed>
               <Table.Summary.Row>
-                <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                <Table.Summary.Cell index={1}>
+                <Table.Summary.Cell index={0}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>Total: {total}</span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={2}>
+                <Table.Summary.Cell index={1}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     일반: {list.filter((l) => l.parkcartype === ETicketType.NORMAL).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={3}>
+                <Table.Summary.Cell index={2}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     정기권: {list.filter((l) => l.parkcartype === ETicketType.SEASONTICKET).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={4}>
+                <Table.Summary.Cell index={3}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     방문권: {list.filter((l) => l.parkcartype === ETicketType.VISITTICKET).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={5}>
+                <Table.Summary.Cell index={4}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     무료주차권:{' '}
                     {list.filter((l) => l.parkcartype === ETicketType.FREETICKET).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={6}>
+                <Table.Summary.Cell index={5}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     미인식: {list.filter((l) => l.parkcartype === ETicketType.UNRECOGNIZED).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={6} />
                 <Table.Summary.Cell index={7} />
-                <Table.Summary.Cell index={8} />
-                <Table.Summary.Cell index={9}>
+                <Table.Summary.Cell index={8}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'parkfee'))}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={10}>
+                <Table.Summary.Cell index={9}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(
                       this.sum(list, 'discountfee') + this.sum(list, 'dayDiscountfee')
                     )}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={11}>
+                <Table.Summary.Cell index={10}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'payfee'))}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={12}>
+                <Table.Summary.Cell index={11}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={13}>
+                <Table.Summary.Cell index={12}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
                   </span>
@@ -525,7 +540,7 @@ class Inout extends PureComponent<any, IState> {
             </Table.Summary>
           )}
           onChange={this.paginationChange}
-          isSelected
+          // isSelected
         />
         {this.state.createModal ? (
           <DraggableModal
@@ -557,6 +572,7 @@ class Inout extends PureComponent<any, IState> {
               onSubmit={(value) => this.update(value)}
               inout={this.state.selected!!}
               gates={this.state.gates}
+              discountClasses={this.state.discountClasses}
             />
           </DraggableModal>
         ) : null}

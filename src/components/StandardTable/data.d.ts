@@ -67,7 +67,7 @@ export interface StandardTableProps {
   onCleanSelectedKeys?: () => void;
   isSelected?: boolean;
   hidePagination?: boolean;
-  clearSelectKey: boolean;
+  clearSelectKey?: boolean;
 }
 
 export type TableColumnProps = ColumnProps<TableListItem> & {

@@ -8,7 +8,7 @@ import { breakerStatusOpt, gateTypeOpt, ticketTypeOpt } from '@/constants/list';
 import zdsTips from '@utils/tips';
 import { localeStore } from '@store/localeStore';
 import { actionGate, actionReset } from '@api/dashboard';
-import { ICorpTicketObj } from '@models/corp';
+import { ICorpTicketObj } from '@models/corpTicket';
 
 interface InfoCardProps {
   icon: any;

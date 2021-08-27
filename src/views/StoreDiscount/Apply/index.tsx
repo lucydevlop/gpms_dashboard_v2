@@ -6,7 +6,7 @@ import { Form } from '@ant-design/compatible';
 import VehicleSearch from '@views/StoreDiscount/Apply/VehicleSearch';
 import { applyCorpDiscountTicket, getCorpAllTickets, getVehicleSearch } from '@api/corp';
 import { runInAction } from 'mobx';
-import { ICorpTicketObj, ICorpSearchVehicleObj } from '@models/corp';
+import { ICorpSearchVehicleObj } from '@models/corp';
 import TicketSummary from '@views/StoreDiscount/Apply/TicketSummary';
 import VehicleList from '@views/StoreDiscount/Apply/VehicleList';
 import DraggableModal from '@components/DraggableModal';
@@ -14,6 +14,7 @@ import { localeStore } from '@store/localeStore';
 import TicketAplyModal from '@views/StoreDiscount/Apply/TicketAplyModal';
 import { userStore } from '@store/userStore';
 import zdsTips from '@utils/tips';
+import { ICorpTicketObj } from '@models/corpTicket';
 
 interface IState {
   loading: boolean;
@@ -183,7 +184,7 @@ class StoreDiscountAply extends React.PureComponent<any, IState> {
             }}
           >
             <TicketAplyModal
-              ableTickets={this.state.selecteTicket}
+              ableTickets={this.state.selecteTicket.filter((t) => t.ableCnt > 0)}
               image={this.state.selected ? this.state.selected.imImagePath!! : null}
               onSubmit={(value) => this.handleDiscountAply(value)}
             />
