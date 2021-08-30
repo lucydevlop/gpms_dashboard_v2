@@ -4,13 +4,13 @@ import {
   formColProps16Config,
   formColProps6Config,
   IFormFieldConfig
-} from '@/utils/form';
+} from '@utils/form';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
 import { EInoutType, ETicketType, inoutSearchDateTypeOpt, ticketTypeOpt } from '@/constants/list';
 import { FormType } from '@/constants/form';
 import { datePickerFormat } from '@/constants';
 import moment from 'moment';
-import { conversionDateTime } from '@/utils/conversion';
+import { conversionDateTime } from '@utils/conversion';
 import { inspect } from 'util';
 import styles from '../Modal/inout.module.less';
 

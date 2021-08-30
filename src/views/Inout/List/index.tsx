@@ -1,21 +1,23 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
 import {
+  calcParkinglotInout,
   createParkinglotInout,
   deleteParkinglotInout,
   editParkinglotInout,
-  getInouts
-} from '@/api/Inout';
+  getInouts,
+  updateParkinglotInout
+} from '@api/Inout';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
 import { runInAction } from 'mobx';
 import Table, { ColumnProps } from 'antd/lib/table';
-import { localeStore } from '@/store/localeStore';
-import PageWrapper from '@/components/PageWrapper';
-import SearchForm from '@/components/StandardTable/SearchForm';
-import StandardTable from '@/components/StandardTable';
+import { localeStore } from '@store/localeStore';
+import PageWrapper from '@components/PageWrapper';
+import SearchForm from '@components/StandardTable/SearchForm';
+import StandardTable from '@components/StandardTable';
 import { TablePaginationConfig } from 'antd/es/table';
 import { Button } from 'antd';
-import { searchInoutFields } from '@views/Inout/FormFields/FormFields';
+import { searchInoutFields } from '@views/Inout/List/FormFields/FormFields';
 import {
   conversionDate,
   conversionDateTime,
@@ -24,10 +26,10 @@ import {
 } from '@utils/conversion';
 import { EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
 import moment from 'moment';
-import DraggableModal from '@/components/DraggableModal';
-import InoutCreateModalForm from '@/views/Inout/Modal/InoutCreateModal';
+import DraggableModal from '@components/DraggableModal';
+import InoutCreateModalForm from '@views/Inout/List/Modal/InoutCreateModal';
 import InoutDetailModalForm from './Modal/InoutDetailModal';
-import { parkinglotStore } from '@/store/parkinglotStore';
+import { parkinglotStore } from '@store/parkinglotStore';
 import { ITicketObj } from '@models/ticket';
 import { DownloadOutlined } from '@ant-design/icons';
 import { generateCsv } from '@utils/downloadUtil';
@@ -105,10 +107,10 @@ class Inout extends PureComponent<any, IState> {
 
   update = (info: IInoutObj) => {
     this.setState({ detailModal: false });
-    editParkinglotInout(info).then((res: any) => {
+    updateParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
-      if (msg === 'success') {
-        this.pollData();
+      if (msg === 'ok') {
+        this.setState({ selected: data }, () => this.pollData());
       }
     });
   };
@@ -173,6 +175,16 @@ class Inout extends PureComponent<any, IState> {
     });
   };
 
+  calc = (info: IInoutObj) => {
+    console.log('calc', info);
+    calcParkinglotInout(info).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+        this.setState({ selected: data });
+      }
+    });
+  };
+
   paginationChange = (pagination: TablePaginationConfig) => {
     this.setState({ current: pagination.current || 1 });
   };
@@ -190,16 +202,6 @@ class Inout extends PureComponent<any, IState> {
         >
           + {localeObj['label.create'] || '신규 등록'}
         </Button>
-        {/*<Button*/}
-        {/*  type="ghost"*/}
-        {/*  onClick={(e: any) => {*/}
-        {/*    e.stopPropagation();*/}
-        {/*    this.delete();*/}
-        {/*  }}*/}
-        {/*  style={{ marginLeft: '1rem' }}*/}
-        {/*>*/}
-        {/*  -{localeObj['label.delete'] || '삭제'}*/}
-        {/*</Button>*/}
         <Button
           style={{ marginLeft: '1rem' }}
           type="primary"
@@ -454,7 +456,7 @@ class Inout extends PureComponent<any, IState> {
           fieldConfig={searchFields}
         />
         <StandardTable
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'max-content', y: 800 }}
           columns={columns}
           loading={this.state.loading}
           // @ts-ignore
@@ -509,29 +511,30 @@ class Inout extends PureComponent<any, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={6} />
                 <Table.Summary.Cell index={7} />
-                <Table.Summary.Cell index={8}>
+                <Table.Summary.Cell index={8} />
+                <Table.Summary.Cell index={9}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'parkfee'))}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={9}>
+                <Table.Summary.Cell index={10}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(
                       this.sum(list, 'discountfee') + this.sum(list, 'dayDiscountfee')
                     )}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={10}>
+                <Table.Summary.Cell index={11}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'payfee'))}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={11}>
+                <Table.Summary.Cell index={12}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={12}>
+                <Table.Summary.Cell index={13}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
                   </span>
@@ -573,6 +576,7 @@ class Inout extends PureComponent<any, IState> {
               inout={this.state.selected!!}
               gates={this.state.gates}
               discountClasses={this.state.discountClasses}
+              onCalc={(value) => this.calc(value)}
             />
           </DraggableModal>
         ) : null}

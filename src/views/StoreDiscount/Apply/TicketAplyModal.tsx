@@ -138,7 +138,7 @@ class TicketAplyModal extends PureComponent<IProps, IState> {
           <Row gutter={24}>
             <Col xl={12} lg={12} md={24} sm={24} xs={24}>
               <Image
-                src={`${process.env.REACT_APP_IMAGE_URL}/${this.props.image}`}
+                src={`${this.props.image}`}
                 ratio={1.8}
                 // src={
                 //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'

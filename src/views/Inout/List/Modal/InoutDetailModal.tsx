@@ -4,8 +4,8 @@ import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import { Form } from '@ant-design/compatible';
 import { Button, Card, Col, InputNumber, Row } from 'antd';
 import { getFormFields } from '@utils/form';
-import { conversionDateTime, conversionEnumValue } from '@/utils/conversion';
-import { IInoutDiscountApplyObj, IInoutObj } from '@/models/inout';
+import { conversionDateTime, conversionEnumValue } from '@utils/conversion';
+import { IInoutDiscountApplyObj, IInoutObj } from '@models/inout';
 import { newInoutDetailFileds } from '../FormFields/FormFields';
 import Meta from 'antd/lib/card/Meta';
 import { dayRangeTypeOpt, discountApplyTypeOpt, EInoutType } from '@/constants/list';
@@ -13,12 +13,14 @@ import emptyImage from '@views/Dashboard/images/empty.svg';
 import { IDiscountClassObj } from '@models/discountClass';
 import StandardTable from '@components/StandardTable';
 import { ColumnProps } from 'antd/es/table';
+import zdsTips from '@utils/tips';
 
 interface IInoutDetailModalProps extends FormComponentProps {
   inout: IInoutObj;
   gates: any[];
   onSubmit: (inout: IInoutObj) => void;
   discountClasses: IDiscountClassObj[];
+  onCalc: (inout: IInoutObj) => void;
 }
 interface IState {
   isCalc: boolean;
@@ -50,6 +52,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
             ? ((fieldsValue.outDate = conversionDateTime(fieldsValue.outDate)),
               (fieldsValue.type = EInoutType.OUT))
             : (fieldsValue.type = EInoutType.IN);
+          // fieldsValue.type = this.props.inout.type;
           this.setState({ isCalc: true });
           fieldsValue.addDiscountClasses = this.state.selectedDiscountClass.map((item) => {
             const discount: IInoutDiscountApplyObj = {
@@ -60,8 +63,37 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
             return discount;
           });
           console.log('calc', fieldsValue);
-          // if (!err) this.props.onSubmit(fieldsValue);
+          if (!err) this.props.onCalc(fieldsValue);
         });
+        break;
+      case 'save':
+        if (!this.state.isCalc) {
+          zdsTips.error('주차요금계산을 먼저 실행해주세요');
+        } else {
+          this.props.form.validateFields((err, fieldsValue) => {
+            fieldsValue.inDate = conversionDateTime(fieldsValue.inDate);
+            fieldsValue.outDate = conversionDateTime(fieldsValue.outDate);
+            fieldsValue.parkinSn = this.props.inout.parkinSn;
+            fieldsValue.parkoutSn = this.props.inout.parkoutSn;
+            fieldsValue.type = this.props.inout.type;
+            fieldsValue.parktime = this.props.inout.parktime;
+            fieldsValue.payfee = this.props.inout.payfee;
+            fieldsValue.parkfee = this.props.inout.parkfee;
+            fieldsValue.dayDiscountfee = this.props.inout.dayDiscountfee;
+            fieldsValue.discountfee = this.props.inout.discountfee;
+            fieldsValue.addDiscountClasses = this.state.selectedDiscountClass.map((item) => {
+              const discount: IInoutDiscountApplyObj = {
+                inSn: fieldsValue.parkinSn,
+                discountClassSn: item.sn,
+                cnt: item.aplyCnt ? item.aplyCnt : 0
+              };
+              return discount;
+            });
+            // console.log('save', fieldsValue);
+            this.props.onSubmit(fieldsValue);
+          });
+        }
+        break;
     }
   }
 

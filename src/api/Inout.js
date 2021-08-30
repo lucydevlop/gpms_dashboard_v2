@@ -40,22 +40,16 @@ export function editParkinglotInout(data) {
   });
 }
 
-export function calcParkinglotInout(parkinglotId, data) {
-  return io.post(
-    process.env.REACT_APP_API_DOMAIN_URL + '/cs/parkinglot/' + parkinglotId + '/calc/inout',
-    {
-      data
-    }
-  );
+export function calcParkinglotInout(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/inouts/calc', {
+    data
+  });
 }
 
-export function updateParkinglotInout(parkinglotId, data) {
-  return io.patch(
-    process.env.REACT_APP_API_DOMAIN_URL + '/cs/parkinglot/' + parkinglotId + '/inout',
-    {
-      data
-    }
-  );
+export function updateParkinglotInout(data) {
+  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/inouts', {
+    data
+  });
 }
 
 export function getParkinglotDiscountClass(parkinglotId) {
