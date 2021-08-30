@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
-import Table, { ColumnProps } from 'antd/lib/table';
 import { IStatisticsInoutDayObj, IStatisticsInoutDaySearchReq } from '@models/statisticsInout';
-import { getInoutByDay } from '@api/statistics';
-import { runInAction } from 'mobx';
 import moment from 'moment';
+import { getInoutByMonth } from '@api/statistics';
+import { runInAction } from 'mobx';
 import { conversionDate, convertNumberWithCommas } from '@utils/conversion';
+import { searchStatisticsInoutMonthFields } from '@views/Statistics/Inout/tabs/inoutFields';
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
-import { searchStatisticsInoutDayFields } from '@views/Statistics/Inout/tabs/inoutFields';
+import Table from 'antd/lib/table';
 
 interface IProps {}
 interface IState {
@@ -19,7 +19,7 @@ interface IState {
   searchParam?: IStatisticsInoutDaySearchReq;
 }
 
-class InoutByDay extends PureComponent<IProps, IState> {
+class InoutByMonth extends PureComponent<IProps, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -32,10 +32,10 @@ class InoutByDay extends PureComponent<IProps, IState> {
   }
   componentDidMount() {
     this.setState({ loading: true });
-    const createTm = [moment(new Date()).subtract(7, 'days'), moment(new Date())];
+    const createTm = [moment(new Date()).subtract(7, 'months'), moment(new Date())];
     const searchParam: IStatisticsInoutDaySearchReq = {
-      startDate: createTm[0].format('YYYY-MM-DD'),
-      endDate: createTm[1].format('YYYY-MM-DD'),
+      startDate: createTm[0].format('YYYY-MM-01'),
+      endDate: createTm[1].format('YYYY-MM-') + createTm[1].daysInMonth(),
       createTm: [createTm[0].unix(), createTm[1].unix()]
     };
     // console.log('pollData', searchParam);
@@ -48,7 +48,7 @@ class InoutByDay extends PureComponent<IProps, IState> {
   }
 
   async pollData() {
-    getInoutByDay(this.state.searchParam)
+    getInoutByMonth(this.state.searchParam)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -86,7 +86,8 @@ class InoutByDay extends PureComponent<IProps, IState> {
         dataIndex: 'date',
         key: 'date',
         width: 110,
-        align: 'center'
+        align: 'center',
+        render: (text: string, record: IStatisticsInoutDayObj) => record.date.substring(0, 7)
       },
       {
         title: '입차',
@@ -156,12 +157,26 @@ class InoutByDay extends PureComponent<IProps, IState> {
             key: 'payFee',
             width: 110,
             align: 'center'
+          },
+          {
+            title: '미납요금',
+            dataIndex: 'nonPayment',
+            key: 'nonPayment',
+            width: 110,
+            align: 'center'
+          },
+          {
+            title: '정산요금',
+            dataIndex: 'payment',
+            key: 'payment',
+            width: 110,
+            align: 'center'
           }
         ]
       }
     ];
     const { list, total, current, pageSize } = this.state;
-    const searchFields = searchStatisticsInoutDayFields();
+    const searchFields = searchStatisticsInoutMonthFields();
 
     return (
       <>
@@ -214,6 +229,12 @@ class InoutByDay extends PureComponent<IProps, IState> {
                 <Table.Summary.Cell index={8}>
                   <span>{convertNumberWithCommas(this.sum(list, 'payFee'))}</span>
                 </Table.Summary.Cell>
+                <Table.Summary.Cell index={9}>
+                  <span>{convertNumberWithCommas(this.sum(list, 'nonPayment'))}</span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={9}>
+                  <span>{convertNumberWithCommas(this.sum(list, 'payment'))}</span>
+                </Table.Summary.Cell>
               </Table.Summary.Row>
             </Table.Summary>
           )}
@@ -226,4 +247,4 @@ class InoutByDay extends PureComponent<IProps, IState> {
   }
 }
 
-export default InoutByDay;
+export default InoutByMonth;
