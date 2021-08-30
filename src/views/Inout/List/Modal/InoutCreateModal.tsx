@@ -1,6 +1,6 @@
-import { IInoutObj } from '@/models/inout';
-import { conversionDateTime } from '@/utils/conversion';
-import { getFormFields } from '@/utils/form';
+import { IInoutObj } from '@models/inout';
+import { conversionDateTime } from '@utils/conversion';
+import { getFormFields } from '@utils/form';
 import { Form } from '@ant-design/compatible';
 import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import { Button, Row } from 'antd';

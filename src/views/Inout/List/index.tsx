@@ -1,21 +1,23 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
 import {
+  calcParkinglotInout,
   createParkinglotInout,
   deleteParkinglotInout,
   editParkinglotInout,
-  getInouts
-} from '@/api/Inout';
+  getInouts,
+  updateParkinglotInout
+} from '@api/Inout';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
 import { runInAction } from 'mobx';
 import Table, { ColumnProps } from 'antd/lib/table';
-import { localeStore } from '@/store/localeStore';
-import PageWrapper from '@/components/PageWrapper';
-import SearchForm from '@/components/StandardTable/SearchForm';
-import StandardTable from '@/components/StandardTable';
+import { localeStore } from '@store/localeStore';
+import PageWrapper from '@components/PageWrapper';
+import SearchForm from '@components/StandardTable/SearchForm';
+import StandardTable from '@components/StandardTable';
 import { TablePaginationConfig } from 'antd/es/table';
 import { Button } from 'antd';
-import { searchInoutFields } from '@views/Inout/FormFields/FormFields';
+import { searchInoutFields } from '@views/Inout/List/FormFields/FormFields';
 import {
   conversionDate,
   conversionDateTime,
@@ -24,13 +26,16 @@ import {
 } from '@utils/conversion';
 import { EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
 import moment from 'moment';
-import DraggableModal from '@/components/DraggableModal';
-import InoutCreateModalForm from '@/views/Inout/Modal/InoutCreateModal';
+import DraggableModal from '@components/DraggableModal';
+import InoutCreateModalForm from '@views/Inout/List/Modal/InoutCreateModal';
 import InoutDetailModalForm from './Modal/InoutDetailModal';
-import { parkinglotStore } from '@/store/parkinglotStore';
+import { parkinglotStore } from '@store/parkinglotStore';
 import { ITicketObj } from '@models/ticket';
 import { DownloadOutlined } from '@ant-design/icons';
 import { generateCsv } from '@utils/downloadUtil';
+import { getDiscountClasses } from '@api/discountClass';
+import { ISelectOptions } from '@utils/form';
+import { IDiscountClassObj } from '@models/discountClass';
 
 interface IState {
   loading: boolean;
@@ -44,6 +49,7 @@ interface IState {
   gates: any[];
   selected?: IInoutObj;
   deleteList: any[];
+  discountClasses: IDiscountClassObj[];
 }
 @inject('parkinglotStore', 'localeStore')
 @observer
@@ -59,7 +65,8 @@ class Inout extends PureComponent<any, IState> {
       createModal: false,
       gates: [],
       detailModal: false,
-      deleteList: []
+      deleteList: [],
+      discountClasses: []
     };
   }
 
@@ -71,6 +78,18 @@ class Inout extends PureComponent<any, IState> {
       });
       this.setState({ gates: unique });
     });
+
+    getDiscountClasses()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ discountClasses: data });
+          });
+        }
+      })
+      .catch(() => {});
+
     const createTm = [moment(new Date()).subtract(3, 'days'), moment(new Date())];
     const searchParam: IInoutSelectReq = {
       startDate: createTm[0].format('YYYY-MM-DD'),
@@ -88,10 +107,10 @@ class Inout extends PureComponent<any, IState> {
 
   update = (info: IInoutObj) => {
     this.setState({ detailModal: false });
-    editParkinglotInout(info).then((res: any) => {
+    updateParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
-      if (msg === 'success') {
-        this.pollData();
+      if (msg === 'ok') {
+        this.setState({ selected: data }, () => this.pollData());
       }
     });
   };
@@ -156,6 +175,16 @@ class Inout extends PureComponent<any, IState> {
     });
   };
 
+  calc = (info: IInoutObj) => {
+    console.log('calc', info);
+    calcParkinglotInout(info).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'success') {
+        this.setState({ selected: data });
+      }
+    });
+  };
+
   paginationChange = (pagination: TablePaginationConfig) => {
     this.setState({ current: pagination.current || 1 });
   };
@@ -173,16 +202,6 @@ class Inout extends PureComponent<any, IState> {
         >
           + {localeObj['label.create'] || '신규 등록'}
         </Button>
-        {/*<Button*/}
-        {/*  type="ghost"*/}
-        {/*  onClick={(e: any) => {*/}
-        {/*    e.stopPropagation();*/}
-        {/*    this.delete();*/}
-        {/*  }}*/}
-        {/*  style={{ marginLeft: '1rem' }}*/}
-        {/*>*/}
-        {/*  -{localeObj['label.delete'] || '삭제'}*/}
-        {/*</Button>*/}
         <Button
           style={{ marginLeft: '1rem' }}
           type="primary"
@@ -437,7 +456,7 @@ class Inout extends PureComponent<any, IState> {
           fieldConfig={searchFields}
         />
         <StandardTable
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'max-content', y: 800 }}
           columns={columns}
           loading={this.state.loading}
           // @ts-ignore
@@ -461,32 +480,31 @@ class Inout extends PureComponent<any, IState> {
           summary={() => (
             <Table.Summary fixed>
               <Table.Summary.Row>
-                <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                <Table.Summary.Cell index={1}>
+                <Table.Summary.Cell index={0}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>Total: {total}</span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={2}>
+                <Table.Summary.Cell index={1}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     일반: {list.filter((l) => l.parkcartype === ETicketType.NORMAL).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={3}>
+                <Table.Summary.Cell index={2}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     정기권: {list.filter((l) => l.parkcartype === ETicketType.SEASONTICKET).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={4}>
+                <Table.Summary.Cell index={3}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     방문권: {list.filter((l) => l.parkcartype === ETicketType.VISITTICKET).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={5}>
+                <Table.Summary.Cell index={4}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     무료주차권:{' '}
                     {list.filter((l) => l.parkcartype === ETicketType.FREETICKET).length}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={6}>
+                <Table.Summary.Cell index={5}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
                     미인식: {list.filter((l) => l.parkcartype === ETicketType.UNRECOGNIZED).length}
                   </span>
@@ -525,7 +543,7 @@ class Inout extends PureComponent<any, IState> {
             </Table.Summary>
           )}
           onChange={this.paginationChange}
-          isSelected
+          // isSelected
         />
         {this.state.createModal ? (
           <DraggableModal
@@ -557,6 +575,8 @@ class Inout extends PureComponent<any, IState> {
               onSubmit={(value) => this.update(value)}
               inout={this.state.selected!!}
               gates={this.state.gates}
+              discountClasses={this.state.discountClasses}
+              onCalc={(value) => this.calc(value)}
             />
           </DraggableModal>
         ) : null}
