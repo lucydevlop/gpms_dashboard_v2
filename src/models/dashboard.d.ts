@@ -12,4 +12,8 @@ export interface IDashboardObj {
   gateType: string;
   vehicleNo?: string;
   carType?: string;
+  outImage?: string;
+  outVehicleNo?: string;
+  outCarType?: string;
+  outDate?: Date;
 }
