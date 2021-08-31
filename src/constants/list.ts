@@ -3,16 +3,33 @@ import { localeStore } from '@store/localeStore';
 
 export enum EDelYn {
   Y = 'Y',
-  N = 'N'
+  N = 'N',
+  ALL = 'ALL'
 }
+export const delYnOpt: ISelectOptions[] = [
+  { value: EDelYn.Y, label: '비활성', color: 'red' },
+  { value: EDelYn.N, label: '활성', color: 'blue' },
+  { value: EDelYn.ALL, label: '전체', color: 'blue' }
+];
+
 export enum EStatus {
   On = 'On',
   Off = 'Off'
 }
 
-export const statusOpt: ISelectOptions[] = [
-  { value: EStatus.On, label: '开启', color: 'blue' },
-  { value: EStatus.Off, label: '关闭', color: 'red' }
+export const radioSelectOpt: ISelectOptions[] = [
+  { value: EStatus.On, label: '사용', color: 'black' },
+  { value: EStatus.Off, label: '사용안함', color: 'black' }
+];
+
+export enum EOnOff {
+  ON = 'ON',
+  OFF = 'OFF'
+}
+
+export const onOffSelectOpt: ISelectOptions[] = [
+  { value: EOnOff.ON, label: '사용', color: 'black' },
+  { value: EOnOff.OFF, label: '사용안함', color: 'black' }
 ];
 
 export enum ECity {
@@ -59,20 +76,22 @@ export enum ECategory {
   LPR = 'LPR',
   BREAKER = 'BREAKER',
   DISPLAY = 'DISPLAY',
-  PAYSTATION = 'PAYSTATION'
+  PAYSTATION = 'PAYSTATION',
+  VOIP = 'VOIP'
 }
 
 export const categoryOpt: ISelectOptions[] = [
   { value: ECategory.LPR, label: 'LPR', color: 'black' },
   { value: ECategory.BREAKER, label: '차단기', color: 'blue' },
   { value: ECategory.DISPLAY, label: '전광판', color: 'green' },
-  { value: ECategory.PAYSTATION, label: '정산기', color: 'navy' }
+  { value: ECategory.PAYSTATION, label: '정산기', color: 'navy' },
+  { value: ECategory.VOIP, label: 'VOIP', color: 'black' }
 ];
 
 export enum EGateType {
   IN = 'IN',
   OUT = 'OUT',
-  INOUT = 'IN-OUT'
+  INOUT = 'IN_OUT'
 }
 
 export const gateTypeOpt: ISelectOptions[] = [
@@ -85,14 +104,14 @@ export enum EBreakerStatus {
   UP = 'UP',
   DOWN = 'DOWN',
   UNLOCK = 'UNLOCK',
-  LOCK = 'LOCK',
+  UPLOCK = 'UPLOCK',
   XUPLOCK = 'XUPLOCK',
   NONE = 'NONE'
 }
 
 export const breakerStatusOpt: ISelectOptions[] = [
   { value: EBreakerStatus.UP, label: '열림', color: 'blue' },
-  { value: EBreakerStatus.LOCK, label: '열림고정', color: 'yellow' },
+  { value: EBreakerStatus.UPLOCK, label: '열림고정', color: 'black' },
   { value: EBreakerStatus.UNLOCK, label: '고정해제', color: 'cyan' },
   { value: EBreakerStatus.DOWN, label: '닫힘', color: 'magenta' },
   { value: EBreakerStatus.XUPLOCK, label: '열림고정(수동)', color: 'gray' },
@@ -124,6 +143,7 @@ export const vehicleTypeOpt: ISelectOptions[] = [
 ];
 
 export enum ETicketType {
+  ALL = 'ALL',
   NORMAL = 'NORMAL',
   SEASONTICKET = 'SEASONTICKET',
   FREETICKET = 'FREETICKET',
@@ -138,7 +158,8 @@ export const ticketTypeOpt: ISelectOptions[] = [
   { value: ETicketType.VISITTICKET, label: '방문권', color: 'black' },
   { value: ETicketType.NORMAL, label: '일반차량', color: 'black' },
   { value: ETicketType.UNRECOGNIZED, label: '미인식', color: 'red' },
-  { value: ETicketType.DISCOUNT, label: '미인식', color: 'red' }
+  { value: ETicketType.DISCOUNT, label: '할인', color: 'red' },
+  { value: ETicketType.ALL, label: '전체', color: 'red' }
 ];
 
 export enum ETicketSearchDateType {
@@ -205,4 +226,227 @@ export enum EPayType {
 export const payTypeOpt: ISelectOptions[] = [
   { value: EPayType.PAID, label: '유료', color: 'black' },
   { value: EPayType.FREE, label: '무료', color: 'black' }
+];
+
+export enum EGateActionType {
+  PCC = 'PCC',
+  GATE = 'GATE'
+}
+
+export const gateActionTypeOpt: ISelectOptions[] = [
+  { value: EGateActionType.PCC, label: 'PCC', color: 'black' },
+  { value: EGateActionType.GATE, label: 'GATE', color: 'black' }
+];
+
+export enum EGateOpenActionType {
+  NONE = 'NONE',
+  RECOGNITION = 'RECOGNITION',
+  RESTRICT = 'RESTRICT'
+}
+
+export const gateOpenActionTypeOpt: ISelectOptions[] = [
+  { value: EGateOpenActionType.NONE, label: '모두허용', color: 'black' },
+  { value: EGateOpenActionType.RECOGNITION, label: '인식차량허용', color: 'black' },
+  { value: EGateOpenActionType.RESTRICT, label: '등록차량허용', color: 'black' }
+];
+
+export enum EMessageClassType {
+  IN = 'IN',
+  OUT = 'OUT',
+  WAIT = 'WAIT'
+}
+
+export const messageClassTypeOpt: ISelectOptions[] = [
+  { value: EMessageClassType.IN, label: '입차', color: 'red' },
+  { value: EMessageClassType.OUT, label: '출차', color: 'blue' },
+  { value: EMessageClassType.WAIT, label: '정산', color: 'green' }
+];
+
+export enum EMessageTypeType {
+  NONMEMBER = 'NONMEMBER',
+  MEMBER = 'MEMBER',
+  CALL = 'CALL',
+  RESTRICTE = 'RESTRICTE',
+  FAILNUMBER = 'FAILNUMBER',
+  INIT = 'INIT',
+  FULL = 'FULL',
+  VIP = 'VIP'
+}
+export const messageTypeTypeOpt: ISelectOptions[] = [
+  { value: EMessageTypeType.INIT, label: '리셋', color: 'black' },
+  { value: EMessageTypeType.NONMEMBER, label: '일반차량', color: 'black' },
+  { value: EMessageTypeType.MEMBER, label: '티맵회원', color: 'black' },
+  { value: EMessageTypeType.VIP, label: '정기권', color: 'black' },
+  { value: EMessageTypeType.CALL, label: '호출', color: 'black' },
+  { value: EMessageTypeType.RESTRICTE, label: '입차제한차량', color: 'black' },
+  { value: EMessageTypeType.FAILNUMBER, label: '번호인식실패', color: 'black' },
+  { value: EMessageTypeType.FULL, label: '만차', color: 'black' }
+];
+
+export const useOrUnuseOpt: ISelectOptions[] = [
+  { value: EDelYn.N, label: '사용', color: 'blue' },
+  { value: EDelYn.Y, label: '미사용', color: 'red' },
+  { value: 'ALL', label: '전체', color: 'black' }
+];
+
+export enum ESearchLable {
+  CARNUM = 'CARNUM',
+  USERNAME = 'USERNAME'
+}
+
+export enum ETicketSearchType {
+  EFFECT = 'EFFECT',
+  EXPIRE = 'EXPIRE',
+  VALIDATE = 'VALIDATE'
+}
+
+export enum EVehiclDayType {
+  OFF = 'OFF',
+  DAY2 = 'DAY2',
+  DAY5 = 'DAY5'
+}
+
+export const ticketSearchTypeOpt: ISelectOptions[] = [
+  { value: ETicketSearchType.EFFECT, label: '시작일', color: 'black' },
+  { value: ETicketSearchType.EXPIRE, label: '종료일', color: 'black' },
+  { value: ETicketSearchType.VALIDATE, label: '사용일', color: 'balck' }
+];
+
+export const searchLableOpt: ISelectOptions[] = [
+  { value: ESearchLable.CARNUM, label: '차량번호', color: 'black' },
+  { value: ESearchLable.USERNAME, label: '이름', color: 'black' }
+];
+
+export const vehicleDayOpt: ISelectOptions[] = [
+  { value: EVehiclDayType.OFF, label: '사용안함', color: 'black' },
+  { value: EVehiclDayType.DAY2, label: '2부제', color: 'black' },
+  { value: EVehiclDayType.DAY5, label: '5부제', color: 'black' }
+];
+
+export enum EExternalSvrType {
+  NONE = 'NONE',
+  TMAP = 'TMAP',
+  ADTCAPS = 'ADTCAPS',
+  GLNT = 'GLNT'
+}
+
+export const externalSvrTypeOpt: ISelectOptions[] = [
+  { value: EExternalSvrType.NONE, label: '사용안함', color: 'black' },
+  { value: EExternalSvrType.TMAP, label: '티맵', color: 'black' },
+  { value: EExternalSvrType.ADTCAPS, label: 'ADT캡스', color: 'black' },
+  { value: EExternalSvrType.GLNT, label: 'GLNT', color: 'black' }
+];
+
+export const VisitorExternalTypeOpt: ISelectOptions[] = [{ value: 'APTNER', label: '아파트너' }];
+
+export enum ESearchUserType {
+  USERNAME = 'USERNAME',
+  USERID = 'USERID'
+}
+
+export enum ERoleType {
+  ADMIN = 'ADMIN',
+  OPERATION = 'OPERATION'
+}
+
+export const roleOpt: ISelectOptions[] = [
+  { value: ERoleType.ADMIN, label: '관리자', color: 'black' },
+  { value: ERoleType.OPERATION, label: '운영자', color: 'black' }
+];
+
+export const userSearchOpt: ISelectOptions[] = [
+  { value: ESearchUserType.USERNAME, label: '사용자이름', color: 'black' },
+  { value: ESearchUserType.USERID, label: '사용자ID', color: 'black' }
+];
+
+export enum ELprTypeType {
+  FRONT = 'FRONT',
+  BACK = 'BACK',
+  ASSIST = 'ASSIST',
+  INFRONT = 'INFRONT',
+  INBACK = 'INBACK',
+  OUTFRONT = 'OUTFRONT'
+}
+export const lprTypeTypeOpt: ISelectOptions[] = [
+  { value: ELprTypeType.FRONT, label: '전방', color: 'black' },
+  { value: ELprTypeType.BACK, label: '후방', color: 'black' },
+  { value: ELprTypeType.ASSIST, label: '보조', color: 'black' },
+  { value: ELprTypeType.INFRONT, label: '양방향 입차전방', color: 'black' },
+  { value: ELprTypeType.INBACK, label: '양방향 입차보조', color: 'black' },
+  { value: ELprTypeType.OUTFRONT, label: '양방향 출차전방', color: 'black' }
+];
+
+export enum EColorType {
+  C1 = 'C1',
+  C3 = 'C3',
+  C4 = 'C4',
+  C5 = 'C5'
+}
+
+export const colorTypeOpt: ISelectOptions[] = [
+  { value: EColorType.C1, label: '초록색', color: 'black' },
+  { value: EColorType.C3, label: '하늘색', color: 'black' },
+  { value: EColorType.C4, label: '빨강색', color: 'black' },
+  { value: EColorType.C5, label: '핑크색', color: 'black' }
+];
+
+export const lineOpt: ISelectOptions[] = [
+  { value: 1, label: '첫번째', color: 'black' },
+  { value: 2, label: '두번째', color: 'black' }
+];
+
+export const orderOpt: ISelectOptions[] = [
+  { value: 1, label: '첫번째', color: 'black' },
+  { value: 2, label: '두번째', color: 'black' },
+  { value: 3, label: '세번째', color: 'black' },
+  { value: 4, label: '네번째', color: 'black' },
+  { value: 5, label: '다섯번째', color: 'black' },
+  { value: 6, label: '여섯번째', color: 'black' },
+  { value: 7, label: '일곱번째', color: 'black' }
+];
+
+export enum ELineStatus {
+  FLOW = 'FLOW',
+  FIX = 'FIX'
+}
+
+export const elineStatusOpt: ISelectOptions[] = [
+  { value: ELineStatus.FIX, label: '고정', color: 'black' },
+  { value: ELineStatus.FLOW, label: '흐름', color: 'black' }
+];
+
+export enum EFareType {
+  BASIC = 'BASIC',
+  ADD = 'ADD'
+}
+
+export const fareTypeOpt: ISelectOptions[] = [
+  { value: EFareType.BASIC, label: '기본', color: 'black' },
+  { value: EFareType.ADD, label: '추가', color: 'black' }
+];
+
+export enum ECorpSearchCondition {
+  NAME = 'NAME',
+  ID = 'ID',
+  MOBILE = 'MOBILE'
+}
+
+export const corpSearchOpt: ISelectOptions[] = [
+  { value: ECorpSearchCondition.ID, label: '입주사ID', color: 'black' },
+  { value: ECorpSearchCondition.NAME, label: '입주사명', color: 'black' },
+  { value: ECorpSearchCondition.MOBILE, label: '전화번호', color: 'black' }
+];
+
+export enum ETicketAplyType {
+  FULL = 'FULL',
+  DAY = 'DAY',
+  NIGHT = 'NIGHT',
+  TIME = 'TIME'
+}
+
+export const ticketAplyTypeOpt: ISelectOptions[] = [
+  { value: ETicketAplyType.FULL, label: '전일', color: 'black' },
+  { value: ETicketAplyType.DAY, label: '주간', color: 'black' },
+  { value: ETicketAplyType.NIGHT, label: '야간', color: 'black' },
+  { value: ETicketAplyType.TIME, label: '시간', color: 'black' }
 ];

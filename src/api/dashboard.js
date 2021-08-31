@@ -9,3 +9,7 @@ export function actionReset(gateId, category) {
     `${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/gate/reset/${gateId}/${category}`
   );
 }
+
+export function actionGate(gateId, action) {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/gate/${action}/${gateId}`);
+}

@@ -1,17 +1,36 @@
 {
   "menu.dashboard": "dashboard",
-  "menu.inout": "입출차현황",
+  "menu.inout": "입출차",
+  "menu.ticket": "정기권관리",
+  "menu.tenant": "입주사",
   "menu.users": "사용자관리",
   "menu.setting": "설정관리",
+  "menu.statistics": "통계",
+  "menu.visitor": "방문권",
+  "menu.storeDiscount": "입주사할인",
 
   "menu.parkinglot.statistics": "주차장통계",
   "menu.parkinglot.parkinglot": "주차장목록",
   "menu.parkinglot.error": "주차장장애현황",
   "menu.parkinglotcs.inout": "입출차현황",
   "menu.parkinglotcs.ticket": "정기권",
+  "menu.tenant.list": "입주사리스트",
+  "menu.tenant.tickets": "입주사할인권",
+  "menu.inout.list": "입출차리스트",
 
   "menu.setting.parkinglot": "주차장기본정보",
   "menu.setting.facility": "시설정보",
+  "menu.setting.fee": "요금정보",
+  "menu.setting.product": "상품정보",
+  "menu.setting.user": "사용자정보",
+
+  "menu.visitor.register": "방문권등록",
+  "menu.visitor.list": "방문권리스트",
+
+  "menu.statistics.inout": "입출차통계",
+
+  "menu.storeDiscount.apply": "주차할인",
+  "menu.storeDiscount.list": "주차할인리스트",
 
   "dashboard.rowInfo0.title": "주차장수",
   "dashboard.rowInfo1.title": "호출건수",
@@ -41,7 +60,7 @@
   "layoutSetting.darkTheme": "다크모드",
   "layoutSetting.colorStyle": "색상 스타일",
 
-  "alert.delete": "선택 항목을 삭제 하시겠습니까?",
+  "alert.delete": "선택 항목을 삭제(비활성) 하시겠습니까?",
   "alert.reset": "리셋 하시겠습니까?",
   "alert.select.time": "시간을 선택하세요",
   "alert.select.breaker": "차단기 상태를 선택하세요",
@@ -58,6 +77,10 @@
   "label.selected": "선택",
   "label.items": "항목",
   "label.clear": "해제",
+  "label.startTime": "시작시간",
+  "label.endTime": "종료시간",
+  "label.download": "다운로드",
+  "label.upload": "업로드",
 
   "label.parkinglot.info": "주차장 정보",
   "label.breaker.control": "차단기 제어",
@@ -65,6 +88,31 @@
   "label.new.disability": "신규 장애",
   "label.parkinglot.disability": "주차장 장애",
   "label.inout.info": "주차장 입출차 현황",
+  "label.inout.create": "입출차 등록",
   "label.inout.detail": "입출차 상세 내역",
-  "label.ticket.info": "주차장 정기권 현황"
+  "label.ticket.info": "주차장 정기권 현황",
+  "label.farePolicy.info": "요금제",
+  "label.fareBasic.info": "요금 정책",
+  "label.fareInfo.info": "요금 블록",
+  "label.ticketClass.info": "주차 상품",
+
+  "label.ticket.create": "정기권 등록",
+  "label.ticket.update": "정기권 상세",
+
+  "label.setting.space": "만차제어",
+
+  "label.user.create": "사용자 등록",
+  "label.user.detail": "사용자 상세 내역",
+  "label.facility.info": "시설물 상세",
+  "label.gate.info": "게이트 상세",
+  "label.display.info": "전광판 상세",
+  "label.display.flowSetting": "전광판 흐름설정",
+
+  "label.tenant.info": "입주사 상세",
+  "label.tenant.discount": "입주사 할인",
+  "label.discount.detail" : "할인권 상세",
+  "label.discount.create": "할인권 생성",
+
+  "label.corpDiscount.create": "입주사 할인권 생성",
+  "label.corpDiscount.detail": "입주사 할인권 상세"
 }

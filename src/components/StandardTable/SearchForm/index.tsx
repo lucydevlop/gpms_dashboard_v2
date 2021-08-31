@@ -65,7 +65,7 @@ class BaseSearch extends React.Component<ISearchFormProps, ISearchFormState> {
             this.handlerSubmit();
           }}
         >
-          <Row className={'RCS-formContainer'}>
+          <Row gutter={24} className={'RCS-formContainer'}>
             {getFormFields(getFieldDecorator, newFieldsConfig, this.state.putAway, 7)}
           </Row>
         </Form>

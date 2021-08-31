@@ -33,7 +33,7 @@ const userInfo = Mock.mock({
 
 Mock.mock('/get/userInfo', userInfo);
 
-export function postLogin(userName, password) {
+export function adminLogin(userName, password) {
   // console.log('login', process.env.REACT_APP_API_DOMAIN_URL + '/login');
   return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/admin/login', {
     data: {
@@ -43,6 +43,38 @@ export function postLogin(userName, password) {
   });
 }
 
+export function userLogin(userName, password) {
+  // console.log('login', process.env.REACT_APP_API_DOMAIN_URL + '/login');
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/user/login', {
+    data: {
+      id: userName,
+      password: password
+    }
+  });
+}
+
 export function getUserInfo() {
   return io.get('/get/userInfo');
+}
+
+export function getAdminList(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/list', {
+    data
+  });
+}
+
+export function createUser(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/admin/register', {
+    data
+  });
+}
+
+export function editUser(data) {
+  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/edit', {
+    data
+  });
+}
+
+export function deleteUser(data) {
+  return io.delete(process.env.REACT_APP_API_DOMAIN_URL + `/dashboard/admin/delete/${data}`, data);
 }

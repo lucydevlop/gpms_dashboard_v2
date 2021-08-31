@@ -215,3 +215,11 @@ export function color2mix(color1: number[], color2: number[], amount: number = 0
     return `rgb(${r}, ${g}, ${b})`;
   }
 }
+
+export function string2mobile(text: string) {
+  const mobile = text
+    .replace(/[^0-9]/g, '')
+    .replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/, '$1-$2-$3')
+    .replace('--', '-');
+  return mobile;
+}

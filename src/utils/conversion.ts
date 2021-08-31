@@ -100,6 +100,26 @@ export const conversionEnumValue = (label: string, list: ISelectOptions[]): ISel
   const value = list.find((item) => label === item.value);
   return value ? value : { value: label, label: label, color: 'black' };
 };
+
+export const conversionEnumLabel = (label: string, list: ISelectOptions[]): ISelectOptions => {
+  const value = list.find((item) => label === item.label);
+  return value ? value : { value: label, label: label, color: 'black' };
+};
+
+export const convertDateToDateTime = (
+  date: string,
+  hour: string,
+  minute: string,
+  sec: string
+): string => {
+  return moment(date + ' ' + hour + ':' + minute + ':' + sec, 'YYYY-MM-DD HH:mm:ss').format(
+    'YYYY-MM-DD HH:mm:ss'
+  );
+};
+
+export const convertNumberWithCommas = (x: any) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
 //
 // /**
 //  * @method conversionNumberToMoment

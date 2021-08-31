@@ -17,7 +17,9 @@ export enum FormType {
   TreeSelect,
   Switch,
   Button,
-  SelectWithRangePicker
+  SelectWithRangePicker,
+  TimeRangePicker,
+  InputGroup
 }
 
 /** 输入框类型 */
