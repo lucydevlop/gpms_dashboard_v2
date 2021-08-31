@@ -36,11 +36,25 @@ class RowInfoCard extends React.Component<IProps, IState> {
     this.setState({ item: this.props.item });
   }
 
-  componentDidUpdate(prevProps: { item: IDashboardObj }, prevState: any) {
-    if (this.props.item !== prevProps.item) {
+  UNSAFE_componentWillMount() {
+    this.setState({ item: this.props.item });
+  }
+
+  UNSAFE_componentWillReceiveProps(props: IProps) {
+    if (props.item !== this.props.item) {
       this.setState({ item: this.props.item });
     }
   }
+
+  // componentDidUpdate() {
+  //   this.setState({ item: this.props.item });
+  // }
+
+  // componentDidUpdate(prevProps: { item: IDashboardObj }, prevState: any) {
+  //   if (this.props.item !== prevProps.item) {
+  //     this.setState({ item: this.props.item });
+  //   }
+  // }
 
   handleResetClick(name: string, category: string) {
     const { localeObj } = localeStore;
@@ -102,9 +116,13 @@ class RowInfoCard extends React.Component<IProps, IState> {
   }
 
   renderTitle() {
-    const gateType = conversionEnumValue(this.props.item.gateType, gateTypeOpt);
+    if (!this.state.item) return;
+
+    const { item } = this.state;
+
+    const gateType = conversionEnumValue(item.gateType, gateTypeOpt);
     const breakerStatus = conversionEnumValue(
-      this.props.item.breakerAction ? this.props.item.breakerAction : 'NONE',
+      item.breakerAction ? item.breakerAction : 'NONE',
       breakerStatusOpt
     );
     return (
@@ -112,7 +130,7 @@ class RowInfoCard extends React.Component<IProps, IState> {
         <Row gutter={24}>
           <Col span={8}>
             <Row>
-              <span style={{ fontSize: '18px' }}>{this.props.item.gateName}</span>
+              <span style={{ fontSize: '18px' }}>{item.gateName}</span>
               <span style={{ fontSize: '17px', color: gateType.color }}>({gateType.label})</span>
             </Row>
             <Row>
@@ -129,22 +147,19 @@ class RowInfoCard extends React.Component<IProps, IState> {
                 bordered={false}
               >
                 <Row style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
-                  {this.renderFacilityStatus(
-                    'LPR',
-                    this.props.item.lprStatus ? this.props.item.lprStatus : 'NONE'
-                  )}
+                  {this.renderFacilityStatus('LPR', item.lprStatus ? item.lprStatus : 'NONE')}
                   {this.renderFacilityStatus(
                     '전광판',
-                    this.props.item.displayStatus ? this.props.item.displayStatus : 'NONE'
+                    item.displayStatus ? item.displayStatus : 'NONE'
                   )}
                   {this.renderFacilityStatus(
                     '차단기',
-                    this.props.item.breakerStatus ? this.props.item.breakerStatus : 'NONE'
+                    item.breakerStatus ? item.breakerStatus : 'NONE'
                   )}
-                  {this.props.item.paystationStatus && this.props.item.gateType !== 'IN'
+                  {item.paystationStatus && item.gateType !== 'IN'
                     ? this.renderFacilityStatus(
                         '정산기',
-                        this.props.item.paystationStatus ? this.props.item.paystationStatus : 'NONE'
+                        item.paystationStatus ? item.paystationStatus : 'NONE'
                       )
                     : null}
                 </Row>
@@ -178,11 +193,11 @@ class RowInfoCard extends React.Component<IProps, IState> {
                 onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                   this.handleGateActionClick(
                     e,
-                    this.props.item.breakerAction === 'UPLOCK' ? 'unlock' : 'uplock'
+                    item.breakerAction === 'UPLOCK' ? 'unlock' : 'uplock'
                   );
                 }}
               >
-                {this.props.item.breakerAction === 'UPLOCK' ? '고정해제' : '열림고정'}
+                {item.breakerAction === 'UPLOCK' ? '고정해제' : '열림고정'}
               </Button>
               <Button
                 size="middle"
@@ -207,7 +222,7 @@ class RowInfoCard extends React.Component<IProps, IState> {
   }
 
   render() {
-    if (!this.props.item) return;
+    if (!this.state.item) return;
 
     return (
       <>
@@ -218,46 +233,142 @@ class RowInfoCard extends React.Component<IProps, IState> {
           bordered={false}
           hoverable
         >
-          <div>
-            {/*{this.state.item ? (*/}
-            {this.props.item.image ? (
-              <Image
-                src={`${this.props.item.image}`}
-                ratio={1.8}
-                // src={
-                //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
-                // }
-              />
-            ) : (
-              <Image
-                ratio={1.8}
-                // @ts-ignore
-                src={emptyImage}
-              />
-            )}
-            {/*// ) : null}*/}
-          </div>
-          <Descriptions
-            layout="vertical"
-            bordered
-            labelStyle={{ fontWeight: 600, textAlign: 'center' }}
-            style={{ textAlign: 'center' }}
-          >
-            <Descriptions.Item label="차량구분" style={{ textAlign: 'center' }}>
-              {
-                conversionEnumValue(
-                  this.props.item.carType ? this.props.item.carType : 'NONE',
-                  ticketTypeOpt
-                ).label
-              }
-            </Descriptions.Item>
-            <Descriptions.Item label="차량번호" style={{ textAlign: 'center' }}>
-              {this.props.item.vehicleNo}
-            </Descriptions.Item>
-            <Descriptions.Item label="시간" style={{ textAlign: 'center' }}>
-              {conversionDateTime(this.props.item.date, '{y}-{m}-{d} {h}:{i}') || '--'}
-            </Descriptions.Item>
-          </Descriptions>
+          {this.state.item.gateType === 'IN_OUT' ? (
+            <Row>
+              <Col span={12} style={{ padding: '5px 15px' }}>
+                <div>
+                  {'입차'}
+                  {/*{this.state.item ? (*/}
+                  {this.state.item.image ? (
+                    <Image
+                      src={`${this.state.item.image}`}
+                      ratio={1.8}
+                      // src={
+                      //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
+                      // }
+                    />
+                  ) : (
+                    <Image
+                      ratio={1.8}
+                      // @ts-ignore
+                      src={emptyImage}
+                    />
+                  )}
+                  {/*// ) : null}*/}
+                </div>
+                <Descriptions
+                  layout="vertical"
+                  bordered
+                  labelStyle={{ fontWeight: 600, textAlign: 'center' }}
+                  style={{ textAlign: 'center' }}
+                >
+                  <Descriptions.Item label="차량구분" style={{ textAlign: 'center' }}>
+                    {
+                      conversionEnumValue(
+                        this.state.item.carType ? this.state.item.carType : 'NONE',
+                        ticketTypeOpt
+                      ).label
+                    }
+                  </Descriptions.Item>
+                  <Descriptions.Item label="차량번호" style={{ textAlign: 'center' }}>
+                    {this.state.item.vehicleNo}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="시간" style={{ textAlign: 'center' }}>
+                    {conversionDateTime(this.state.item.date, '{y}-{m}-{d} {h}:{i}') || '--'}
+                  </Descriptions.Item>
+                </Descriptions>
+              </Col>
+              <Col span={12} style={{ padding: '5px 15px' }}>
+                <div>
+                  {'출차'}
+                  {/*{this.state.item ? (*/}
+                  {this.state.item.outImage ? (
+                    <Image
+                      src={`${this.state.item.outImage}`}
+                      ratio={1.8}
+                      // src={
+                      //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
+                      // }
+                    />
+                  ) : (
+                    <Image
+                      ratio={1.8}
+                      // @ts-ignore
+                      src={emptyImage}
+                    />
+                  )}
+                  {/*// ) : null}*/}
+                </div>
+                <Descriptions
+                  layout="vertical"
+                  bordered
+                  labelStyle={{ fontWeight: 600, textAlign: 'center' }}
+                  style={{ textAlign: 'center' }}
+                >
+                  <Descriptions.Item label="차량구분" style={{ textAlign: 'center' }}>
+                    {
+                      conversionEnumValue(
+                        this.state.item.outCarType ? this.state.item.outCarType : 'NONE',
+                        ticketTypeOpt
+                      ).label
+                    }
+                  </Descriptions.Item>
+                  <Descriptions.Item label="차량번호" style={{ textAlign: 'center' }}>
+                    {this.state.item.outVehicleNo}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="시간" style={{ textAlign: 'center' }}>
+                    {conversionDateTime(
+                      this.state.item.outDate ? this.state.item.outDate : 0,
+                      '{y}-{m}-{d} {h}:{i}'
+                    ) || '--'}
+                  </Descriptions.Item>
+                </Descriptions>
+              </Col>
+            </Row>
+          ) : (
+            <>
+              <div>
+                {/*{this.state.item ? (*/}
+                {this.state.item.image ? (
+                  <Image
+                    src={`${this.state.item.image}`}
+                    ratio={1.8}
+                    // src={
+                    //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
+                    // }
+                  />
+                ) : (
+                  <Image
+                    ratio={1.8}
+                    // @ts-ignore
+                    src={emptyImage}
+                  />
+                )}
+                {/*// ) : null}*/}
+              </div>
+              <Descriptions
+                layout="vertical"
+                bordered
+                labelStyle={{ fontWeight: 600, textAlign: 'center' }}
+                style={{ textAlign: 'center' }}
+              >
+                <Descriptions.Item label="차량구분" style={{ textAlign: 'center' }}>
+                  {
+                    conversionEnumValue(
+                      this.state.item.carType ? this.state.item.carType : 'NONE',
+                      ticketTypeOpt
+                    ).label
+                  }
+                </Descriptions.Item>
+                <Descriptions.Item label="차량번호" style={{ textAlign: 'center' }}>
+                  {this.state.item.vehicleNo}
+                </Descriptions.Item>
+                <Descriptions.Item label="시간" style={{ textAlign: 'center' }}>
+                  {conversionDateTime(this.state.item.date, '{y}-{m}-{d} {h}:{i}') || '--'}
+                </Descriptions.Item>
+              </Descriptions>
+            </>
+          )}
         </Card>
       </>
     );

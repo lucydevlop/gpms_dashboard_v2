@@ -73,11 +73,6 @@ class Image extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = {
-      src: props.src,
-      src2x: props.src2x
-    };
-
     this.onLoad = this.onLoad.bind(this);
     this.onError = this.onError.bind(this);
   }
@@ -94,9 +89,10 @@ class Image extends PureComponent<Props, State> {
   }
 
   UNSAFE_componentWillReceiveProps(props: Props) {
-    if (props.src !== this.props.src) {
-      this.setState({ src: this.props.src, src2x: this.props.src2x });
-    }
+    this.setState({ src: this.props.src, src2x: this.props.src2x });
+    // if (props.src !== this.props.src) {
+    //   this.setState({ src: this.props.src, src2x: this.props.src2x });
+    // }
   }
 
   onLoad() {
@@ -121,13 +117,14 @@ class Image extends PureComponent<Props, State> {
   render() {
     const { ratio, fillOut, alt, contain, hover } = this.props;
     const { src, src2x } = this.state;
+    console.log('image', src, this.props.src);
     return (
       <ImageWrapper ratio={ratio} fillOut={fillOut} hover={hover}>
         <Img
           // @ts-ignore
           contain={contain}
-          onLoad={this.onLoad}
-          onError={this.onError}
+          // onLoad={this.onLoad}
+          // onError={this.onError}
           // @ts-ignore
           innerRef={(image) => (this.image = image)}
           srcSet={`${src} 1x, ${src2x || src} 2x`}
