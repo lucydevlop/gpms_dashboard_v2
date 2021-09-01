@@ -10,7 +10,7 @@ import { EDelYn, ETicketType } from '@/constants/list';
 import VisitorRegisterCardForm from '@views/Visitor/Register/registerCard';
 import { getFormFields } from '@utils/form';
 import { conversionDateTime } from '@utils/conversion';
-import { VisitorAdds } from '@api/visitor';
+import { visitorAdds } from '@api/visitor';
 import { runInAction } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { userStore } from '@store/userStore';
@@ -66,7 +66,7 @@ class VisitorRegister extends PureComponent<IProps, IState> {
       if (!flag) {
         return;
       }
-      VisitorAdds(this.state.visitorCardList).then((res: any) => {
+      visitorAdds(this.state.visitorCardList).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
