@@ -94,6 +94,26 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
           });
         }
         break;
+      case 'update':
+        if (this.state.isCalc) {
+          zdsTips.error('주차요금전송을 실행해주세요');
+        } else {
+          this.props.form.validateFields((err, fieldsValue) => {
+            if (
+              fieldsValue.outDate !== this.props.inout.outDate ||
+              fieldsValue.inDate !== this.props.inout.inDate ||
+              this.state.selectedDiscountClass.length > 0
+            ) {
+              return zdsTips.error('주차요금계산을 실행해주세요');
+            } else {
+              fieldsValue.inDate = conversionDateTime(fieldsValue.inDate);
+              fieldsValue.outDate = fieldsValue.outDate
+                ? conversionDateTime(fieldsValue.outDate)
+                : '';
+              this.props.onSubmit(fieldsValue);
+            }
+          });
+        }
     }
   }
 
@@ -308,6 +328,17 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
                 type="primary"
                 htmlType="submit"
                 style={{ fontWeight: 700 }}
+                onClick={(e: BaseSyntheticEvent) => {
+                  e.preventDefault();
+                  this.handlerSubmit('update');
+                }}
+              >
+                입차내역수정
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ fontWeight: 700, marginLeft: '30px' }}
                 onClick={(e: BaseSyntheticEvent) => {
                   e.preventDefault();
                   this.handlerSubmit('calc');

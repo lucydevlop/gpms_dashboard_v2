@@ -156,6 +156,20 @@ class InoutByDay extends PureComponent<IProps, IState> {
             key: 'payFee',
             width: 110,
             align: 'center'
+          },
+          {
+            title: '미납요금',
+            dataIndex: 'nonPayment',
+            key: 'nonPayment',
+            width: 110,
+            align: 'center'
+          },
+          {
+            title: '정산요금',
+            dataIndex: 'payment',
+            key: 'payment',
+            width: 110,
+            align: 'center'
           }
         ]
       }
@@ -213,6 +227,12 @@ class InoutByDay extends PureComponent<IProps, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={8}>
                   <span>{convertNumberWithCommas(this.sum(list, 'payFee'))}</span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={9}>
+                  <span>{convertNumberWithCommas(this.sum(list, 'nonPayment'))}</span>
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={10}>
+                  <span>{convertNumberWithCommas(this.sum(list, 'payment'))}</span>
                 </Table.Summary.Cell>
               </Table.Summary.Row>
             </Table.Summary>
