@@ -54,7 +54,7 @@ export function SearchCorpTicketFields(
       fieldOption: regisDateRangeConfig
     },
     {
-      id: 'discountClassSn',
+      id: 'ticketClassSn',
       label: '할인권명',
       colProps: {
         xl: 12,

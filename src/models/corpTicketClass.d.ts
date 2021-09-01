@@ -22,6 +22,7 @@ export interface ICorpTicketClassObj {
   createDate?: Date;
   discountType?: number;
   calcYn?: EDelYn;
+  ticketClassSn?: number;
 }
 
 export interface ICorpTicketSummaryObj {
@@ -50,5 +51,5 @@ export interface ICorpTicketSearchReq {
   applyStatus?: string;
   vehicleNo?: string;
   createTm?: number[];
-  discountClassSn?: number;
+  ticketClassSn?: number;
 }

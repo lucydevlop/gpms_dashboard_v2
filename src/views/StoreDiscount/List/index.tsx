@@ -75,16 +75,13 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
         if (msg === 'success') {
           const unique: ISelectOptions[] = [];
           runInAction(() => {
-            console.log(data);
             data.forEach((e: any) => {
               unique.push({
-                value: e.corpTicketClass.discountClassSn,
+                value: String(e.classSn),
                 label: e.corpTicketClass.name
               });
             });
-            this.setState({ corpTicketClassOpt: unique }, () =>
-              console.log(this.state.corpTicketClassOpt)
-            );
+            this.setState({ corpTicketClassOpt: unique });
           });
         }
       })
@@ -141,10 +138,10 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
       endDate: conversionDate(item.createTm!![1]),
       vehicleNo: item.vehicleNo,
       applyStatus: this.state.applyStatus,
-      discountClassSn: item.discountClassSn
+      ticketClassSn: item.ticketClassSn
     };
     this.setState({ searchParam: searchParma }, () => {
-      console.log(this.state.searchParam), this.pollData();
+      this.pollData();
     });
   };
 
@@ -208,7 +205,15 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
         key: 'discountNm',
         width: 110,
         align: 'center',
-        render: (test: string, record) => record.discountNm
+        render: (test: string, record) => {
+          const type = conversionEnumValue(
+            record.ticketClassSn ? String(record.ticketClassSn)!! : record.discountNm!!,
+            this.state.corpTicketClassOpt
+          );
+          return {
+            children: <div>{type.label}</div>
+          };
+        }
       },
       {
         title: '수량',
