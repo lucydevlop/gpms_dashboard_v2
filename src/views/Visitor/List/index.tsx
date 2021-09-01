@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { getVisitorList, VisitorDelete } from '@api/visitor';
+import { getVisitorList, visitorDelete } from '@api/visitor';
 import { IVisitorObj, IVisitorSearchReq } from '@models/visitor';
 import { EDelYn, ETicketSearchDateType, ETicketType } from '@/constants/list';
 import moment from 'moment';
@@ -105,7 +105,7 @@ class VisitorList extends PureComponent<any, IState> {
     const { localeObj } = localeStore;
     if (key === 'delete') {
       zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
-        VisitorDelete(info.sn)
+        visitorDelete(info.sn)
           .then((res: any) => {
             const { msg, data } = res;
             if (msg === 'success') {

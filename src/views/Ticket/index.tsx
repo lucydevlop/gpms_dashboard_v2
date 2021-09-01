@@ -518,7 +518,7 @@ class Ticket extends PureComponent<any, IState> {
       <PageWrapper>
         <SearchForm
           submit={(value) => this.getSearchData(value)}
-          location={this.props.loaction}
+          location={this.props.location}
           footerRender={() => this.addProdRender()}
           fieldConfig={searchFields}
         />
