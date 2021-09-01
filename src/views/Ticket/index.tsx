@@ -308,6 +308,7 @@ class Ticket extends PureComponent<any, IState> {
         : '';
       data.etc = ticket.etc;
       data.etc1 = ticket.etc1;
+      data.sn = ticket.sn;
       return data;
     });
     await generateCsv(downLoadData, headers, '정기권');

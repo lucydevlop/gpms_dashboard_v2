@@ -232,7 +232,7 @@ class InoutByMonth extends PureComponent<IProps, IState> {
                 <Table.Summary.Cell index={9}>
                   <span>{convertNumberWithCommas(this.sum(list, 'nonPayment'))}</span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={9}>
+                <Table.Summary.Cell index={10}>
                   <span>{convertNumberWithCommas(this.sum(list, 'payment'))}</span>
                 </Table.Summary.Cell>
               </Table.Summary.Row>
