@@ -16,6 +16,12 @@ export interface ICorpTicketClassObj {
   extendYn: EOnOff;
   delYn: EDelYn;
   discountClass: IDiscountClassObj;
+  vehicleNo?: string;
+  discountNm?: string;
+  quantity?: string;
+  createDate?: Date;
+  discountType?: number;
+  calcYn?: EDelYn;
 }
 
 export interface ICorpTicketSummaryObj {
@@ -35,4 +41,14 @@ export interface ICorpTicketAddObj {
   corpSn: number;
   corpTicketClassSn: number;
   cnt: number;
+}
+
+export interface ICorpTicketSearchReq {
+  corpSn: number;
+  startDate?: string;
+  endDate?: string;
+  applyStatus?: string;
+  vehicleNo?: string;
+  createTm?: number[];
+  discountClassSn?: number;
 }
