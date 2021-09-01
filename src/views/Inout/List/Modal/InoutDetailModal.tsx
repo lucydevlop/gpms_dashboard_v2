@@ -99,11 +99,22 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
           zdsTips.error('주차요금전송을 실행해주세요');
         } else {
           this.props.form.validateFields((err, fieldsValue) => {
+            console.log(
+              'update',
+              conversionDateTime(fieldsValue.inDate),
+              conversionDateTime(this.props.inout.inDate)
+            );
+
             if (
-              fieldsValue.outDate !== this.props.inout.outDate ||
-              fieldsValue.inDate !== this.props.inout.inDate ||
-              this.state.selectedDiscountClass.length > 0
+              this.props.inout.outDate !== null &&
+              (conversionDateTime(fieldsValue.inDate) !==
+                conversionDateTime(this.props.inout.inDate) ||
+                conversionDateTime(fieldsValue.outDate) !==
+                  conversionDateTime(this.props.inout.outDate ? this.props.inout.outDate : 0))
             ) {
+              return zdsTips.error('주차요금계산을 실행해주세요');
+            }
+            if (this.state.selectedDiscountClass.length > 0) {
               return zdsTips.error('주차요금계산을 실행해주세요');
             } else {
               fieldsValue.inDate = conversionDateTime(fieldsValue.inDate);
