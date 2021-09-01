@@ -57,10 +57,18 @@ export const asyncRouteConfig: RouteChild[] = [
     name: 'inout',
     icon: <CarOutlined />,
     path: '/inout',
-    component: ['/views/Inout'],
     authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
-    loading: true,
-    localeKey: 'menu.inout'
+    localeKey: 'menu.inout',
+    routes: [
+      {
+        name: 'list',
+        path: '/inout/list',
+        component: ['/views/Inout/List'],
+        // authority: ['admin', 'ROLE_SUPER'],
+        loading: true,
+        localeKey: 'menu.inout.list'
+      }
+    ]
   },
   {
     name: 'tickets',

@@ -22,6 +22,8 @@ export const timeDenominator = 1000;
 /** 日期选择 */
 export const datePickerFormat = 'YYYY/MM/DD';
 
+export const monthPickerFormat = 'YYYY/MM';
+
 export const dateTimePickerFormat = 'YYYY/MM/DD HH:mm';
 
 export const timePickerFormat = 'HH:mm';

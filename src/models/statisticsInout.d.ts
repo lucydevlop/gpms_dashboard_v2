@@ -9,6 +9,8 @@ export interface IStatisticsInoutDayObj {
   discountFee?: number;
   dayDiscountFee?: number;
   payFee?: number;
+  nonPayment?: number;
+  payment?: number;
 }
 
 export interface IStatisticsInoutDaySearchReq {

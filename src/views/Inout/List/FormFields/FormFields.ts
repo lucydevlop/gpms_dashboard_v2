@@ -4,13 +4,15 @@ import {
   formColProps16Config,
   formColProps6Config,
   IFormFieldConfig
-} from '@/utils/form';
+} from '@utils/form';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
 import { EInoutType, ETicketType, inoutSearchDateTypeOpt, ticketTypeOpt } from '@/constants/list';
 import { FormType } from '@/constants/form';
 import { datePickerFormat } from '@/constants';
 import moment from 'moment';
-import { conversionDateTime } from '@/utils/conversion';
+import { conversionDateTime } from '@utils/conversion';
+import { inspect } from 'util';
+import styles from '../Modal/inout.module.less';
 
 const regisDateRangeConfig = {
   rules: [
@@ -535,6 +537,104 @@ export function newInoutDetailFileds(
       },
       component: {
         type: FormType.Input
+      }
+    },
+    {
+      id: 'parktime',
+      label: '주차시간',
+      colProps: {
+        span: 6
+      },
+      formItemProps: {
+        labelCol: {
+          span: 16
+        },
+        wrapperCol: {
+          span: 8
+        }
+      },
+      fieldOption: {
+        initialValue: inout ? inout.parktime : ''
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          class: styles.customInput,
+          disabled: true
+        }
+      }
+    },
+    {
+      id: 'parkfee',
+      label: '주차요금',
+      colProps: {
+        span: 6
+      },
+      formItemProps: {
+        labelCol: {
+          span: 10
+        },
+        wrapperCol: {
+          span: 12
+        }
+      },
+      fieldOption: {
+        initialValue: inout ? inout.parkfee : '0'
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          disabled: true
+        }
+      }
+    },
+    {
+      id: 'discountfee',
+      label: '할인요금',
+      colProps: {
+        span: 6
+      },
+      formItemProps: {
+        labelCol: {
+          span: 10
+        },
+        wrapperCol: {
+          span: 12
+        }
+      },
+      fieldOption: {
+        initialValue: inout ? inout.discountfee : '0'
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          class: styles.customInput,
+          disabled: true
+        }
+      }
+    },
+    {
+      id: 'payfee',
+      label: '결제요금',
+      colProps: {
+        span: 6
+      },
+      formItemProps: {
+        labelCol: {
+          span: 10
+        },
+        wrapperCol: {
+          span: 12
+        }
+      },
+      fieldOption: {
+        initialValue: inout ? inout.payfee : ''
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          disabled: true
+        }
       }
     },
     {

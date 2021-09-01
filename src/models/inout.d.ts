@@ -1,5 +1,6 @@
 import { EDelYn, EInoutType, ETicketType } from '@/constants/list';
 import { IDiscountClassObj } from '@models/discountClass';
+import { ICorpTicketClassObj } from '@models/corpTicketClass';
 
 export interface IInoutObj {
   type: EInoutType;
@@ -36,7 +37,7 @@ export interface IInoutSelectReq {
   parkcartype?: ETicketType;
 }
 
-export interface IInoutDiscountAplyObj {
+export interface IInoutDiscountApplyObj {
   inSn: number;
   discountClassSn: number;
   cnt: number;
@@ -56,6 +57,7 @@ export interface IInoutDiscountObj {
   calcYn: EDelYn;
   outSn?: number;
   discountClass: IDiscountClassObj;
+  ticketClass: ICorpTicketClassObj;
   //not metadata
   disabled: boolean;
 }

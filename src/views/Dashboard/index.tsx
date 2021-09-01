@@ -43,7 +43,7 @@ class Dashboard extends React.Component<any, IDashboardState> {
         if (msg === 'success') {
           runInAction(() => {
             this.setState({ dashboardObjs: data });
-            console.log(this.state.dashboardObjs);
+            // console.log(this.state.dashboardObjs);
           });
         }
       })
@@ -56,16 +56,27 @@ class Dashboard extends React.Component<any, IDashboardState> {
     }, 3000);
   }
 
+  renderGate(item: IDashboardObj, index: number) {
+    if (item.gateType === 'IN_OUT') {
+      return (
+        <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+          <RowInfoCard item={item} key={index} />
+        </Col>
+      );
+    }
+    return (
+      <Col xl={12} lg={12} md={24} sm={24} xs={24}>
+        <RowInfoCard item={item} key={index} />
+      </Col>
+    );
+  }
+
   render() {
     const { localeObj } = localeStore;
     return (
       <div className="dashboard">
         <Row gutter={24}>
-          {this.state.dashboardObjs.map((item, index) => (
-            <Col xl={12} lg={12} md={24} sm={24} xs={24}>
-              <RowInfoCard item={item} key={index} />
-            </Col>
-          ))}
+          {this.state.dashboardObjs.map((item, index) => this.renderGate(item, index))}
         </Row>
       </div>
     );
