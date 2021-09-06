@@ -504,7 +504,7 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout?.outDate ? moment(inout.outDate) : ''
+        initialValue: inout?.outDate ? moment(inout.outDate) : moment(new Date())
       },
       component: {
         type: FormType.DatePicker,

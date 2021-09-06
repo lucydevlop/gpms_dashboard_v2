@@ -2,12 +2,12 @@ import React from 'react';
 import { ICorpTicketClassObj, ICorpTicketSearchReq } from '@models/corpTicketClass';
 import { inject, observer } from 'mobx-react';
 import { userStore } from '@store/userStore';
-import { deleteCorpTicket, getCorpAbleTickets } from '@api/storeDiscount';
+import { deleteCorpTicket } from '@api/storeDiscount';
 import { runInAction } from 'mobx';
 import moment from 'moment';
 import { localeStore } from '@store/localeStore';
 import { ColumnProps } from 'antd/lib/table';
-import { EDelYn, useOrUnuseOpt } from '@/constants/list';
+import { EDelYn } from '@/constants/list';
 import { conversionDate, conversionEnumValue } from '@utils/conversion';
 import { DeleteOutlined } from '@ant-design/icons';
 import PageWrapper from '@components/PageWrapper';
@@ -17,8 +17,7 @@ import SearchForm from '@/components/StandardTable/SearchForm';
 import { SearchCorpTicketFields } from '@views/StoreDiscount/List/fields/fields';
 import zdsTips from '@utils/tips';
 import { ISelectOptions } from '@utils/form';
-import { getCorpAllTickets } from '@api/corp';
-import { unique } from 'mobx/lib/utils/utils';
+import { getCorpAllTickets, getCorpApplyTickets } from '@api/corp';
 
 interface IState {
   detailModal: boolean;
@@ -81,6 +80,7 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
                 label: e.corpTicketClass.name
               });
             });
+            unique.push({ value: '', label: '전체' });
             this.setState({ corpTicketClassOpt: unique });
           });
         }
@@ -93,16 +93,14 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
   };
 
   async pollData() {
+    const { userInfo } = userStore;
     this.setState({ loading: true });
-    getCorpAbleTickets(this.state.searchParam)
+    getCorpApplyTickets(userInfo.corpSn, this.state.searchParam)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            const list = data.data.filter((e: ICorpTicketClassObj) => {
-              return e.delYn === EDelYn.N;
-            });
-            this.setState({ list: list });
+            this.setState({ list: data });
           });
         }
       })
@@ -152,32 +150,10 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
     ];
 
     const columns: ColumnProps<ICorpTicketClassObj>[] = [
-      // {
-      //   title: '사용여부',
-      //   key: 'delYn',
-      //   width: 110,
-      //   align: 'center',
-      //   fixed: 'left',
-      //   filters: delYnOpt
-      //     .filter((e) => e.value !== EDelYn.ALL)
-      //     .map((r) => ({ text: r.label, value: r.value!! })),
-      //   onFilter: (value, record) => record.delYn.indexOf(value as string) === 0,
-      //   render: (test: string, record: ICorpTicketClassObj) => {
-      //     const type = conversionEnumValue(record.delYn, delYnOpt);
-      //     return {
-      //       props: {
-      //         style: {
-      //           color: type.color
-      //         }
-      //       },
-      //       children: <div>{type.label}</div>
-      //     };
-      //   }
-      // },
       {
         title: '적용',
         key: 'calcYn',
-        width: 110,
+        width: 80,
         filters: calcOpt.map((r) => ({ text: r.label, value: r.value!! })),
         onFilter: (value, record) => record.calcYn?.indexOf(value as string) === 0,
         align: 'center',
@@ -186,10 +162,10 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
           return {
             props: {
               style: {
-                color: type.color
+                color: record.delYn === EDelYn.Y ? 'gray' : type.color
               }
             },
-            children: <div>{type.label}</div>
+            children: <div>{record.delYn === EDelYn.Y ? '취소' : type.label}</div>
           };
         }
       },
@@ -218,7 +194,7 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
       {
         title: '수량',
         key: 'quantity',
-        width: 110,
+        width: 60,
         align: 'center',
         render: (test: string, record) => record.quantity
       },
@@ -238,7 +214,7 @@ class StoreDiscountList extends React.PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (item: ICorpTicketClassObj) =>
-          item.calcYn === EDelYn.N ? (
+          item.calcYn === EDelYn.N && item.delYn === EDelYn.N ? (
             <div>
               <a
                 onClick={(e: any) => {

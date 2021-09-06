@@ -149,7 +149,8 @@ export enum ETicketType {
   FREETICKET = 'FREETICKET',
   VISITTICKET = 'VISITTICKET',
   UNRECOGNIZED = 'UNRECOGNIZED',
-  DISCOUNT = 'DISCOUNT'
+  DISCOUNT = 'DISCOUNT',
+  PARTRECOGNIZED = 'PARTRECOGNIZED'
 }
 
 export const ticketTypeOpt: ISelectOptions[] = [
@@ -158,6 +159,7 @@ export const ticketTypeOpt: ISelectOptions[] = [
   { value: ETicketType.VISITTICKET, label: '방문권', color: 'black' },
   { value: ETicketType.NORMAL, label: '일반차량', color: 'black' },
   { value: ETicketType.UNRECOGNIZED, label: '미인식', color: 'red' },
+  { value: ETicketType.PARTRECOGNIZED, label: '부분인식', color: 'red' },
   { value: ETicketType.DISCOUNT, label: '할인', color: 'red' },
   { value: ETicketType.ALL, label: '전체', color: 'red' }
 ];

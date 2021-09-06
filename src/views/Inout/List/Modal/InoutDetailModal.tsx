@@ -21,6 +21,7 @@ interface IInoutDetailModalProps extends FormComponentProps {
   onSubmit: (inout: IInoutObj) => void;
   discountClasses: IDiscountClassObj[];
   onCalc: (inout: IInoutObj) => void;
+  onTransfer: (inout: IInoutObj) => void;
 }
 interface IState {
   isCalc: boolean;
@@ -81,16 +82,18 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
             fieldsValue.parkfee = this.props.inout.parkfee;
             fieldsValue.dayDiscountfee = this.props.inout.dayDiscountfee;
             fieldsValue.discountfee = this.props.inout.discountfee;
-            fieldsValue.addDiscountClasses = this.state.selectedDiscountClass.map((item) => {
-              const discount: IInoutDiscountApplyObj = {
-                inSn: fieldsValue.parkinSn,
-                discountClassSn: item.sn,
-                cnt: item.aplyCnt ? item.aplyCnt : 0
-              };
-              return discount;
-            });
+            fieldsValue.addDiscountClasses = this.state.selectedDiscountClass
+              .filter((d) => !d.disable)
+              .map((item) => {
+                const discount: IInoutDiscountApplyObj = {
+                  inSn: fieldsValue.parkinSn,
+                  discountClassSn: item.sn,
+                  cnt: item.aplyCnt ? item.aplyCnt : 0
+                };
+                return discount;
+              });
             // console.log('save', fieldsValue);
-            this.props.onSubmit(fieldsValue);
+            this.props.onTransfer(fieldsValue);
           });
         }
         break;
@@ -99,11 +102,11 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
           zdsTips.error('주차요금전송을 실행해주세요');
         } else {
           this.props.form.validateFields((err, fieldsValue) => {
-            console.log(
-              'update',
-              conversionDateTime(fieldsValue.inDate),
-              conversionDateTime(this.props.inout.inDate)
-            );
+            // console.log(
+            //   'update',
+            //   conversionDateTime(fieldsValue.inDate),
+            //   conversionDateTime(this.props.inout.inDate)
+            // );
 
             if (
               this.props.inout.outDate !== null &&
@@ -125,6 +128,22 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
             }
           });
         }
+        break;
+      case 'apply':
+        this.props.form.validateFields((err, fieldsValue) => {
+          fieldsValue.addDiscountClasses = this.state.selectedDiscountClass.map((item) => {
+            const discount: IInoutDiscountApplyObj = {
+              inSn: fieldsValue.parkinSn,
+              discountClassSn: item.sn,
+              cnt: item.aplyCnt ? item.aplyCnt : 0
+            };
+            return discount;
+          });
+          fieldsValue.inDate = conversionDateTime(fieldsValue.inDate);
+          fieldsValue.outDate = '';
+          this.props.onSubmit(fieldsValue);
+        });
+        break;
     }
   }
 
@@ -345,6 +364,17 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
                 }}
               >
                 입차내역수정
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ fontWeight: 700, marginLeft: '30px' }}
+                onClick={(e: BaseSyntheticEvent) => {
+                  e.preventDefault();
+                  this.handlerSubmit('apply');
+                }}
+              >
+                할인권적용
               </Button>
               <Button
                 type="primary"

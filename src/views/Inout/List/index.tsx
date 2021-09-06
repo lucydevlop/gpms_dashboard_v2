@@ -6,6 +6,7 @@ import {
   deleteParkinglotInout,
   editParkinglotInout,
   getInouts,
+  transferParkinglotInout,
   updateParkinglotInout
 } from '@api/Inout';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
@@ -108,6 +109,16 @@ class Inout extends PureComponent<any, IState> {
   update = (info: IInoutObj) => {
     this.setState({ detailModal: false });
     updateParkinglotInout(info).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'ok') {
+        this.setState({ selected: data }, () => this.pollData());
+      }
+    });
+  };
+
+  tranfer = (info: IInoutObj) => {
+    this.setState({ detailModal: false });
+    transferParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'ok') {
         this.setState({ selected: data }, () => this.pollData());
@@ -577,6 +588,7 @@ class Inout extends PureComponent<any, IState> {
               gates={this.state.gates}
               discountClasses={this.state.discountClasses}
               onCalc={(value) => this.calc(value)}
+              onTransfer={(value) => this.tranfer(value)}
             />
           </DraggableModal>
         ) : null}
