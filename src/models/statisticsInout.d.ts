@@ -1,10 +1,17 @@
-export interface IStatisticsInoutDayObj {
+export interface IStatisticsInoutCountObj {
   date: string;
   inCnt?: number;
   outCnt?: number;
-  normalCnt?: number;
-  ticketCnt?: number;
-  unrecognizedCnt: number;
+  inNormalCnt?: number;
+  inTicketCnt?: number;
+  inUnrecognizedCnt: number;
+  outNormalCnt?: number;
+  outTicketCnt?: number;
+  outUnrecognizedCnt: number;
+}
+
+export interface IStatisticsInoutPaymentObj {
+  date: string;
   parkFee?: number;
   discountFee?: number;
   dayDiscountFee?: number;

@@ -27,7 +27,8 @@
   "menu.visitor.register": "방문권등록",
   "menu.visitor.list": "방문권리스트",
 
-  "menu.statistics.inout": "입출차통계",
+  "menu.statistics.inoutCount": "입출차이용",
+  "menu.statistics.inoutPayment": "입출차정산",
 
   "menu.storeDiscount.apply": "주차할인",
   "menu.storeDiscount.list": "주차할인리스트",

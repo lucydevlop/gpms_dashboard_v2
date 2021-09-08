@@ -124,6 +124,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
               fieldsValue.outDate = fieldsValue.outDate
                 ? conversionDateTime(fieldsValue.outDate)
                 : '';
+              fieldsValue.parkoutSn = this.props.inout.parkoutSn;
               this.props.onSubmit(fieldsValue);
             }
           });
@@ -141,6 +142,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
           });
           fieldsValue.inDate = conversionDateTime(fieldsValue.inDate);
           fieldsValue.outDate = '';
+          fieldsValue.parkoutSn = this.props.inout.parkoutSn;
           this.props.onSubmit(fieldsValue);
         });
         break;

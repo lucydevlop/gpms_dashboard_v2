@@ -303,7 +303,11 @@ class Inout extends PureComponent<any, IState> {
         align: 'center',
         render: (text: string, record: IInoutObj) => {
           const status =
-            record.parkoutSn === -1 ? '이중입차' : record.parkoutSn !== 0 ? '차량출차' : '차량입차';
+            record.parkoutSn === -1
+              ? '이중입차'
+              : record.parkoutSn !== 0 && record.parkoutSn !== null
+              ? '차량출차'
+              : '차량입차';
           return {
             props: {
               style: {

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PageWrapper from '@components/PageWrapper';
 import { Tabs } from 'antd';
-import InoutByDay from './tabs/InoutByDay';
-import InoutByMonth from '@views/Statistics/Inout/tabs/InoutByMonth';
+import InoutPaymentByDay from '@views/Statistics/Inout/Payment/tabs/InoutPaymentByDay';
+import InoutPaymentByMonth from '@views/Statistics/Inout/Payment/tabs/InoutPaymentByMonth';
 
 interface IProps {}
 interface IState {}
@@ -19,10 +19,10 @@ class StatisticsInout extends PureComponent<IProps, IState> {
       <PageWrapper>
         <Tabs type="card">
           <TabPane tab="일자별" key="1">
-            <InoutByDay />
+            <InoutPaymentByDay />
           </TabPane>
           <TabPane tab="월별" key="2">
-            <InoutByMonth />
+            <InoutPaymentByMonth />
           </TabPane>
         </Tabs>
       </PageWrapper>
