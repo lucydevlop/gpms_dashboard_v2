@@ -55,7 +55,7 @@ class FacilityModal extends PureComponent<IProps, IState> {
           this.handlerSubmit();
         }}
       >
-        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 11)}</Row>
+        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 12)}</Row>
         <Form.Item
           {...submitFormLayout}
           style={{
