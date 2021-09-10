@@ -196,11 +196,11 @@ export function getParkinglot() {
 }
 
 export function getGateList() {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/gate/list');
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/gates');
 }
 
 export function updateParkinglot(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglot/update', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots', {
     data
   });
 }

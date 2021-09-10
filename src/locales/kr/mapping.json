@@ -14,9 +14,9 @@
   "menu.parkinglot.error": "주차장장애현황",
   "menu.parkinglotcs.inout": "입출차현황",
   "menu.parkinglotcs.ticket": "정기권",
-  "menu.tenant.list": "입주사리스트",
+  "menu.tenant.list": "입주사현황",
   "menu.tenant.tickets": "입주사할인권",
-  "menu.inout.list": "입출차리스트",
+  "menu.inout.list": "입출차현황",
 
   "menu.setting.parkinglot": "주차장기본정보",
   "menu.setting.facility": "시설정보",

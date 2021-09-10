@@ -154,8 +154,8 @@ export enum ETicketType {
 }
 
 export const ticketTypeOpt: ISelectOptions[] = [
-  { value: ETicketType.SEASONTICKET, label: '정기권', color: 'black' },
-  { value: ETicketType.FREETICKET, label: '무료주차권', color: 'black' },
+  { value: ETicketType.SEASONTICKET, label: '유료정기권', color: 'black' },
+  { value: ETicketType.FREETICKET, label: '무료정기권', color: 'black' },
   { value: ETicketType.VISITTICKET, label: '방문권', color: 'black' },
   { value: ETicketType.NORMAL, label: '일반차량', color: 'black' },
   { value: ETicketType.UNRECOGNIZED, label: '미인식', color: 'red' },
@@ -216,6 +216,12 @@ export enum EDayRangeType {
 
 export const dayRangeTypeOpt: ISelectOptions[] = [
   { value: EDayRangeType.ALL, label: '전체', color: 'black' },
+  { value: EDayRangeType.WEEKDAY, label: '주중', color: 'black' },
+  { value: EDayRangeType.WEEKEND, label: '주말', color: 'black' }
+];
+
+export const operatingDaysTypeOpt: ISelectOptions[] = [
+  { value: EDayRangeType.ALL, label: '무휴', color: 'black' },
   { value: EDayRangeType.WEEKDAY, label: '주중', color: 'black' },
   { value: EDayRangeType.WEEKEND, label: '주말', color: 'black' }
 ];

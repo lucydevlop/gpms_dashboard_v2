@@ -240,9 +240,9 @@ export function NewTicketFields(
         },
         selectOptions: ticketTypeOpt.filter(
           (d) =>
-            d.value !== ETicketType.NORMAL &&
-            d.value !== ETicketType.UNRECOGNIZED &&
-            d.value !== ETicketType.DISCOUNT
+            d.value === ETicketType.SEASONTICKET ||
+            d.value === ETicketType.VISITTICKET ||
+            d.value === ETicketType.FREETICKET
         )
       }
     },
@@ -329,31 +329,6 @@ export function NewTicketFields(
       fieldOption: {
         initialValue: ticket ? ticket.vehicleNo : null,
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
-      },
-      component: {
-        type: FormType.Input
-      }
-    },
-    {
-      id: 'vehiclekind',
-      label: '차량정보',
-      colProps: {
-        span: 8,
-        xs: 24,
-        md: 6,
-        xl: 12
-      },
-      formItemProps: {
-        labelCol: {
-          span: 8
-        },
-        wrapperCol: {
-          span: 12
-        },
-        children: null
-      },
-      fieldOption: {
-        initialValue: ticket ? ticket.vehiclekind : null
       },
       component: {
         type: FormType.Input
@@ -470,6 +445,60 @@ export function NewTicketFields(
       }
     },
     {
+      id: 'vehiclekind',
+      label: '차량정보',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 6,
+        xl: 12
+      },
+      formItemProps: {
+        labelCol: {
+          span: 8
+        },
+        wrapperCol: {
+          span: 12
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: ticket ? ticket.vehiclekind : null
+      },
+      component: {
+        type: FormType.Input
+      }
+    },
+    {
+      id: 'corpSn',
+      label: '입주사',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 6,
+        xl: 12
+      },
+      formItemProps: {
+        labelCol: {
+          span: 8
+        },
+        wrapperCol: {
+          span: 12
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: ticket ? ticket.corpSn : corpSelectList[0].value
+      },
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: '선택하세요'
+        },
+        selectOptions: corpSelectList
+      }
+    },
+    {
       id: 'etc',
       label: '정보1',
       colProps: {
@@ -546,35 +575,6 @@ export function NewTicketFields(
           placeholder: '선택하세요'
         },
         selectOptions: delYnOpt.filter((d) => d.value !== EDelYn.ALL)
-      }
-    },
-    {
-      id: 'corpSn',
-      label: '입주사',
-      colProps: {
-        span: 8,
-        xs: 24,
-        md: 6,
-        xl: 12
-      },
-      formItemProps: {
-        labelCol: {
-          span: 8
-        },
-        wrapperCol: {
-          span: 12
-        },
-        children: null
-      },
-      fieldOption: {
-        initialValue: ticket ? ticket.corpSn : corpSelectList[0].value
-      },
-      component: {
-        type: FormType.Select,
-        option: {
-          placeholder: '선택하세요'
-        },
-        selectOptions: corpSelectList
       }
     },
     {

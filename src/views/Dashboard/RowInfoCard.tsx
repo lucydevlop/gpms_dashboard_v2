@@ -57,6 +57,7 @@ class RowInfoCard extends React.Component<IProps, IState> {
   // }
 
   handleResetClick(name: string, category: string) {
+    if (name === '전광판') return;
     const { localeObj } = localeStore;
     zdsTips.confirm(localeObj['alert.cs.complete'] || name + ' 리셋 하시겠습니까?', () => {
       actionReset(this.props.item.gateId, category).then((res: any) => {

@@ -25,7 +25,7 @@ import {
   conversionEnumValue,
   convertNumberWithCommas
 } from '@utils/conversion';
-import { EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
+import { EDelYn, EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
 import moment from 'moment';
 import DraggableModal from '@components/DraggableModal';
 import InoutCreateModalForm from '@views/Inout/List/Modal/InoutCreateModal';
@@ -47,7 +47,8 @@ interface IState {
   createModal: boolean;
   detailModal: boolean;
   searchParam?: IInoutSelectReq;
-  gates: any[];
+  inGates: any[];
+  outGates: any[];
   selected?: IInoutObj;
   deleteList: any[];
   discountClasses: IDiscountClassObj[];
@@ -64,7 +65,8 @@ class Inout extends PureComponent<any, IState> {
       current: 1,
       pageSize: 20,
       createModal: false,
-      gates: [],
+      inGates: [],
+      outGates: [],
       detailModal: false,
       deleteList: [],
       discountClasses: []
@@ -73,11 +75,21 @@ class Inout extends PureComponent<any, IState> {
 
   componentDidMount() {
     parkinglotStore.initGateList().then(() => {
-      const unique: { value: string; label: string }[] = [];
-      parkinglotStore.gateList.forEach((gate) => {
-        unique.push({ value: gate.gateId, label: gate.gateName });
-      });
-      this.setState({ gates: unique });
+      const inUnique: { value: string; label: string }[] = [];
+      parkinglotStore.gateList
+        .filter((g) => g.delYn === EDelYn.N && g.gateType.includes('IN'))
+        .forEach((gate) => {
+          inUnique.push({ value: gate.gateId, label: gate.gateName });
+        });
+      this.setState({ inGates: inUnique });
+
+      const outUnique: { value: string; label: string }[] = [];
+      parkinglotStore.gateList
+        .filter((g) => g.delYn === EDelYn.N && g.gateType.includes('OUT'))
+        .forEach((gate) => {
+          outUnique.push({ value: gate.gateId, label: gate.gateName });
+        });
+      this.setState({ outGates: outUnique });
     });
 
     getDiscountClasses()
@@ -152,7 +164,7 @@ class Inout extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            console.log(data);
+            // console.log(data);
             this.setState({ list: data, total: data.length });
           });
         }
@@ -241,10 +253,10 @@ class Inout extends PureComponent<any, IState> {
       '입차시간',
       '출차게이트',
       '출차시간',
-      '주차요금',
+      '기본요금',
       '할인요금',
+      '주차요금',
       '결제요금',
-      '정산요금',
       '미납요금',
       '메모'
     ].join(',');
@@ -388,7 +400,7 @@ class Inout extends PureComponent<any, IState> {
         render: (text: string, record: IInoutObj) => record.parktime
       },
       {
-        title: '주차요금',
+        title: '기본요금',
         key: 'parkfee',
         width: 100,
         align: 'center',
@@ -404,11 +416,18 @@ class Inout extends PureComponent<any, IState> {
         )
       },
       {
-        title: '결제요금',
+        title: '주차요금',
         key: 'payfee',
         width: 100,
         align: 'center',
         render: (text: string, record: IInoutObj) => <span>{record.payfee}</span>
+      },
+      {
+        title: '결제요금',
+        key: 'payfee',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IInoutObj) => <span>{record.paymentAmount}</span>
       },
       {
         title: '미납요금',
@@ -425,13 +444,6 @@ class Inout extends PureComponent<any, IState> {
             children: <div>{record.nonPayment}</div>
           };
         }
-      },
-      {
-        title: '정산요금',
-        key: 'payfee',
-        width: 100,
-        align: 'center',
-        render: (text: string, record: IInoutObj) => <span>{record.paymentAmount}</span>
       },
       {
         title: '메모',
@@ -572,7 +584,7 @@ class Inout extends PureComponent<any, IState> {
           >
             <InoutCreateModalForm
               onSubmit={(value) => this.create(value)}
-              gates={this.state.gates}
+              gates={this.state.inGates}
             />
           </DraggableModal>
         ) : null}
@@ -589,7 +601,8 @@ class Inout extends PureComponent<any, IState> {
             <InoutDetailModalForm
               onSubmit={(value) => this.update(value)}
               inout={this.state.selected!!}
-              gates={this.state.gates}
+              inGates={this.state.inGates}
+              outGates={this.state.outGates}
               discountClasses={this.state.discountClasses}
               onCalc={(value) => this.calc(value)}
               onTransfer={(value) => this.tranfer(value)}
