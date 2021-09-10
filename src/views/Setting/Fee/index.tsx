@@ -3,7 +3,7 @@ import PageWrapper from '@components/PageWrapper';
 import classNames from 'classnames';
 import { inject, observer } from 'mobx-react';
 import { layoutStore } from '@store/layoutStore';
-import { Col, Row, Collapse, Form, Input, Card, Descriptions, Button, Divider } from 'antd';
+import { Col, Row, Collapse, Form, Input, Card, Descriptions, Button, Divider, Tabs } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { IFareBasicObj, IFareInfoObj, IFarePolicyObj } from '@models/fare';
 import {
@@ -407,17 +407,51 @@ class FeeSetting extends PureComponent<any, IState> {
   render() {
     const { isDarkTheme } = layoutStore;
     const { localeObj } = localeStore;
+    const { TabPane } = Tabs;
     return (
       <PageWrapper>
-        <Row gutter={24}>
-          <Col xl={12} lg={12} md={24} sm={24} xs={24}>
-            <Row style={{ marginBottom: '12px', width: '100%' }}>
-              <Col style={{ width: '100%' }}>
+        <Tabs type="card">
+          <TabPane tab="요금 기본 정보" key="1">
+            <Row gutter={24}>
+              <Col xl={12} lg={12} md={24} sm={24} xs={24}>
+                <Row style={{ marginBottom: '12px', width: '100%' }}>
+                  <Col style={{ width: '100%' }}>
+                    <Form className="action-error-modal-form">
+                      <Form.Item>{this.renderFareBasic()}</Form.Item>
+                    </Form>
+                  </Col>
+                </Row>
+              </Col>
+              <Col xl={12} lg={12} md={24} sm={24} xs={24}>
                 <Form className="action-error-modal-form">
-                  <Form.Item>{this.renderFareBasic()}</Form.Item>
+                  <Form.Item>
+                    <Card
+                      title="요금제 정보"
+                      type="inner"
+                      headStyle={{ fontSize: 18, fontWeight: 700 }}
+                      size="default"
+                      bordered={false}
+                      extra={
+                        <div>
+                          <a
+                            onClick={(e: any) => {
+                              e.stopPropagation();
+                              this.handleFarePolicyClick('add');
+                            }}
+                          >
+                            <PlusCircleOutlined />
+                          </a>
+                        </div>
+                      }
+                    >
+                      {this.renderFarePolicies()}
+                    </Card>
+                  </Form.Item>
                 </Form>
               </Col>
             </Row>
+          </TabPane>
+          <TabPane tab="요금 블록 정보" key="2">
             <Row>
               <Col style={{ width: '100%' }}>
                 <Form className="action-error-modal-form">
@@ -447,35 +481,8 @@ class FeeSetting extends PureComponent<any, IState> {
                 </Form>
               </Col>
             </Row>
-          </Col>
-          <Col xl={12} lg={12} md={24} sm={24} xs={24}>
-            <Form className="action-error-modal-form">
-              <Form.Item>
-                <Card
-                  title="요금제 정보"
-                  type="inner"
-                  headStyle={{ fontSize: 18, fontWeight: 700 }}
-                  size="default"
-                  bordered={false}
-                  extra={
-                    <div>
-                      <a
-                        onClick={(e: any) => {
-                          e.stopPropagation();
-                          this.handleFarePolicyClick('add');
-                        }}
-                      >
-                        <PlusCircleOutlined />
-                      </a>
-                    </div>
-                  }
-                >
-                  {this.renderFarePolicies()}
-                </Card>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
+          </TabPane>
+        </Tabs>
         {this.state.fareBasicModal ? (
           <DraggableModal
             title={localeObj['label.fareBasic.info'] || '요금 정책 기본'}
@@ -486,6 +493,8 @@ class FeeSetting extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ fareBasicModal: false });
             }}
+            width={800}
+            footer={[]}
           >
             <FareBasicModal
               onSubmit={(value) => {
@@ -505,7 +514,8 @@ class FeeSetting extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ farePolicyModal: false });
             }}
-            width={550}
+            width={800}
+            footer={[]}
           >
             <FarePolicyModal
               onSubmit={(value) => {
@@ -526,7 +536,8 @@ class FeeSetting extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ fareInfoModal: false });
             }}
-            width={550}
+            width={800}
+            footer={[]}
           >
             <FareInfoModal
               onSubmit={(value) => {

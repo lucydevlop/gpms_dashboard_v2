@@ -405,12 +405,13 @@ export const lineOpt: ISelectOptions[] = [
 
 export const orderOpt: ISelectOptions[] = [
   { value: 1, label: '첫번째', color: 'black' },
-  { value: 2, label: '두번째', color: 'black' },
-  { value: 3, label: '세번째', color: 'black' },
-  { value: 4, label: '네번째', color: 'black' },
-  { value: 5, label: '다섯번째', color: 'black' },
-  { value: 6, label: '여섯번째', color: 'black' },
-  { value: 7, label: '일곱번째', color: 'black' }
+  { value: 2, label: '두번째', color: 'black' }
+  // ,
+  // { value: 3, label: '세번째', color: 'black' },
+  // { value: 4, label: '네번째', color: 'black' },
+  // { value: 5, label: '다섯번째', color: 'black' },
+  // { value: 6, label: '여섯번째', color: 'black' },
+  // { value: 7, label: '일곱번째', color: 'black' }
 ];
 
 export enum ELineStatus {

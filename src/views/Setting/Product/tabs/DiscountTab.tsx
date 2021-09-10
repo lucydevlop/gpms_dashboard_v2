@@ -181,6 +181,7 @@ class DiscountTab extends PureComponent<IProps, IState> {
             width={800}
             onOk={() => this.setState({ createModal: false })}
             onCancel={() => this.setState({ createModal: false })}
+            footer={[]}
           >
             <DiscountModal
               onSubmit={(value) => {
@@ -196,6 +197,7 @@ class DiscountTab extends PureComponent<IProps, IState> {
             width={800}
             onOk={() => this.setState({ detailModal: false })}
             onCancel={() => this.setState({ detailModal: false })}
+            footer={[]}
           >
             <DiscountModal
               onSubmit={(value) => {

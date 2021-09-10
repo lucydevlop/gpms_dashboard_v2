@@ -581,6 +581,7 @@ class Inout extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ createModal: false });
             }}
+            footer={[]}
           >
             <InoutCreateModalForm
               onSubmit={(value) => this.create(value)}

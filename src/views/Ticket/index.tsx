@@ -584,6 +584,7 @@ class Ticket extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ createModal: false });
             }}
+            footer={[]}
           >
             <TicketModal
               onSubmit={(value) => this.create(value)}
@@ -600,6 +601,7 @@ class Ticket extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ detailModal: false });
             }}
+            footer={[]}
           >
             <TicketModal
               onSubmit={(value) => this.update(value)}

@@ -231,6 +231,7 @@ class FacilityTab extends PureComponent<IProps, IState> {
               this.setState({ createModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <FacilityModal
               onSubmit={(value) => {
@@ -252,6 +253,7 @@ class FacilityTab extends PureComponent<IProps, IState> {
               this.setState({ detailModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <FacilityModal
               onSubmit={(value) => {
