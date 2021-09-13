@@ -171,6 +171,16 @@ const getFormComponent = (component: IFormFieldOption) => {
           <RangePicker size="middle" {...option} />
         </>
       );
+    case FormType.CheckGroup:
+      return (
+        <Checkbox.Group size="middle" {...option} className="radio-group">
+          {selectOptions.map((item) => (
+            <Checkbox key={item.value} value={item.value}>
+              {item.label}
+            </Checkbox>
+          ))}
+        </Checkbox.Group>
+      );
     default:
       return <Input size="middle" {...option} />;
   }

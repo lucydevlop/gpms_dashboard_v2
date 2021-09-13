@@ -340,9 +340,9 @@ export enum EExternalSvrType {
 
 export const externalSvrTypeOpt: ISelectOptions[] = [
   { value: EExternalSvrType.NONE, label: '사용안함', color: 'black' },
-  { value: EExternalSvrType.TMAP, label: '티맵', color: 'black' },
-  { value: EExternalSvrType.ADTCAPS, label: 'ADT캡스', color: 'black' },
-  { value: EExternalSvrType.GLNT, label: 'GLNT', color: 'black' }
+  // { value: EExternalSvrType.TMAP, label: '티맵', color: 'black' },
+  // { value: EExternalSvrType.ADTCAPS, label: 'ADT캡스', color: 'black' },
+  { value: EExternalSvrType.GLNT, label: '사용', color: 'black' }
 ];
 
 export const VisitorExternalTypeOpt: ISelectOptions[] = [{ value: 'APTNER', label: '아파트너' }];
@@ -458,4 +458,26 @@ export const ticketAplyTypeOpt: ISelectOptions[] = [
   { value: ETicketAplyType.DAY, label: '주간', color: 'black' },
   { value: ETicketAplyType.NIGHT, label: '야간', color: 'black' },
   { value: ETicketAplyType.TIME, label: '시간', color: 'black' }
+];
+
+export enum EDayType {
+  MON = 'MON',
+  TUE = 'TUE',
+  WED = 'WED',
+  THU = 'THU',
+  FRI = 'FRI',
+  SAT = 'SAT',
+  SUN = 'SUN',
+  ALL = 'ALL'
+}
+
+export const dayTYpeOpt: ISelectOptions[] = [
+  { value: EDayType.MON, label: '월', color: 'black' },
+  { value: EDayType.TUE, label: '화', color: 'black' },
+  { value: EDayType.WED, label: '수', color: 'black' },
+  { value: EDayType.THU, label: '목', color: 'black' },
+  { value: EDayType.FRI, label: '금', color: 'black' },
+  { value: EDayType.SAT, label: '토', color: 'black' },
+  { value: EDayType.SUN, label: '일', color: 'black' },
+  { value: EDayType.ALL, label: '전체', color: 'black' }
 ];

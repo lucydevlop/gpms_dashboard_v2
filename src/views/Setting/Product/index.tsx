@@ -12,11 +12,21 @@ import {
   updateCorpTicketClasses
 } from '@api/corpTicketClass';
 import { createTicketClasses, getTicketClasses, updateTicketClasses } from '@api/ticketClass';
+import {
+  createBarcode,
+  createBarcodeClasses,
+  getBarcode,
+  getBarcodeClasses,
+  updateBarcode,
+  updateBarcodeClasses
+} from '@api/barcode';
 import { runInAction } from 'mobx';
 import { ITicketClassObj } from '@models/ticketClass';
 import { ICorpTicketClassObj } from '@models/corpTicketClass';
 import { ISelectOptions } from '@utils/form';
 import { EDelYn } from '@/constants/list';
+import { IBarcodeClassObj, IBarcodeObj } from '@models/barcode';
+import BarcodeTab from '@views/Setting/Product/tabs/BarcodeTab';
 
 interface IProps {}
 interface IState {
@@ -25,6 +35,8 @@ interface IState {
   ticketClasses: ITicketClassObj[];
   corpTicketClasses: ICorpTicketClassObj[];
   discountSelectClasses: ISelectOptions[];
+  barcode: IBarcodeObj | null;
+  barcodeClasses: IBarcodeClassObj[];
 }
 
 class ProductSetting extends PureComponent<IProps, IState> {
@@ -35,7 +47,9 @@ class ProductSetting extends PureComponent<IProps, IState> {
       discountClasses: [],
       ticketClasses: [],
       corpTicketClasses: [],
-      discountSelectClasses: []
+      discountSelectClasses: [],
+      barcode: null,
+      barcodeClasses: []
     };
   }
   componentDidMount() {
@@ -80,6 +94,28 @@ class ProductSetting extends PureComponent<IProps, IState> {
         if (msg === 'success') {
           runInAction(() => {
             this.setState({ corpTicketClasses: data });
+          });
+        }
+      })
+      .catch(() => {});
+
+    getBarcode()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ barcode: data[0] });
+          });
+        }
+      })
+      .catch(() => {});
+
+    getBarcodeClasses()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ barcodeClasses: data });
           });
         }
       })
@@ -182,7 +218,7 @@ class ProductSetting extends PureComponent<IProps, IState> {
   };
 
   handleCorpTicketClasses = (info: ICorpTicketClassObj) => {
-    console.log('handleCorpTicketClasses', info);
+    // console.log('handleCorpTicketClasses', info);
     if (info.sn === null) {
       createCorpTicketClasses(info)
         .then((res: any) => {
@@ -208,6 +244,67 @@ class ProductSetting extends PureComponent<IProps, IState> {
                 return { ...t };
               });
               this.setState({ corpTicketClasses: corpTicketClasses });
+            });
+          }
+        })
+        .catch(() => {});
+    }
+  };
+
+  handleBarcode = (info: IBarcodeObj) => {
+    // console.log('handleBarcode', info);
+    if (info.sn === null || info.sn === undefined) {
+      createBarcode(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              this.setState({ barcode: data });
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      updateBarcode(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              this.setState({ barcode: data });
+            });
+          }
+        })
+        .catch(() => {});
+    }
+  };
+
+  handleBarcodeClass = (info: IBarcodeClassObj) => {
+    console.log('handleBarcodeClass', info);
+    if (info.sn === null || info.sn === undefined) {
+      createBarcodeClasses(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const barcodeClasses = [...this.state.barcodeClasses, data];
+              this.setState({ barcodeClasses: barcodeClasses });
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      updateBarcodeClasses(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              const barcodeClasses = this.state.barcodeClasses.map((t) => {
+                if (t.sn === data.sn) {
+                  return { ...data };
+                }
+                return { ...t };
+              });
+              this.setState({ barcodeClasses: barcodeClasses });
             });
           }
         })
@@ -248,12 +345,14 @@ class ProductSetting extends PureComponent<IProps, IState> {
             />
           </TabPane>
           <TabPane tab="바코드할인권" key="5">
-            <CorpTicketClassTab
-              discountSelectClasses={this.state.discountSelectClasses}
-              corpTicketClasses={corpTicketClasses}
+            <BarcodeTab
               discountClasses={discountClasses}
+              discountSelectClasses={this.state.discountSelectClasses}
+              barcode={this.state.barcode ? this.state.barcode : null}
+              barcodeClasses={this.state.barcodeClasses}
               loading={this.state.loading}
-              onSubmit={this.handleCorpTicketClasses}
+              onSubmit={this.handleBarcode}
+              onClassSubmit={this.handleBarcodeClass}
             />
           </TabPane>
         </Tabs>

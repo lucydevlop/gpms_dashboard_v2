@@ -18,7 +18,7 @@ import {
 } from '@/api/fare';
 import { runInAction } from 'mobx';
 import StandardDescription, { Attribute } from '@components/StandardDescription';
-import { conversionDate, conversionEnumValue } from '@utils/conversion';
+import { conversionDate, conversionEnumValue, convertWeekDay } from '@utils/conversion';
 import { ColumnProps } from 'antd/lib/table';
 import StandardTable from '@components/StandardTable';
 import DraggableModal from '@components/DraggableModal';
@@ -361,6 +361,10 @@ class FeeSetting extends PureComponent<any, IState> {
           value: f
             ? `${f.addFare!!.fareName} ( ${f.addFare!!.time1}분 / ${f.addFare!!.won1}원 )`
             : ''
+        },
+        {
+          name: '적용일',
+          value: f ? `${convertWeekDay(f.week)}` : ''
         },
         {
           name: '적용시점',

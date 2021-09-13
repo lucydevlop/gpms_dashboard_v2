@@ -71,33 +71,6 @@ export function displayFields(display?: IDisplayMsgObj): IFormFieldConfig<keyof 
       }
     },
     {
-      id: 'colorCode',
-      label: '컬러',
-      colProps: {
-        xl: 12,
-        xs: 24
-      },
-      formItemProps: {
-        labelCol: {
-          xl: 9,
-          xs: 9
-        },
-        wrapperCol: {
-          xl: 15,
-          xs: 15
-        },
-        children: null
-      },
-      fieldOption: {
-        initialValue: display ? display.colorCode : EColorType.C1,
-        rules: [{ required: true, message: '필수 입력값 입니다' }]
-      },
-      component: {
-        type: FormType.Select,
-        selectOptions: colorTypeOpt
-      }
-    },
-    {
       id: 'lineNumber',
       label: '라인',
       colProps: {
@@ -149,6 +122,33 @@ export function displayFields(display?: IDisplayMsgObj): IFormFieldConfig<keyof 
       component: {
         type: FormType.Select,
         selectOptions: orderOpt
+      }
+    },
+    {
+      id: 'colorCode',
+      label: '컬러',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: display ? display.colorCode : EColorType.C1,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: colorTypeOpt
       }
     },
     {

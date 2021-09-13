@@ -119,7 +119,7 @@ class Inout extends PureComponent<any, IState> {
   }
 
   update = (info: IInoutObj) => {
-    this.setState({ detailModal: false });
+    // this.setState({ detailModal: false });
     updateParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'ok') {
@@ -129,7 +129,7 @@ class Inout extends PureComponent<any, IState> {
   };
 
   tranfer = (info: IInoutObj) => {
-    this.setState({ detailModal: false });
+    // this.setState({ detailModal: false });
     transferParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'ok') {
@@ -199,7 +199,7 @@ class Inout extends PureComponent<any, IState> {
   };
 
   calc = (info: IInoutObj) => {
-    console.log('calc', info);
+    // console.log('calc', info);
     calcParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'success') {
@@ -558,12 +558,12 @@ class Inout extends PureComponent<any, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={12}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
+                    {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={13}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
+                    {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
                   </span>
                 </Table.Summary.Cell>
               </Table.Summary.Row>

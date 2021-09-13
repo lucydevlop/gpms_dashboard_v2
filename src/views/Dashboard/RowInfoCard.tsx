@@ -4,7 +4,7 @@ import { IDashboardObj } from '@models/dashboard';
 import Image from '@/components/ImageWrapper';
 import emptyImage from './images/empty.svg';
 import { conversionDateTime, conversionEnumValue } from '@utils/conversion';
-import { breakerStatusOpt, gateTypeOpt, ticketTypeOpt } from '@/constants/list';
+import { breakerStatusOpt, EGateType, gateTypeOpt, ticketTypeOpt } from '@/constants/list';
 import zdsTips from '@utils/tips';
 import { localeStore } from '@store/localeStore';
 import { actionGate, actionReset } from '@api/dashboard';
@@ -116,6 +116,48 @@ class RowInfoCard extends React.Component<IProps, IState> {
     );
   }
 
+  titleStatus() {
+    if (!this.state.item) return;
+
+    const { item } = this.state;
+
+    if (item?.gateType == EGateType.INOUT) {
+      return (
+        <Row style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+          {this.renderFacilityStatus('입구LPR', item.inLprStatus ? item.inLprStatus : 'NONE')}
+          {this.renderFacilityStatus('출구LPR', item.outLprStatus ? item.outLprStatus : 'NONE')}
+          {this.renderFacilityStatus(
+            '입구전광판',
+            item.inDisplayStatus ? item.inDisplayStatus : 'NONE'
+          )}
+          {this.renderFacilityStatus(
+            '출구전광판',
+            item.outDisplayStatus ? item.outDisplayStatus : 'NONE'
+          )}
+          {this.renderFacilityStatus('차단기', item.breakerStatus ? item.breakerStatus : 'NONE')}
+          {item.paystationStatus
+            ? this.renderFacilityStatus(
+                '정산기',
+                item.paystationStatus ? item.paystationStatus : 'NONE'
+              )
+            : null}
+        </Row>
+      );
+    }
+    return (
+      <Row style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+        {this.renderFacilityStatus('LPR', item.lprStatus ? item.lprStatus : 'NONE')}
+        {this.renderFacilityStatus('전광판', item.displayStatus ? item.displayStatus : 'NONE')}
+        {this.renderFacilityStatus('차단기', item.breakerStatus ? item.breakerStatus : 'NONE')}
+        {item.paystationStatus && item.gateType !== 'IN'
+          ? this.renderFacilityStatus(
+              '정산기',
+              item.paystationStatus ? item.paystationStatus : 'NONE'
+            )
+          : null}
+      </Row>
+    );
+  }
   renderTitle() {
     if (!this.state.item) return;
 
@@ -147,23 +189,7 @@ class RowInfoCard extends React.Component<IProps, IState> {
                 bodyStyle={{ padding: '0.2vw 0.4vw' }}
                 bordered={false}
               >
-                <Row style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
-                  {this.renderFacilityStatus('LPR', item.lprStatus ? item.lprStatus : 'NONE')}
-                  {this.renderFacilityStatus(
-                    '전광판',
-                    item.displayStatus ? item.displayStatus : 'NONE'
-                  )}
-                  {this.renderFacilityStatus(
-                    '차단기',
-                    item.breakerStatus ? item.breakerStatus : 'NONE'
-                  )}
-                  {item.paystationStatus && item.gateType !== 'IN'
-                    ? this.renderFacilityStatus(
-                        '정산기',
-                        item.paystationStatus ? item.paystationStatus : 'NONE'
-                      )
-                    : null}
-                </Row>
+                {this.titleStatus()}
               </Card>
             </Row>
             <Row style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
