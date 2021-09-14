@@ -72,7 +72,7 @@ export function DiscountFields(
     },
     {
       id: 'effectDate',
-      label: '시작일',
+      label: '적용 시작일',
       colProps: {
         xl: 12,
         xs: 24
@@ -97,7 +97,7 @@ export function DiscountFields(
     },
     {
       id: 'expireDate',
-      label: '종료일',
+      label: '적용 종료일',
       colProps: {
         xl: 12,
         xs: 24
