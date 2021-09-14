@@ -24,21 +24,24 @@ export function SearchCorpTicketFields(
   return [
     {
       id: 'createTm',
-      label: '조회기준',
+      label: '',
       colProps: {
         xl: 12,
-        md: 24,
-        lg: 24,
+        md: 12,
         xs: 24
       },
       formItemProps: {
         labelCol: {
-          xl: 8,
-          xs: 10
+          span: 0,
+          xl: 0,
+          md: 0,
+          xs: 0
         },
         wrapperCol: {
-          xl: 16,
-          xs: 14
+          span: 15,
+          xs: 24,
+          md: 15,
+          xl: 15
         }
       },
       component: {
@@ -58,18 +61,18 @@ export function SearchCorpTicketFields(
       label: '할인권명',
       colProps: {
         xl: 12,
-        md: 24,
-        lg: 24,
+        md: 12,
         xs: 24
       },
       formItemProps: {
         labelCol: {
-          xl: 8,
-          xs: 10
+          xl: 5,
+          xs: 5
         },
         wrapperCol: {
-          xl: 16,
-          xs: 14
+          xl: 19,
+          md: 15,
+          xs: 19
         }
       },
       component: {

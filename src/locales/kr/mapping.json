@@ -26,13 +26,13 @@
   "menu.setting.barcode": "바코드할인기본정보",
 
   "menu.visitor.register": "방문권등록",
-  "menu.visitor.list": "방문권리스트",
+  "menu.visitor.list": "방문권현황",
 
   "menu.statistics.inoutCount": "입출차이용",
   "menu.statistics.inoutPayment": "입출차정산",
 
   "menu.storeDiscount.apply": "주차할인",
-  "menu.storeDiscount.list": "주차할인리스트",
+  "menu.storeDiscount.list": "주차할인현황",
 
   "dashboard.rowInfo0.title": "주차장수",
   "dashboard.rowInfo1.title": "호출건수",
