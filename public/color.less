@@ -46,7 +46,7 @@ html {--antd-wave-shadow-color: @primary-color;}
 .ant-alert-success .ant-alert-icon {color: #52c41a;}
 .ant-alert-info {background-color: color(~`colorPalette("@{primary-color}", 1)`);border: 1px solid color(~`colorPalette("@{primary-color}", 3)`);}
 .ant-alert-info .ant-alert-icon {color: @primary-color;}
-.ant-alert-warning {background-color: #fffbe6;border: 1px solid #ffe58f;}
+.ant-alert-warning {background-color: color(~`colorPalette("@{border-color-split}", 1)`);border: 1px solid #ffe58f;}
 .ant-alert-warning .ant-alert-icon {color: #faad14;}
 .ant-alert-error {background-color: #fff2f0;border: 1px solid #ffccc7;}
 .ant-alert-error .ant-alert-icon {color: #ff4d4f;}
@@ -1431,9 +1431,9 @@ tr.ant-table-expanded-row:hover > td {background: #fbfbfb;}
 .ant-tag-checkable:active, .ant-tag-checkable-checked {color: #fff;}
 .ant-tag-checkable-checked {background-color: @primary-color;}
 .ant-tag-checkable:active {background-color: color(~`colorPalette("@{primary-color}", 7)`);}
-.ant-tag-pink {color: #c41d7f;background: color(~`colorPalette("@{border-color-base}", 3)`);border-color: #ffadd2;}
+.ant-tag-pink {color: #c41d7f;background: #fff0f6;border-color: #ffadd2;}
 .ant-tag-pink-inverse {color: #fff;background: #eb2f96;border-color: #eb2f96;}
-.ant-tag-magenta {color: #c41d7f;background: color(~`colorPalette("@{border-color-base}", 3)`);border-color: #ffadd2;}
+.ant-tag-magenta {color: #c41d7f;background: #fff0f6;border-color: #ffadd2;}
 .ant-tag-magenta-inverse {color: #fff;background: #eb2f96;border-color: #eb2f96;}
 .ant-tag-red {color: #cf1322;background: #fff1f0;border-color: #ffa39e;}
 .ant-tag-red-inverse {color: #fff;background: #f5222d;border-color: #f5222d;}
@@ -1443,7 +1443,7 @@ tr.ant-table-expanded-row:hover > td {background: #fbfbfb;}
 .ant-tag-orange-inverse {color: #fff;background: #fa8c16;border-color: #fa8c16;}
 .ant-tag-yellow {color: #d4b106;background: #feffe6;border-color: #fffb8f;}
 .ant-tag-yellow-inverse {color: #fff;background: #fadb14;border-color: #fadb14;}
-.ant-tag-gold {color: #d48806;background: #fffbe6;border-color: #ffe58f;}
+.ant-tag-gold {color: #d48806;background: color(~`colorPalette("@{border-color-split}", 1)`);border-color: #ffe58f;}
 .ant-tag-gold-inverse {color: #fff;background: #faad14;border-color: #faad14;}
 .ant-tag-cyan {color: #08979c;background: #e6fffb;border-color: #87e8de;}
 .ant-tag-cyan-inverse {color: #fff;background: #13c2c2;border-color: #13c2c2;}
@@ -1451,14 +1451,14 @@ tr.ant-table-expanded-row:hover > td {background: #fbfbfb;}
 .ant-tag-lime-inverse {color: #fff;background: #a0d911;border-color: #a0d911;}
 .ant-tag-green {color: #389e0d;background: #f6ffed;border-color: #b7eb8f;}
 .ant-tag-green-inverse {color: #fff;background: #52c41a;border-color: #52c41a;}
-.ant-tag-blue {color: #096dd9;background: color(~`colorPalette("@{popover-customize-border-color}", 1)`);border-color: #91d5ff;}
+.ant-tag-blue {color: #096dd9;background: #e6f7ff;border-color: #91d5ff;}
 .ant-tag-blue-inverse {color: #fff;background: #1890ff;border-color: #1890ff;}
 .ant-tag-geekblue {color: #1d39c4;background: #f0f5ff;border-color: #adc6ff;}
 .ant-tag-geekblue-inverse {color: #fff;background: #2f54eb;border-color: #2f54eb;}
 .ant-tag-purple {color: #531dab;background: #f9f0ff;border-color: #d3adf7;}
 .ant-tag-purple-inverse {color: #fff;background: #722ed1;border-color: #722ed1;}
 .ant-tag-success {color: #52c41a;background: #f6ffed;border-color: #b7eb8f;}
-.ant-tag-processing {color: #1890ff;background: color(~`colorPalette("@{popover-customize-border-color}", 1)`);border-color: #91d5ff;}
+.ant-tag-processing {color: #1890ff;background: #e6f7ff;border-color: #91d5ff;}
 .ant-tag-error {color: #f5222d;background: #fff1f0;border-color: #ffa39e;}
 .ant-tag-warning {color: #fa8c16;background: #fff7e6;border-color: #ffd591;}
 .ant-timeline {color: rgba(0, 0, 0, 0.85);}

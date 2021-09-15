@@ -121,7 +121,7 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
       }
     },
     {
-      id: 'dateType',
+      id: 'searchDateLabel',
       label: '조회기준',
       formItemProps: {
         labelCol: {
@@ -158,8 +158,8 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
               localeObj['label.startDate'] || '시작일',
               localeObj['label.endDate'] || '종료일'
             ],
-            allowClear: true,
-            disabledDate: disabledThreeMonth
+            allowClear: true
+            // ,disabledDate: disabledThreeMonth
           }
         },
         fieldOption: regisMonthRangeConfig

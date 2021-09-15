@@ -112,7 +112,9 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
           placeholder: localeObj['label.choose'] || '선택해주세요',
           allowClear: true
         },
-        selectOptions: ticketTypeOpt
+        selectOptions: ticketTypeOpt.filter(
+          (t) => t.value !== ETicketType.ALL && t.value !== ETicketType.DISCOUNT
+        )
       }
     },
     {
@@ -199,7 +201,9 @@ export function newInoutFields(gates: any[]): IFormFieldConfig<keyof IInoutObj>[
       },
       component: {
         type: FormType.Select,
-        selectOptions: ticketTypeOpt
+        selectOptions: ticketTypeOpt.filter(
+          (t) => t.value !== ETicketType.ALL && t.value !== ETicketType.DISCOUNT
+        )
       }
     },
     {

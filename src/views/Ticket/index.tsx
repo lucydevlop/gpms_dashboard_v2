@@ -39,6 +39,7 @@ import { getDiscountClasses } from '@api/discountClass';
 import { getTicketClasses } from '@api/ticketClass';
 import { ISelectOptions } from '@utils/form';
 import { ITicketClassObj } from '@models/ticketClass';
+import { string2mobile } from '@utils/tools';
 
 type IState = {
   loading: boolean;
@@ -84,7 +85,7 @@ class Ticket extends PureComponent<any, IState> {
       fromDate: createTm[0].format('YYYY-MM-DD'),
       toDate: createTm[1].format('YYYY-MM-DD'),
       createTm: [createTm[0].unix(), createTm[1].unix()],
-      dateType: ETicketSearchDateType.VALIDATE,
+      searchDateLabel: ETicketSearchDateType.VALIDATE,
       ticketType: ETicketType.ALL
     };
     this.getTicketClasses();
@@ -115,7 +116,7 @@ class Ticket extends PureComponent<any, IState> {
 
   getSearchData = (info: ITicketSelectReq) => {
     const searchParam: ITicketSelectReq = {
-      dateType: info.dateType,
+      searchDateLabel: info.searchDateLabel,
       startDate: conversionDate(info.createTm[0]),
       endDate: conversionDate(info.createTm[1]),
       fromDate: conversionDate(info.createTm[0]),
@@ -403,7 +404,8 @@ class Ticket extends PureComponent<any, IState> {
         key: 'tel',
         width: 110,
         align: 'center',
-        render: (test: string, record: ITicketObj) => record.tel
+        render: (test: string, record: ITicketObj) =>
+          record.tel ? string2mobile(record.tel) : null
       },
       {
         title: '타입',

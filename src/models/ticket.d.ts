@@ -24,7 +24,7 @@ export interface ITicketObj {
 
 export interface ITicketSelectReq {
   parkinglotId?: number;
-  dateType: string;
+  searchDateLabel: string;
   startDate: string;
   endDate: string;
   createTm: number[];
