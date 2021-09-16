@@ -52,6 +52,12 @@ export function updateParkinglotInout(data) {
   });
 }
 
+export function transferParkinglotInout(data) {
+  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/inouts/transfer', {
+    data
+  });
+}
+
 export function getParkinglotDiscountClass(parkinglotId) {
   return io.get(
     process.env.REACT_APP_API_DOMAIN_URL + '/cs/parkinglot/' + parkinglotId + '/discount-class'

@@ -2,6 +2,7 @@ import moment, { Moment } from 'moment';
 import { moneyMillion, percentDenominator, timeDenominator } from '@/constants';
 import { types } from 'util';
 import { ISelectOptions } from '@utils/form';
+import { dayTYpeOpt } from '@/constants/list';
 
 export function conversionDate(time: number | Date, cFormat = '{y}-{m}-{d}'): string {
   if (arguments.length === 0) {
@@ -119,6 +120,14 @@ export const convertDateToDateTime = (
 
 export const convertNumberWithCommas = (x: any) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+export const convertWeekDay = (x: string[]) => {
+  let data: string = '';
+  x.map((x) => {
+    data = data + conversionEnumValue(x, dayTYpeOpt).label + ' ';
+  });
+  return data;
 };
 //
 // /**

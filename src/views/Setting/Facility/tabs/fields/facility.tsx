@@ -2,7 +2,14 @@ import React from 'react';
 import { IFormFieldConfig } from '@utils/form';
 import { IFacilityObj } from '@models/facility';
 import { FormType } from '@/constants/form';
-import { categoryOpt, ECategory, EDelYn, lprTypeTypeOpt } from '@/constants/list';
+import {
+  categoryOpt,
+  delYnOpt,
+  ECategory,
+  EDelYn,
+  gateTypeOpt,
+  lprTypeTypeOpt
+} from '@/constants/list';
 // import { BaseColConfig } from '@components/EditableTable/EditableTable';
 // import { gateTypeOpt } from '@/constants/list';
 // import { conversionEnumValue } from '@utils/conversion';
@@ -371,6 +378,33 @@ export function facilityFields(
       }
     },
     {
+      id: 'delYn',
+      label: '사용',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: facility ? facility.delYn : null,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: delYnOpt.filter((d) => d.value !== EDelYn.ALL)
+      }
+    },
+    {
       id: 'gateType',
       label: 'gateType',
       colProps: {
@@ -415,31 +449,6 @@ export function facilityFields(
       },
       fieldOption: {
         initialValue: facility ? facility.sn : null
-      },
-      component: {
-        type: FormType.Input
-      }
-    },
-    {
-      id: 'delYn',
-      label: 'delYn',
-      colProps: {
-        xl: 12,
-        xs: 24
-      },
-      formItemProps: {
-        labelCol: {
-          xl: 9,
-          xs: 9
-        },
-        wrapperCol: {
-          xl: 15,
-          xs: 15
-        },
-        children: null
-      },
-      fieldOption: {
-        initialValue: facility ? facility.delYn : EDelYn.N
       },
       component: {
         type: FormType.Input

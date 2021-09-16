@@ -44,7 +44,7 @@ export function actionFacility(id, facilityId, action) {
 }
 
 export function getGates() {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/gate/list`);
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/gates`);
 }
 
 export function updateGate(data) {

@@ -564,6 +564,7 @@ class UserSetting extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ createModal: false });
             }}
+            footer={[]}
           >
             <UserCreateModalForm onSubmit={(value) => this.create(value)} />
           </DraggableModal>
@@ -577,6 +578,7 @@ class UserSetting extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ detailModal: false });
             }}
+            footer={[]}
           >
             <UserDetailModalForm
               user={this.state.selected!!}

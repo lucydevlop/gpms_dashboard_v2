@@ -1,14 +1,16 @@
-import React, { BaseSyntheticEvent, PureComponent } from 'react';
+import React, { BaseSyntheticEvent, PureComponent, useState } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import { Form } from '@ant-design/compatible';
 import { IFareBasicObj, IFareInfoObj, IFarePolicyObj } from '@models/fare';
-import { Button, Row } from 'antd';
+import { Button, Checkbox, Col, Divider, Row } from 'antd';
 import { getFormFields } from '@utils/form';
 import { localeStore } from '@store/localeStore';
 import { getFareBasicFields } from '@views/Setting/Fee/fields/fareBasic';
 import moment from 'moment';
 import { EDelYn } from '@/constants/list';
 import { getFarePolicyFields } from '@views/Setting/Fee/fields/farePolicy';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 
 interface IProps extends FormComponentProps {
   farePolicy?: IFarePolicyObj | null;
@@ -16,12 +18,18 @@ interface IProps extends FormComponentProps {
   onSubmit: (info: IFarePolicyObj) => void;
 }
 
-interface IState {}
+interface IState {
+  daysAllCheck: boolean;
+}
+
+const { Group: CheckboxGroup } = Checkbox;
 
 class FarePolicyModal extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      daysAllCheck: false
+    };
   }
 
   handlerSubmit() {
@@ -66,6 +74,19 @@ class FarePolicyModal extends PureComponent<IProps, IState> {
         }
       }
     };
+
+    const checkGroupLayout = {
+      labelCol: {
+        xl: 4,
+        xs: 4
+      },
+      wrapperCol: {
+        xl: 16,
+        xs: 16
+      },
+      children: null
+    };
+
     return (
       <Form
         onSubmit={(e: BaseSyntheticEvent) => {

@@ -171,23 +171,23 @@ export function SearchVisitorFields(): IFormFieldConfig<keyof IVisitorSearchReq>
   return [
     {
       id: 'dateType',
-      label: '조회기준',
+      label: '',
       colProps: {
         xl: 12,
         xs: 24
       },
       formItemProps: {
         labelCol: {
-          span: 7,
-          xl: 5,
-          md: 5,
-          xs: 5
+          span: 0,
+          xl: 0,
+          md: 0,
+          xs: 0
         },
         wrapperCol: {
           span: 15,
-          xs: 19,
-          md: 19,
-          xl: 19
+          xs: 24,
+          md: 24,
+          xl: 24
         }
       },
       fieldOption: {

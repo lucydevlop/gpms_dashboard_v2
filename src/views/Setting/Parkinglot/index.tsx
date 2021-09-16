@@ -20,6 +20,7 @@ import ParkingSpaceSettingModalForm from './Modal/ParkingSpaceSettingModal';
 import { number } from 'echarts/core';
 import { getGateGroups, updateParkinglot } from '@/api/parkinglot';
 import ParkingVisitorExternalModalForm from './Modal/ParkingVisitorExternalModal';
+import zdsTips from '@utils/tips';
 
 interface IProps extends FormComponentProps {}
 interface IState {
@@ -77,19 +78,6 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
 
   onFinish = async () => {
     this.props.form.validateFields((err, fieldsValue) => {
-      // if (!err) {
-      //   let timeList: number[] = [];
-      //   if (values.createTm && values.createTm.length) {
-      //     timeList = getQueryRangeDate(values.createTm);
-      //   }
-      //
-      //   this.props.submit({
-      //     ...values,
-      //     // @ts-ignore
-      //     createTm: timeList
-      //   });
-      // }
-
       const sendData: any = {
         parkId: fieldsValue.parkId,
         siteId: fieldsValue.siteid,
@@ -107,14 +95,15 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
         visitorExternalKey:
           fieldsValue.visitorExternal === 'On' ? this.state.visitorExternalKey : null,
         visitorExternal: fieldsValue.visitorExternal === 'On' ? this.state.visitorExternal : null,
-        space: fieldsValue.space === 'Off' ? null : this.state.space
+        space: fieldsValue.space === 'Off' ? null : this.state.space,
+        operatingDays: fieldsValue.operatingDays
       };
       if (!err) {
         updateParkinglot(sendData).then((res: any) => {
           const { msg, data } = res;
           if (msg === 'success') {
             runInAction(() => {
-              this.setState({ parkinglot: data });
+              zdsTips.success('주차 정보 변경 완료'), () => this.setState({ parkinglot: data });
             });
           }
         });

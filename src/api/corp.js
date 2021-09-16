@@ -40,3 +40,13 @@ export function applyCorpDiscountTicket(data) {
     data: data
   });
 }
+
+export function getCorpApplyTickets(corpSn, data) {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/corps/${corpSn}/tickets`, {
+    params: {
+      fromDate: data.startDate,
+      toDate: data.endDate,
+      ticketClassSn: data.ticketClassSn ? data.ticketClassSn : ''
+    }
+  });
+}

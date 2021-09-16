@@ -39,6 +39,10 @@ class FacilitySetting extends PureComponent<any, IState> {
   }
 
   componentDidMount() {
+    this.pollData();
+  }
+
+  pollData = async () => {
     this.setState({ loading: true });
 
     getGates()
@@ -75,7 +79,7 @@ class FacilitySetting extends PureComponent<any, IState> {
       .catch(() => {});
 
     this.setState({ loading: false });
-  }
+  };
 
   handleGateUpdate = async (record: IGateObj) => {
     updateGate(record)
@@ -83,14 +87,15 @@ class FacilitySetting extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            const update = data;
-            const gates = this.state.gates.map((e) => {
-              if (e.sn === update.sn) {
-                return { ...update };
-              }
-              return { ...e };
-            });
-            this.setState({ gates: gates });
+            this.pollData();
+            // const update = data;
+            // const gates = this.state.gates.map((e) => {
+            //   if (e.sn === update.sn) {
+            //     return { ...update };
+            //   }
+            //   return { ...e };
+            // });
+            // this.setState({ gates: gates });
           });
         }
       })

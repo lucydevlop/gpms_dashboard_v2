@@ -22,6 +22,7 @@ import { IFacilityObj, IFacilitySummaryObj } from '@models/facility';
 import { rules } from '@typescript-eslint/eslint-plugin';
 import { IActionsHistoryObj, IDisabilityObj } from '@models/history';
 import { Console } from 'console';
+import { IGateObj } from '@models/gate';
 
 configure({ enforceActions: 'observed' });
 class ParkinglotStore {
@@ -49,7 +50,7 @@ class ParkinglotStore {
 
   @observable parkinglotErrorSum: Array<IParkinglotErrorSummaryObj> = [];
 
-  @observable gateList: Array<any> = [];
+  @observable gateList: Array<IGateObj> = [];
 
   @observable gateGroups: Array<any> = [];
 

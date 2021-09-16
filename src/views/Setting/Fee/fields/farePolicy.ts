@@ -3,6 +3,7 @@ import { IFormFieldConfig, ISelectOptions } from '@utils/form';
 import { FormType } from '@/constants/form';
 import { localeStore } from '@store/localeStore';
 import moment from 'moment';
+import { dayTYpeOpt } from '@/constants/list';
 
 export function getFarePolicyFields(
   fareInfos: ISelectOptions[],
@@ -123,6 +124,32 @@ export function getFarePolicyFields(
       component: {
         type: FormType.Select,
         selectOptions: fareInfos
+      }
+    },
+    {
+      id: 'week',
+      label: '적용일',
+      colProps: {
+        xl: 24,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 4,
+          xs: 4
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: farePolicy ? farePolicy.week : ''
+      },
+      component: {
+        type: FormType.CheckGroup,
+        selectOptions: dayTYpeOpt
       }
     }
   ];

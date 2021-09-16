@@ -71,7 +71,12 @@ class UploadModal extends PureComponent<IProps, IState> {
     };
 
     return (
-      <Modal visible={this.props.visiable} onOk={this.props.onOk} onCancel={this.props.onCancel}>
+      <Modal
+        visible={this.props.visiable}
+        onOk={this.props.onOk}
+        onCancel={this.props.onCancel}
+        footer={[]}
+      >
         <Form>
           <Upload
             {...props}
