@@ -6,6 +6,7 @@ import {
   deleteParkinglotInout,
   editParkinglotInout,
   getInouts,
+  transferParkinglotInout,
   updateParkinglotInout
 } from '@api/Inout';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
@@ -24,7 +25,7 @@ import {
   conversionEnumValue,
   convertNumberWithCommas
 } from '@utils/conversion';
-import { EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
+import { EDelYn, EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
 import moment from 'moment';
 import DraggableModal from '@components/DraggableModal';
 import InoutCreateModalForm from '@views/Inout/List/Modal/InoutCreateModal';
@@ -46,7 +47,8 @@ interface IState {
   createModal: boolean;
   detailModal: boolean;
   searchParam?: IInoutSelectReq;
-  gates: any[];
+  inGates: any[];
+  outGates: any[];
   selected?: IInoutObj;
   deleteList: any[];
   discountClasses: IDiscountClassObj[];
@@ -63,7 +65,8 @@ class Inout extends PureComponent<any, IState> {
       current: 1,
       pageSize: 20,
       createModal: false,
-      gates: [],
+      inGates: [],
+      outGates: [],
       detailModal: false,
       deleteList: [],
       discountClasses: []
@@ -72,11 +75,21 @@ class Inout extends PureComponent<any, IState> {
 
   componentDidMount() {
     parkinglotStore.initGateList().then(() => {
-      const unique: { value: string; label: string }[] = [];
-      parkinglotStore.gateList.forEach((gate) => {
-        unique.push({ value: gate.gateId, label: gate.gateName });
-      });
-      this.setState({ gates: unique });
+      const inUnique: { value: string; label: string }[] = [];
+      parkinglotStore.gateList
+        .filter((g) => g.delYn === EDelYn.N && g.gateType.includes('IN'))
+        .forEach((gate) => {
+          inUnique.push({ value: gate.gateId, label: gate.gateName });
+        });
+      this.setState({ inGates: inUnique });
+
+      const outUnique: { value: string; label: string }[] = [];
+      parkinglotStore.gateList
+        .filter((g) => g.delYn === EDelYn.N && g.gateType.includes('OUT'))
+        .forEach((gate) => {
+          outUnique.push({ value: gate.gateId, label: gate.gateName });
+        });
+      this.setState({ outGates: outUnique });
     });
 
     getDiscountClasses()
@@ -106,8 +119,18 @@ class Inout extends PureComponent<any, IState> {
   }
 
   update = (info: IInoutObj) => {
-    this.setState({ detailModal: false });
+    // this.setState({ detailModal: false });
     updateParkinglotInout(info).then((res: any) => {
+      const { msg, data } = res;
+      if (msg === 'ok') {
+        this.setState({ selected: data }, () => this.pollData());
+      }
+    });
+  };
+
+  tranfer = (info: IInoutObj) => {
+    // this.setState({ detailModal: false });
+    transferParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'ok') {
         this.setState({ selected: data }, () => this.pollData());
@@ -141,7 +164,7 @@ class Inout extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            console.log(data);
+            // console.log(data);
             this.setState({ list: data, total: data.length });
           });
         }
@@ -176,7 +199,7 @@ class Inout extends PureComponent<any, IState> {
   };
 
   calc = (info: IInoutObj) => {
-    console.log('calc', info);
+    // console.log('calc', info);
     calcParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'success') {
@@ -230,10 +253,10 @@ class Inout extends PureComponent<any, IState> {
       '입차시간',
       '출차게이트',
       '출차시간',
-      '주차요금',
+      '기본요금',
       '할인요금',
+      '주차요금',
       '결제요금',
-      '정산요금',
       '미납요금',
       '메모'
     ].join(',');
@@ -292,7 +315,11 @@ class Inout extends PureComponent<any, IState> {
         align: 'center',
         render: (text: string, record: IInoutObj) => {
           const status =
-            record.parkoutSn === -1 ? '이중입차' : record.parkoutSn !== 0 ? '차량출차' : '차량입차';
+            record.parkoutSn === -1
+              ? '이중입차'
+              : record.parkoutSn !== 0 && record.parkoutSn !== null
+              ? '차량출차'
+              : '차량입차';
           return {
             props: {
               style: {
@@ -373,7 +400,7 @@ class Inout extends PureComponent<any, IState> {
         render: (text: string, record: IInoutObj) => record.parktime
       },
       {
-        title: '주차요금',
+        title: '기본요금',
         key: 'parkfee',
         width: 100,
         align: 'center',
@@ -389,11 +416,18 @@ class Inout extends PureComponent<any, IState> {
         )
       },
       {
-        title: '결제요금',
+        title: '주차요금',
         key: 'payfee',
         width: 100,
         align: 'center',
         render: (text: string, record: IInoutObj) => <span>{record.payfee}</span>
+      },
+      {
+        title: '결제요금',
+        key: 'payfee',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IInoutObj) => <span>{record.paymentAmount}</span>
       },
       {
         title: '미납요금',
@@ -410,13 +444,6 @@ class Inout extends PureComponent<any, IState> {
             children: <div>{record.nonPayment}</div>
           };
         }
-      },
-      {
-        title: '정산요금',
-        key: 'payfee',
-        width: 100,
-        align: 'center',
-        render: (text: string, record: IInoutObj) => <span>{record.paymentAmount}</span>
       },
       {
         title: '메모',
@@ -531,12 +558,12 @@ class Inout extends PureComponent<any, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={12}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
+                    {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={13}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
+                    {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
                   </span>
                 </Table.Summary.Cell>
               </Table.Summary.Row>
@@ -554,10 +581,11 @@ class Inout extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ createModal: false });
             }}
+            footer={[]}
           >
             <InoutCreateModalForm
               onSubmit={(value) => this.create(value)}
-              gates={this.state.gates}
+              gates={this.state.inGates}
             />
           </DraggableModal>
         ) : null}
@@ -574,9 +602,11 @@ class Inout extends PureComponent<any, IState> {
             <InoutDetailModalForm
               onSubmit={(value) => this.update(value)}
               inout={this.state.selected!!}
-              gates={this.state.gates}
+              inGates={this.state.inGates}
+              outGates={this.state.outGates}
               discountClasses={this.state.discountClasses}
               onCalc={(value) => this.calc(value)}
+              onTransfer={(value) => this.tranfer(value)}
             />
           </DraggableModal>
         ) : null}

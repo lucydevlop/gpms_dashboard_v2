@@ -221,6 +221,7 @@ class TenantTicket extends PureComponent<any, IState> {
               this.setState({ createModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <CorpTicketCreateModal
               corpTicketClasses={this.state.corpTicketClasses.filter((t) => t.delYn === EDelYn.N)}

@@ -194,6 +194,7 @@ class TicketClassTab extends PureComponent<IProps, IState> {
               this.setState({ createModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <TicketClassModal
               onSubmit={(value) => {
@@ -214,6 +215,7 @@ class TicketClassTab extends PureComponent<IProps, IState> {
               this.setState({ detailModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <TicketClassModal
               ticketClass={this.state.selected}

@@ -158,28 +158,43 @@ export const asyncRouteConfig: RouteChild[] = [
     authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
     routes: [
       {
-        name: 'inout',
-        path: '/statistics/inout',
-        component: ['/views/Statistics/Inout'],
+        name: 'inoutCount',
+        path: '/statistics/inoutCount',
+        component: ['/views/Statistics/Inout/Count'],
         loading: true,
-        localeKey: 'menu.statistics.inout'
+        localeKey: 'menu.statistics.inoutCount'
       },
       {
-        name: 'erros',
-        path: '/parkinglot/error',
-        component: ['/views/ParkingLot/Error'],
-        authority: ['admin', 'ROLE_SUPER'],
+        name: 'inoutPayment',
+        path: '/statistics/inoutPayment',
+        component: ['/views/Statistics/Inout/Payment'],
         loading: true,
-        localeKey: 'menu.parkinglot.error'
-      },
-      {
-        name: 'list',
-        path: '/parkinglot/parkinglot',
-        component: ['/views/ParkingLot/Parkinglot'],
-        authority: ['admin', 'ROLE_SUPER'],
-        loading: true,
-        localeKey: 'menu.parkinglot.parkinglot'
+        localeKey: 'menu.statistics.inoutPayment'
       }
+      // ,
+      // {
+      //   name: 'inout',
+      //   path: '/statistics/inout',
+      //   component: ['/views/Statistics/Inout'],
+      //   loading: true,
+      //   localeKey: 'menu.statistics.inout'
+      // },
+      // {
+      //   name: 'erros',
+      //   path: '/parkinglot/error',
+      //   component: ['/views/ParkingLot/Error'],
+      //   authority: ['admin', 'ROLE_SUPER'],
+      //   loading: true,
+      //   localeKey: 'menu.parkinglot.error'
+      // },
+      // {
+      //   name: 'list',
+      //   path: '/parkinglot/parkinglot',
+      //   component: ['/views/ParkingLot/Parkinglot'],
+      //   authority: ['admin', 'ROLE_SUPER'],
+      //   loading: true,
+      //   localeKey: 'menu.parkinglot.parkinglot'
+      // }
     ]
   },
   {

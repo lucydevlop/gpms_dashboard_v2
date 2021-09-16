@@ -1,25 +1,26 @@
 import React, { BaseSyntheticEvent, PureComponent } from 'react';
-import { inject, observer } from 'mobx-react';
 import { FormComponentProps } from '@ant-design/compatible/lib/form';
+import { IBarcodeClassObj } from '@models/barcode';
+import { IDiscountClassObj } from '@models/discountClass';
+import { inject, observer } from 'mobx-react';
 import { Form } from '@ant-design/compatible';
 import { Button, Row } from 'antd';
 import { getFormFields, ISelectOptions } from '@utils/form';
-import { conversionDateTime } from '@/utils/conversion';
-import { IDiscountClassObj } from '@models/discountClass';
-import { ICorpTicketClassObj } from '@models/corpTicketClass';
-import { corpDiscountFields } from '@views/Setting/Product/tabs/fields/corpTicketClass';
+import { conversionDateTime } from '@utils/conversion';
+import { BarcodeClassFields } from '@views/Setting/Product/tabs/fields/barcode';
 
-interface ICorpTicketModalProps extends FormComponentProps {
-  discount?: ICorpTicketClassObj;
-  onSubmit: (discount: ICorpTicketClassObj) => void;
-  discountSelectClasses: ISelectOptions[];
+interface IProps extends FormComponentProps {
+  barcodeClass?: IBarcodeClassObj;
+  onSubmit: (info: IBarcodeClassObj) => void;
   discountClasses: IDiscountClassObj[];
+  discountSelectClasses: ISelectOptions[];
 }
-interface ICorpTicketModalState {}
+
+interface IState {}
 
 @inject('localeStore')
 @observer
-class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketModalState> {
+class BarcodeClassModal extends PureComponent<IProps, IState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
       const discountClass: IDiscountClassObj = this.props.discountClasses.filter((e) => {
@@ -27,15 +28,16 @@ class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketMo
       })[0];
       fieldsValue.effectDate = conversionDateTime(discountClass.effectDate, '{y}-{m}-{d} 00:00:00');
       fieldsValue.expireDate = conversionDateTime(discountClass.expireDate, '{y}-{m}-{d} 23:59:59');
-      if (!err) this.props.onSubmit(fieldsValue);
+      if (!err) {
+        console.log('handlerSubmit', fieldsValue);
+        this.props.onSubmit(fieldsValue);
+      }
     });
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
-    const CorpDiscountFields = corpDiscountFields(
-      this.props.discount,
-      this.props.discountSelectClasses
-    );
+    const Fields = BarcodeClassFields(this.props.barcodeClass, this.props.discountSelectClasses);
     return (
       <>
         <Row style={{ marginTop: '10px' }}>
@@ -45,7 +47,7 @@ class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketMo
               this.handlerSubmit();
             }}
           >
-            <Row gutter={24}>{getFormFields(getFieldDecorator, CorpDiscountFields, true, 8)}</Row>
+            <Row gutter={24}>{getFormFields(getFieldDecorator, Fields, true, 4)}</Row>
             <Button
               type="primary"
               htmlType="submit"
@@ -60,8 +62,5 @@ class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketMo
   }
 }
 
-const CorpTicketModalForm = Form.create<ICorpTicketModalProps>({ name: 'corpTicketModal' })(
-  CorpTicketModal
-);
-
-export default CorpTicketModalForm;
+const BarcodeClassModalForm = Form.create<IProps>({ name: 'barcodeClassModal' })(BarcodeClassModal);
+export default BarcodeClassModalForm;

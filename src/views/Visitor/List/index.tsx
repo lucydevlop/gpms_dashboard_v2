@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { getVisitorList, VisitorDelete } from '@api/visitor';
+import { getVisitorList, visitorDelete } from '@api/visitor';
 import { IVisitorObj, IVisitorSearchReq } from '@models/visitor';
 import { EDelYn, ETicketSearchDateType, ETicketType } from '@/constants/list';
 import moment from 'moment';
@@ -105,7 +105,7 @@ class VisitorList extends PureComponent<any, IState> {
     const { localeObj } = localeStore;
     if (key === 'delete') {
       zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
-        VisitorDelete(info.sn)
+        visitorDelete(info.sn)
           .then((res: any) => {
             const { msg, data } = res;
             if (msg === 'success') {
@@ -126,38 +126,57 @@ class VisitorList extends PureComponent<any, IState> {
   render() {
     const columns: ColumnProps<IVisitorObj>[] = [
       {
-        title: '차량번호',
+        title: (
+          <div>
+            <p>방문일</p>
+            <p>차량번호</p>
+          </div>
+        ),
         key: 'vehicleNo',
-        width: 100,
+        width: 120,
         align: 'center',
-        render: (test: string, record: IVisitorObj) => record.vehicleNo
+        render: (test: string, record: IVisitorObj) => (
+          <div>
+            <span style={{ color: 'var(--text-color-secondary)' }}>
+              <p>{conversionDate(record.effectDate as Date, '{y}-{m}-{d}') || '--'}</p>
+            </span>
+            <span style={{ fontSize: '15px' }}>{record.vehicleNo}</span>
+          </div>
+        )
       },
-      {
-        title: '방문일',
-        key: 'effectDate',
-        width: 100,
-        align: 'center',
-        render: (test: string, record: IVisitorObj) =>
-          conversionDate(record.effectDate as Date, '{y}-{m}-{d}') || '--'
-      },
+      // {
+      //   title: '방문일',
+      //   key: 'effectDate',
+      //   width: 100,
+      //   align: 'center',
+      //   render: (test: string, record: IVisitorObj) =>
+      //     conversionDate(record.effectDate as Date, '{y}-{m}-{d}') || '--'
+      // },
       {
         title: '메모',
         key: 'etc',
-        width: 100,
+        width: 120,
         align: 'center',
-        render: (test: string, record: IVisitorObj) => record.etc
+        render: (test: string, record: IVisitorObj) => (
+          <div>
+            <span style={{ color: 'var(--text-color-secondary)' }}>
+              <p>{record.tel ? string2mobile(record.tel) : record.tel}</p>
+            </span>
+            <span>{record.etc}</span>
+          </div>
+        )
       },
-      {
-        title: '전화번호',
-        key: 'tel',
-        width: 100,
-        align: 'center',
-        render: (test: string, record: IVisitorObj) =>
-          record.tel ? string2mobile(record.tel) : record.tel
-      },
+      // {
+      //   title: '전화번호',
+      //   key: 'tel',
+      //   width: 100,
+      //   align: 'center',
+      //   render: (test: string, record: IVisitorObj) =>
+      //     record.tel ? string2mobile(record.tel) : record.tel
+      // },
       {
         title: 'Action',
-        width: 100,
+        width: 80,
         align: 'center',
         render: (item: IVisitorObj) => (
           <div>

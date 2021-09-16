@@ -245,34 +245,6 @@ export function CorpRegisterFields(): IFormFieldConfig<keyof ICorpObj>[] {
 export function CorpUpdateFields(corp: ICorpObj): IFormFieldConfig<keyof ICorpObj>[] {
   return [
     {
-      id: 'corpId',
-      label: '입주사ID',
-      colProps: {
-        xl: 12,
-        xs: 24
-      },
-      fieldOption: {
-        initialValue: corp.corpId ? corp.corpId : null
-      },
-      formItemProps: {
-        labelCol: {
-          xl: 9,
-          xs: 9
-        },
-        wrapperCol: {
-          xl: 15,
-          xs: 15
-        },
-        children: null
-      },
-      component: {
-        type: FormType.Input,
-        option: {
-          readOnly: true
-        }
-      }
-    },
-    {
       id: 'corpName',
       label: '입주사명',
       colProps: {
@@ -298,6 +270,31 @@ export function CorpUpdateFields(corp: ICorpObj): IFormFieldConfig<keyof ICorpOb
         type: FormType.Input,
         option: {
           placeholder: '입주사명'
+        }
+      }
+    },
+    {
+      id: 'password',
+      label: '패스워드',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '패스워드 변경'
         }
       }
     },
@@ -442,11 +439,14 @@ export function CorpUpdateFields(corp: ICorpObj): IFormFieldConfig<keyof ICorpOb
       }
     },
     {
-      id: 'password',
-      label: '패스워드',
+      id: 'corpId',
+      label: '입주사ID',
       colProps: {
         xl: 12,
         xs: 24
+      },
+      fieldOption: {
+        initialValue: corp.corpId ? corp.corpId : null
       },
       formItemProps: {
         labelCol: {
@@ -462,7 +462,7 @@ export function CorpUpdateFields(corp: ICorpObj): IFormFieldConfig<keyof ICorpOb
       component: {
         type: FormType.Input,
         option: {
-          placeholder: '패스워드 변경'
+          readOnly: true
         }
       }
     },

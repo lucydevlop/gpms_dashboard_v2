@@ -14,23 +14,25 @@
   "menu.parkinglot.error": "주차장장애현황",
   "menu.parkinglotcs.inout": "입출차현황",
   "menu.parkinglotcs.ticket": "정기권",
-  "menu.tenant.list": "입주사리스트",
+  "menu.tenant.list": "입주사현황",
   "menu.tenant.tickets": "입주사할인권",
-  "menu.inout.list": "입출차리스트",
+  "menu.inout.list": "입출차현황",
 
   "menu.setting.parkinglot": "주차장기본정보",
   "menu.setting.facility": "시설정보",
   "menu.setting.fee": "요금정보",
   "menu.setting.product": "상품정보",
   "menu.setting.user": "사용자정보",
+  "menu.setting.barcode": "바코드할인기본정보",
 
   "menu.visitor.register": "방문권등록",
-  "menu.visitor.list": "방문권리스트",
+  "menu.visitor.list": "방문권현황",
 
-  "menu.statistics.inout": "입출차통계",
+  "menu.statistics.inoutCount": "입출차이용",
+  "menu.statistics.inoutPayment": "입출차정산",
 
   "menu.storeDiscount.apply": "주차할인",
-  "menu.storeDiscount.list": "주차할인리스트",
+  "menu.storeDiscount.list": "주차할인현황",
 
   "dashboard.rowInfo0.title": "주차장수",
   "dashboard.rowInfo1.title": "호출건수",
@@ -114,5 +116,8 @@
   "label.discount.create": "할인권 생성",
 
   "label.corpDiscount.create": "입주사 할인권 생성",
-  "label.corpDiscount.detail": "입주사 할인권 상세"
+  "label.corpDiscount.detail": "입주사 할인권 상세",
+
+  "label.barcode.create": "바코드 할인권 생성",
+  "label.barcode.detail": "바코드 할인권 상세"
 }

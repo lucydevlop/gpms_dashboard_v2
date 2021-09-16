@@ -455,6 +455,7 @@ class TenantList extends PureComponent<any, IState> {
               this.setState({ createModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <TenantListModal
               onSubmit={(value) => {
@@ -475,6 +476,7 @@ class TenantList extends PureComponent<any, IState> {
               this.setState({ detailModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <TenantListModal
               onSubmit={(value) => {

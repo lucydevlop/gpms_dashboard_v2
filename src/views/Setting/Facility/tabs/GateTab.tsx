@@ -195,6 +195,7 @@ class GateTab extends PureComponent<IProps, IState> {
               this.setState({ createModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <GateModal
               onSubmit={(value) => {
@@ -215,6 +216,7 @@ class GateTab extends PureComponent<IProps, IState> {
               this.setState({ detailModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <GateModal
               gate={this.state.selected}

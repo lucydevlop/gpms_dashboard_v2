@@ -227,6 +227,7 @@ class CorpTicketClassTab extends PureComponent<IProps, IState> {
               this.setState({ createModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <CorpTicketModal
               onSubmit={(value) => {
@@ -248,6 +249,7 @@ class CorpTicketClassTab extends PureComponent<IProps, IState> {
               this.setState({ detailModal: false });
             }}
             width={800}
+            footer={[]}
           >
             <CorpTicketModal
               onSubmit={(value) => {

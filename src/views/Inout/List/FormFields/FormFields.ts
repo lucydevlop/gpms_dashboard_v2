@@ -112,7 +112,9 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
           placeholder: localeObj['label.choose'] || '선택해주세요',
           allowClear: true
         },
-        selectOptions: ticketTypeOpt
+        selectOptions: ticketTypeOpt.filter(
+          (t) => t.value !== ETicketType.ALL && t.value !== ETicketType.DISCOUNT
+        )
       }
     },
     {
@@ -199,7 +201,9 @@ export function newInoutFields(gates: any[]): IFormFieldConfig<keyof IInoutObj>[
       },
       component: {
         type: FormType.Select,
-        selectOptions: ticketTypeOpt
+        selectOptions: ticketTypeOpt.filter(
+          (t) => t.value !== ETicketType.ALL && t.value !== ETicketType.DISCOUNT
+        )
       }
     },
     {
@@ -323,7 +327,8 @@ export function newInoutFields(gates: any[]): IFormFieldConfig<keyof IInoutObj>[
 
 export function newInoutDetailFileds(
   inout?: IInoutObj,
-  gates?: any[]
+  inGates?: any[],
+  outGates?: any[]
 ): IFormFieldConfig<keyof IInoutObj>[] {
   const { localeObj } = localeStore;
   return [
@@ -376,7 +381,12 @@ export function newInoutDetailFileds(
       },
       component: {
         type: FormType.Select,
-        selectOptions: ticketTypeOpt
+        selectOptions: ticketTypeOpt.filter(
+          (t) =>
+            t.value !== ETicketType.DISCOUNT &&
+            t.value !== ETicketType.ALL &&
+            t.value !== ETicketType.PARTRECOGNIZED
+        )
       }
     },
     {
@@ -423,11 +433,11 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout ? inout.inGateId : gates!![0].gateId
+        initialValue: inout ? inout.inGateId : inGates!![0].gateId
       },
       component: {
         type: FormType.Select,
-        selectOptions: gates
+        selectOptions: inGates
       }
     },
     {
@@ -478,11 +488,11 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout?.outGateId ? inout.outGateId : gates!![0].gateId
+        initialValue: inout?.outGateId ? inout.outGateId : outGates!![0].gateId
       },
       component: {
         type: FormType.Select,
-        selectOptions: gates
+        selectOptions: outGates
       }
     },
     {
@@ -504,7 +514,7 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout?.outDate ? moment(inout.outDate) : ''
+        initialValue: inout?.outDate ? moment(inout.outDate) : moment(new Date())
       },
       component: {
         type: FormType.DatePicker,

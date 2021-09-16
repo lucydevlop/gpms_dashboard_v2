@@ -3,8 +3,10 @@ import { IParkinglotObj, Space } from '@models/parkinglot';
 import { FormType } from '@/constants/form';
 import {
   cityOpt,
+  EDayRangeType,
   EStatus,
   externalSvrTypeOpt,
+  operatingDaysTypeOpt,
   payTypeOpt,
   radioSelectOpt,
   vehicleDayOpt,
@@ -519,6 +521,38 @@ export function ParkinglotSettingFields(
           note: space ? `게이트:${space.gateGroupId}, 공간:${space.space}` : null
         },
         selectOptions: radioSelectOpt
+      }
+    },
+    {
+      id: 'operatingDays',
+      label: '주차장운영일',
+      colProps: {
+        span: 24,
+        xs: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5,
+          xs: 9,
+          xl: 8
+        },
+        wrapperCol: {
+          span: 15,
+          xs: 15,
+          xl: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: parkinglot ? parkinglot.operatingDays : EDayRangeType.ALL
+      },
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: '입력하세요'
+        },
+        selectOptions: operatingDaysTypeOpt
       }
     }
   ];

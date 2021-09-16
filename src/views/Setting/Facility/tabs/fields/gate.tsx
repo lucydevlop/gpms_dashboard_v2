@@ -2,6 +2,8 @@ import { IGateObj } from '@models/gate';
 import { IFormFieldConfig } from '@utils/form';
 import { FormType } from '@/constants/form';
 import {
+  delYnOpt,
+  EDelYn,
   EGateActionType,
   EGateOpenActionType,
   EGateType,
@@ -259,6 +261,33 @@ export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] 
       }
     },
     {
+      id: 'delYn',
+      label: '사용',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: gate ? gate.delYn : null,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: delYnOpt.filter((d) => d.value !== EDelYn.ALL)
+      }
+    },
+    {
       id: 'sn',
       label: 'sn',
       colProps: {
@@ -278,16 +307,6 @@ export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] 
       },
       fieldOption: {
         initialValue: gate ? gate.sn : null
-      },
-      component: {
-        type: FormType.Input
-      }
-    },
-    {
-      id: 'delYn',
-      label: 'delYn',
-      fieldOption: {
-        initialValue: gate ? gate.delYn : 'N'
       },
       component: {
         type: FormType.Input

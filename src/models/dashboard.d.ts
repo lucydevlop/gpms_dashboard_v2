@@ -4,9 +4,13 @@ export interface IDashboardObj {
   breakerStatus?: string;
   breakerAction?: string;
   displayStatus?: string;
+  inDisplayStatus?: string;
+  outDisplayStatus?: string;
   paystationAction?: string;
   paystationStatus?: string;
   lprStatus?: string;
+  inLprStatus?: string;
+  outLprStatus?: string;
   gateName: string;
   gateId: string;
   gateType: string;

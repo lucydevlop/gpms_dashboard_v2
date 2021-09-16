@@ -1,25 +1,32 @@
 import React, { PureComponent } from 'react';
-import { IStatisticsInoutDayObj, IStatisticsInoutDaySearchReq } from '@models/statisticsInout';
-import moment from 'moment';
-import { getInoutByMonth } from '@api/statistics';
+import Table, { ColumnProps } from 'antd/lib/table';
+import {
+  IStatisticsInoutCountObj,
+  IStatisticsInoutDaySearchReq,
+  IStatisticsInoutPaymentObj
+} from '@models/statisticsInout';
+import { getInoutByDay, getInoutPaymentByDay, getInoutPaymentByMonth } from '@api/statistics';
 import { runInAction } from 'mobx';
+import moment from 'moment';
 import { conversionDate, convertNumberWithCommas } from '@utils/conversion';
-import { searchStatisticsInoutMonthFields } from '@views/Statistics/Inout/tabs/inoutFields';
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
-import Table from 'antd/lib/table';
+import {
+  searchStatisticsInoutDayFields,
+  searchStatisticsInoutMonthFields
+} from '@views/Statistics/Inout/Count/tabs/inoutFields';
 
 interface IProps {}
 interface IState {
   loading: boolean;
-  list: IStatisticsInoutDayObj[];
+  list: IStatisticsInoutPaymentObj[];
   total: number;
   current: number;
   pageSize: number;
   searchParam?: IStatisticsInoutDaySearchReq;
 }
 
-class InoutByMonth extends PureComponent<IProps, IState> {
+class InoutPaymentByMonth extends PureComponent<IProps, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -48,7 +55,7 @@ class InoutByMonth extends PureComponent<IProps, IState> {
   }
 
   async pollData() {
-    getInoutByMonth(this.state.searchParam)
+    getInoutPaymentByMonth(this.state.searchParam)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -87,94 +94,50 @@ class InoutByMonth extends PureComponent<IProps, IState> {
         key: 'date',
         width: 110,
         align: 'center',
-        render: (text: string, record: IStatisticsInoutDayObj) => record.date.substring(0, 7)
+        render: (text: string, record: IStatisticsInoutCountObj) => record.date.substring(0, 7)
       },
       {
-        title: '입차',
-        children: [
-          {
-            title: '총건수',
-            dataIndex: 'inCnt',
-            key: 'inCnt',
-            width: 110,
-            align: 'center'
-          },
-          {
-            title: '일반차량',
-            dataIndex: 'normalCnt',
-            key: 'normalCnt',
-            width: 110,
-            align: 'center'
-          },
-          {
-            title: '정기권차량',
-            dataIndex: 'ticketCnt',
-            key: 'ticketCnt',
-            width: 110,
-            align: 'center'
-          },
-          {
-            title: '미인식차량',
-            dataIndex: 'unrecognizedCnt',
-            key: 'unrecognizedCnt',
-            width: 110,
-            align: 'center'
-          }
-        ]
+        title: '주차요금',
+        dataIndex: 'parkFee',
+        key: 'parkFee',
+        width: 110,
+        align: 'center'
       },
       {
-        title: '출차',
-        children: [
-          {
-            title: '총건수',
-            dataIndex: 'outCnt',
-            key: 'outCnt',
-            width: 110,
-            align: 'center'
-          },
-          {
-            title: '주차요금',
-            dataIndex: 'parkFee',
-            key: 'parkFee',
-            width: 110,
-            align: 'center'
-          },
-          {
-            title: '할인요금',
-            // dataIndex: 'parkFee',
-            key: 'discountFee',
-            width: 110,
-            align: 'center',
-            render: (text: string, record: IStatisticsInoutDayObj) => {
-              const discountFee = record.discountFee ? record.discountFee : 0;
-              const dayDiscountFee = record.dayDiscountFee ? record.dayDiscountFee : 0;
-              return discountFee + dayDiscountFee;
-            }
-          },
-          {
-            title: '결제요금',
-            dataIndex: 'payFee',
-            key: 'payFee',
-            width: 110,
-            align: 'center'
-          },
-          {
-            title: '미납요금',
-            dataIndex: 'nonPayment',
-            key: 'nonPayment',
-            width: 110,
-            align: 'center'
-          },
-          {
-            title: '정산요금',
-            dataIndex: 'payment',
-            key: 'payment',
-            width: 110,
-            align: 'center'
-          }
-        ]
+        title: '할인요금',
+        // dataIndex: 'parkFee',
+        key: 'discountFee',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IStatisticsInoutPaymentObj) => {
+          const discountFee = record.discountFee ? record.discountFee : 0;
+          const dayDiscountFee = record.dayDiscountFee ? record.dayDiscountFee : 0;
+          return discountFee + dayDiscountFee;
+        }
+      },
+      {
+        title: '결제요금',
+        dataIndex: 'payFee',
+        key: 'payFee',
+        width: 110,
+        align: 'center'
+      },
+      {
+        title: '미납요금',
+        dataIndex: 'nonPayment',
+        key: 'nonPayment',
+        width: 110,
+        align: 'center'
+      },
+      {
+        title: '정산요금',
+        dataIndex: 'payment',
+        key: 'payment',
+        width: 110,
+        align: 'center'
       }
     ];
+
     const { list, total, current, pageSize } = this.state;
     const searchFields = searchStatisticsInoutMonthFields();
 
@@ -191,7 +154,7 @@ class InoutByMonth extends PureComponent<IProps, IState> {
           columns={columns}
           loading={this.state.loading}
           // @ts-ignore
-          rowKey={(record: IStatisticsInoutDayObj) => String(record.date)}
+          rowKey={(record: IStatisticsInoutCountObj) => String(record.date)}
           data={{
             list
           }}
@@ -202,37 +165,22 @@ class InoutByMonth extends PureComponent<IProps, IState> {
                   <span>Total: {total}</span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={1}>
-                  <span>{this.sum(list, 'inCnt')}</span>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={2}>
-                  <span>{this.sum(list, 'normalCnt')}</span>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={3}>
-                  <span>{this.sum(list, 'ticketCnt')}</span>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={4}>
-                  <span>{this.sum(list, 'unrecognizedCnt')}</span>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={5}>
-                  <span>{this.sum(list, 'outCnt')}</span>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={6}>
                   <span>{convertNumberWithCommas(this.sum(list, 'parkFee'))}</span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={7}>
+                <Table.Summary.Cell index={2}>
                   <span>
                     {convertNumberWithCommas(
                       this.sum(list, 'discountFee') + this.sum(list, 'dayDiscountFee')
                     )}
                   </span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={8}>
+                <Table.Summary.Cell index={3}>
                   <span>{convertNumberWithCommas(this.sum(list, 'payFee'))}</span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={9}>
+                <Table.Summary.Cell index={4}>
                   <span>{convertNumberWithCommas(this.sum(list, 'nonPayment'))}</span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={9}>
+                <Table.Summary.Cell index={5}>
                   <span>{convertNumberWithCommas(this.sum(list, 'payment'))}</span>
                 </Table.Summary.Cell>
               </Table.Summary.Row>
@@ -247,4 +195,4 @@ class InoutByMonth extends PureComponent<IProps, IState> {
   }
 }
 
-export default InoutByMonth;
+export default InoutPaymentByMonth;

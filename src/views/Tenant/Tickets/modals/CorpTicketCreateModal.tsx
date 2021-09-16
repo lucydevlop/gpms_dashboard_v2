@@ -58,7 +58,7 @@ class CorpTicketCreateModal extends PureComponent<IProps, IState> {
             marginTop: 32
           }}
         >
-          <Button type="primary" htmlType="submit" style={{ width: '50%', left: '25%' }}>
+          <Button type="primary" htmlType="submit" style={{ width: '30%', left: '35%' }}>
             저장
           </Button>
         </Form.Item>
