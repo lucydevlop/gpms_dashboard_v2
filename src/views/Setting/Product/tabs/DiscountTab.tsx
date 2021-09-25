@@ -4,6 +4,7 @@ import { ColumnProps } from 'antd/lib/table';
 import {
   dayRangeTypeOpt,
   delYnOpt,
+  discountApplyRateOpt,
   discountApplyTypeOpt,
   discountTypeOpt,
   EDelYn
@@ -116,6 +117,14 @@ class DiscountTab extends PureComponent<IProps, IState> {
         onFilter: (value, record) => record.discountApplyType.indexOf(value as string) === 0,
         render: (text: string, record: IDiscountClassObj) =>
           conversionEnumValue(record.discountApplyType, discountApplyTypeOpt).label
+      },
+      {
+        title: '할인적용율',
+        key: 'discountApplyRate',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IDiscountClassObj) =>
+          conversionEnumValue(record.discountApplyRate, discountApplyRateOpt).label
       },
       {
         title: '할인적용값',

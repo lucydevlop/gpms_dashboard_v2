@@ -2,14 +2,14 @@ import { IDiscountClassObj } from '@models/discountClass';
 import { IFormFieldConfig } from '@utils/form';
 import { FormType } from '@/constants/form';
 import {
+  discountApplyRateOpt,
   discountApplyTypeOpt,
   discountTypeOpt,
+  EDiscountApplyRate,
   EDiscountApplyType,
-  EDiscountType,
-  payTypeOpt
+  EDiscountType
 } from '@/constants/list';
 import moment from 'moment';
-import { ICorpTicketClassObj } from '@models/corpTicketClass';
 
 export function DiscountFields(
   discount?: IDiscountClassObj
@@ -144,6 +144,32 @@ export function DiscountFields(
       component: {
         type: FormType.Select,
         selectOptions: discountApplyTypeOpt
+      }
+    },
+    {
+      id: 'discountApplyRate',
+      label: '할인적용률',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: discount ? discount.discountApplyRate : EDiscountApplyRate.VARIABLE
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: discountApplyRateOpt
       }
     },
     {

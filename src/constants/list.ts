@@ -208,6 +208,16 @@ export const discountApplyTypeOpt: ISelectOptions[] = [
   { value: EDiscountApplyType.PERCENT, label: '%', color: 'black' }
 ];
 
+export enum EDiscountApplyRate {
+  FIX = 'FIX',
+  VARIABLE = 'VARIABLE'
+}
+
+export const discountApplyRateOpt: ISelectOptions[] = [
+  { value: EDiscountApplyRate.FIX, label: '고정할인', color: 'black' },
+  { value: EDiscountApplyRate.VARIABLE, label: '변동할인', color: 'black' }
+];
+
 export enum EDayRangeType {
   ALL = 'ALL',
   WEEKDAY = 'WEEKDAY',

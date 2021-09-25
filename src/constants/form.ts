@@ -20,7 +20,8 @@ export enum FormType {
   SelectWithRangePicker,
   TimeRangePicker,
   InputGroup,
-  CheckGroup
+  CheckGroup,
+  InputAndCheck
 }
 
 /** 输入框类型 */

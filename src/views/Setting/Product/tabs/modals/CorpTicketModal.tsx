@@ -22,6 +22,7 @@ interface ICorpTicketModalState {}
 class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketModalState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
+      console.log('handlerSubmit', fieldsValue);
       const discountClass: IDiscountClassObj = this.props.discountClasses.filter((e) => {
         return e.sn === Number(fieldsValue.discountClassSn);
       })[0];
@@ -30,11 +31,13 @@ class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketMo
       if (!err) this.props.onSubmit(fieldsValue);
     });
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const CorpDiscountFields = corpDiscountFields(
       this.props.discount,
-      this.props.discountSelectClasses
+      this.props.discountSelectClasses,
+      this.props.form
     );
     return (
       <>

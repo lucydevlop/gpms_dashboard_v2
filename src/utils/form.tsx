@@ -24,7 +24,6 @@ import { InputProps, TextAreaProps } from 'antd/lib/input';
 import { FormType } from '@/constants/form';
 import { GetFieldDecoratorOptions } from '@ant-design/compatible/lib/form/Form';
 import { DatePickerProps, RangePickerProps } from 'antd/lib/date-picker';
-import { DeleteOutlined } from '@ant-design/icons';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -54,6 +53,7 @@ export interface IFormFieldOption {
   option?: IComponentOption;
   selectOptions?: ISelectOptions[];
   handler?: () => void;
+  option2?: IComponentOption;
 }
 
 export interface IFromFieldBaseConfig {
@@ -84,7 +84,7 @@ interface IGetFieldDecorator {
  * @return return antd 的 form 组件
  */
 const getFormComponent = (component: IFormFieldOption) => {
-  const { type, selectOptions = [], option } = { ...component };
+  const { type, selectOptions = [], option, option2 } = { ...component };
   switch (type) {
     case FormType.Input:
       return <Input size="middle" {...option} />;
@@ -180,6 +180,26 @@ const getFormComponent = (component: IFormFieldOption) => {
             </Checkbox>
           ))}
         </Checkbox.Group>
+      );
+    case FormType.InputAndCheck:
+      return (
+        <>
+          <InputGroup style={{ display: 'flex' }}>
+            <Col span={15}>
+              <Input size="middle" {...option} />
+            </Col>
+            <Col span={9}>
+              <Checkbox
+                style={{ alignItems: 'center', marginLeft: '7px' }}
+                // key={option2.key}
+                // checked={option2.value}
+                onChange={(event) => option2.onChange(event.target.checked)}
+              >
+                {option2.text}
+              </Checkbox>
+            </Col>
+          </InputGroup>
+        </>
       );
     default:
       return <Input size="middle" {...option} />;
