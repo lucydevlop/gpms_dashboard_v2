@@ -67,6 +67,14 @@ export const asyncRouteConfig: RouteChild[] = [
         // authority: ['admin', 'ROLE_SUPER'],
         loading: true,
         localeKey: 'menu.inout.list'
+      },
+      {
+        name: 'payments',
+        path: '/inout/payment',
+        component: ['/views/Inout/Payment'],
+        // authority: ['admin', 'ROLE_SUPER'],
+        loading: true,
+        localeKey: 'menu.inout.payment'
       }
     ]
   },

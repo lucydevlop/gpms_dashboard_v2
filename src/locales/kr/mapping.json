@@ -17,6 +17,7 @@
   "menu.tenant.list": "입주사현황",
   "menu.tenant.tickets": "입주사할인권",
   "menu.inout.list": "입출차현황",
+  "menu.inout.payment": "입출차결제현황",
 
   "menu.setting.parkinglot": "주차장기본정보",
   "menu.setting.facility": "시설정보",

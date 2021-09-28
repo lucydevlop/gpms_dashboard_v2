@@ -4,7 +4,6 @@ import {
   calcParkinglotInout,
   createParkinglotInout,
   deleteParkinglotInout,
-  editParkinglotInout,
   getInouts,
   transferParkinglotInout,
   updateParkinglotInout
@@ -176,7 +175,7 @@ class Inout extends PureComponent<any, IState> {
   }
 
   getSearchData = (info: IInoutSelectReq) => {
-    console.log('getSearchData', info);
+    // console.log('getSearchData', info);
     const searchParam: IInoutSelectReq = {
       dateType: info.dateType,
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),

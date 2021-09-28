@@ -493,3 +493,13 @@ export const dayTYpeOpt: ISelectOptions[] = [
   { value: EDayType.SUN, label: '일', color: 'black' },
   { value: EDayType.ALL, label: '전체', color: 'black' }
 ];
+
+export enum EPaymentType {
+  PAYMENT = 'PAYMENT',
+  PREPAYMENT = 'PREPAYMENT'
+}
+
+export const paymentTypeOpt: ISelectOptions[] = [
+  { value: EPaymentType.PAYMENT, label: '출차정산', color: 'black' },
+  { value: EPaymentType.PREPAYMENT, label: '사전정산', color: 'black' }
+];

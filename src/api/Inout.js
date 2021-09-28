@@ -76,3 +76,12 @@ export function deleteParkinglotInout(id) {
     id
   );
 }
+
+export function getInoutPayment(data) {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/payments`, {
+    params: {
+      fromDate: data.startDate,
+      toDate: data.endDate
+    }
+  });
+}
