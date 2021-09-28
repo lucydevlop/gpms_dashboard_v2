@@ -81,7 +81,8 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
           (d) =>
             d.value !== ETicketType.NORMAL &&
             d.value !== ETicketType.UNRECOGNIZED &&
-            d.value !== ETicketType.DISCOUNT
+            d.value !== ETicketType.DISCOUNT &&
+            d.value !== ETicketType.PARTRECOGNIZED
         )
       }
     },

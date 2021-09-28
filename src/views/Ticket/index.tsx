@@ -40,6 +40,8 @@ import { getTicketClasses } from '@api/ticketClass';
 import { ISelectOptions } from '@utils/form';
 import { ITicketClassObj } from '@models/ticketClass';
 import { string2mobile } from '@utils/tools';
+import { inject, observer } from 'mobx-react';
+import { corpStore } from '@store/corpStore';
 
 type IState = {
   loading: boolean;
@@ -58,6 +60,8 @@ type IState = {
   ticketClassesSelect: ISelectOptions[];
 };
 
+@inject('corpStore', 'localeStore')
+@observer
 class Ticket extends PureComponent<any, IState> {
   constructor(props: any) {
     super(props);
@@ -78,6 +82,7 @@ class Ticket extends PureComponent<any, IState> {
 
   componentDidMount() {
     this.setState({ loading: true });
+    corpStore.initCorp();
     const createTm = [moment(new Date()).subtract(3, 'month'), moment(new Date())];
     const searchParam: ITicketSelectReq = {
       startDate: createTm[0].format('YYYY-MM-DD'),
@@ -555,7 +560,7 @@ class Ticket extends PureComponent<any, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={2}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    정기권:
+                    유료정기권:
                     {list.filter((tmp) => tmp.ticketType === ETicketType.SEASONTICKET).length}
                   </span>
                 </Table.Summary.Cell>
@@ -567,7 +572,7 @@ class Ticket extends PureComponent<any, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={2}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    무료권:
+                    무료정기권:
                     {list.filter((tmp) => tmp.ticketType === ETicketType.FREETICKET).length}
                   </span>
                 </Table.Summary.Cell>

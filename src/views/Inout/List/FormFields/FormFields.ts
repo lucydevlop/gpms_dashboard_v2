@@ -202,7 +202,11 @@ export function newInoutFields(gates: any[]): IFormFieldConfig<keyof IInoutObj>[
       component: {
         type: FormType.Select,
         selectOptions: ticketTypeOpt.filter(
-          (t) => t.value !== ETicketType.ALL && t.value !== ETicketType.DISCOUNT
+          (t) =>
+            t.value !== ETicketType.ALL &&
+            t.value !== ETicketType.DISCOUNT &&
+            t.value !== ETicketType.UNRECOGNIZED &&
+            t.value !== ETicketType.PARTRECOGNIZED
         )
       }
     },
@@ -382,10 +386,7 @@ export function newInoutDetailFileds(
       component: {
         type: FormType.Select,
         selectOptions: ticketTypeOpt.filter(
-          (t) =>
-            t.value !== ETicketType.DISCOUNT &&
-            t.value !== ETicketType.ALL &&
-            t.value !== ETicketType.PARTRECOGNIZED
+          (t) => t.value !== ETicketType.DISCOUNT && t.value !== ETicketType.ALL
         )
       }
     },

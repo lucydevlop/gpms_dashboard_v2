@@ -76,7 +76,9 @@ class Dashboard extends React.Component<any, IDashboardState> {
     return (
       <div className="dashboard">
         <Row gutter={24}>
-          {this.state.dashboardObjs.map((item, index) => this.renderGate(item, index))}
+          {this.state.dashboardObjs
+            .filter((d) => d.gateType !== 'ETC')
+            .map((item, index) => this.renderGate(item, index))}
         </Row>
       </div>
     );

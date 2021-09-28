@@ -91,13 +91,15 @@ export const categoryOpt: ISelectOptions[] = [
 export enum EGateType {
   IN = 'IN',
   OUT = 'OUT',
-  INOUT = 'IN_OUT'
+  INOUT = 'IN_OUT',
+  ETC = 'ETC'
 }
 
 export const gateTypeOpt: ISelectOptions[] = [
   { value: EGateType.IN, label: '입구전용', color: 'black' },
   { value: EGateType.OUT, label: '출구전용', color: 'blue' },
-  { value: EGateType.INOUT, label: '입출구', color: 'green' }
+  { value: EGateType.INOUT, label: '입출구', color: 'green' },
+  { value: EGateType.ETC, label: '기타', color: 'red' }
 ];
 
 export enum EBreakerStatus {
