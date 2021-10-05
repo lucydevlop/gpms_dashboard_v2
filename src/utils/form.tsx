@@ -185,10 +185,10 @@ const getFormComponent = (component: IFormFieldOption) => {
       return (
         <>
           <InputGroup style={{ display: 'flex' }}>
-            <Col span={15}>
+            <Col span={14}>
               <Input size="middle" {...option} />
             </Col>
-            <Col span={9}>
+            <Col span={10}>
               <Checkbox
                 style={{ alignItems: 'center', marginLeft: '7px' }}
                 // key={option2.key}

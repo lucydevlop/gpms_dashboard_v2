@@ -104,7 +104,7 @@ export const corpDiscountFields = (
     component: {
       type: FormType.InputAndCheck,
       option: {
-        placeholder: '무제한 설정 999999999 입력',
+        // placeholder: '무제한 설정 999999999 입력',
         disabled: getLimit(form, 'onceMax')
       },
       option2: {

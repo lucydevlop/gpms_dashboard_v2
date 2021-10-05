@@ -489,7 +489,7 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout?.outGateId ? inout.outGateId : outGates!![0].gateId
+        initialValue: inout?.outGateId ? inout.outGateId : null
       },
       component: {
         type: FormType.Select,

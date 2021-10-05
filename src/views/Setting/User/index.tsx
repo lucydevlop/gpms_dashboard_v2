@@ -549,7 +549,7 @@ class UserSetting extends PureComponent<any, IState> {
               }
             }
           }}
-          onSelectRow={(row: ITicketObj[]) => {
+          onSelectRow={(row: IUserObj[]) => {
             this.setState({ deleteList: row });
           }}
           onChange={this.paginationChange}
