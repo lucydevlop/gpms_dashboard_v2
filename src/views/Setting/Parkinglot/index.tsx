@@ -96,7 +96,8 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
           fieldsValue.visitorExternal === 'On' ? this.state.visitorExternalKey : null,
         visitorExternal: fieldsValue.visitorExternal === 'On' ? this.state.visitorExternal : null,
         space: fieldsValue.space === 'Off' ? null : this.state.space,
-        operatingDays: fieldsValue.operatingDays
+        operatingDays: fieldsValue.operatingDays,
+        visitorRegister: fieldsValue.visitorRegister
       };
       if (!err) {
         updateParkinglot(sendData).then((res: any) => {

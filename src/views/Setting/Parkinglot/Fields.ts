@@ -4,8 +4,10 @@ import { FormType } from '@/constants/form';
 import {
   cityOpt,
   EDayRangeType,
+  EOnOff,
   EStatus,
   externalSvrTypeOpt,
+  onOffSelectOpt,
   operatingDaysTypeOpt,
   payTypeOpt,
   radioSelectOpt,
@@ -553,6 +555,38 @@ export function ParkinglotSettingFields(
           placeholder: '입력하세요'
         },
         selectOptions: operatingDaysTypeOpt
+      }
+    },
+    {
+      id: 'visitorRegister',
+      label: '입주사방문권등록',
+      colProps: {
+        span: 24,
+        xs: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5,
+          xs: 9,
+          xl: 8
+        },
+        wrapperCol: {
+          span: 15,
+          xs: 15,
+          xl: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: parkinglot ? parkinglot.visitorRegister : EOnOff.OFF
+      },
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: '입력하세요'
+        },
+        selectOptions: onOffSelectOpt
       }
     }
   ];

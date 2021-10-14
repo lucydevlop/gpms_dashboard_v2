@@ -82,10 +82,25 @@ export const asyncRouteConfig: RouteChild[] = [
     name: 'tickets',
     icon: <AuditOutlined />,
     path: '/tickets',
-    component: ['/views/Ticket'],
     authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
-    loading: true,
-    localeKey: 'menu.ticket'
+    localeKey: 'menu.ticket',
+    routes: [
+      {
+        name: 'list',
+        path: '/tickets/list',
+        component: ['/views/Ticket'],
+        authority: ['ADMIN', 'SUPER_ADMIN'],
+        loading: true,
+        localeKey: 'menu.ticket.list'
+      },
+      {
+        name: 'register',
+        path: '/tickets/visitor',
+        component: ['/views/Visitor/Register'],
+        loading: true,
+        localeKey: 'menu.ticket.visitor'
+      }
+    ]
   },
   {
     name: 'tenant',
@@ -179,30 +194,6 @@ export const asyncRouteConfig: RouteChild[] = [
         loading: true,
         localeKey: 'menu.statistics.inoutPayment'
       }
-      // ,
-      // {
-      //   name: 'inout',
-      //   path: '/statistics/inout',
-      //   component: ['/views/Statistics/Inout'],
-      //   loading: true,
-      //   localeKey: 'menu.statistics.inout'
-      // },
-      // {
-      //   name: 'erros',
-      //   path: '/parkinglot/error',
-      //   component: ['/views/ParkingLot/Error'],
-      //   authority: ['admin', 'ROLE_SUPER'],
-      //   loading: true,
-      //   localeKey: 'menu.parkinglot.error'
-      // },
-      // {
-      //   name: 'list',
-      //   path: '/parkinglot/parkinglot',
-      //   component: ['/views/ParkingLot/Parkinglot'],
-      //   authority: ['admin', 'ROLE_SUPER'],
-      //   loading: true,
-      //   localeKey: 'menu.parkinglot.parkinglot'
-      // }
     ]
   },
   {
@@ -241,6 +232,12 @@ export const asyncRouteConfig: RouteChild[] = [
         path: '/setting/user',
         component: ['/views/Setting/User'],
         localeKey: 'menu.setting.user'
+      },
+      {
+        name: 'holidaySetting',
+        path: '/setting/holiday',
+        component: ['/views/Setting/Holiday'],
+        localeKey: 'menu.setting.holiday'
       }
     ]
   },

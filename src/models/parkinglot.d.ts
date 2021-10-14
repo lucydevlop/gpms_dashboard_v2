@@ -1,6 +1,6 @@
 import { IQueryListParams } from '@models/global';
 import { Moment } from 'moment';
-import { ECity, EDayRangeType, ERemoteTool } from '@/constants/list';
+import { ECity, EDayRangeType, EOnOff, ERemoteTool } from '@/constants/list';
 import { IActionsHistoryObj } from '@models/history';
 
 /**
@@ -38,6 +38,7 @@ export interface IParkinglotObj {
   visitorExternal?: string;
   visitorExternalKey?: string | null;
   operatingDays?: EDayRangeType;
+  visitorRegister?: EOnOff;
   createBy?: string;
   createDate?: Date;
   updateBy?: string;

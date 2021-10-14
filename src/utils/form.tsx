@@ -54,6 +54,7 @@ export interface IFormFieldOption {
   selectOptions?: ISelectOptions[];
   handler?: () => void;
   option2?: IComponentOption;
+  col?: number;
 }
 
 export interface IFromFieldBaseConfig {
@@ -279,11 +280,45 @@ export const getFormFields = (
             style={{ marginBottom: 10 }}
           >
             <InputGroup compact style={{ width: '100%', flex: 1, display: 'flex' }}>
-              {getFieldDecorator(formField.id, fieldOption)(getFormComponent(formField.component))}
-              {getFieldDecorator(
-                formField.formSubItemProps.id,
-                formField.formSubItemProps.fieldOption
-              )(getFormComponent(formField.formSubItemProps.component))}
+              {formField.component.option.col ? (
+                <>
+                  <Col span={formField.component.option.col}>
+                    {getFieldDecorator(
+                      formField.id,
+                      fieldOption
+                    )(getFormComponent(formField.component))}
+                  </Col>
+                  <Col style={{ alignItems: 'center', marginLeft: '7px' }}>
+                    {getFieldDecorator(
+                      formField.formSubItemProps.id,
+                      formField.formSubItemProps.fieldOption
+                    )(getFormComponent(formField.formSubItemProps.component))}
+                  </Col>
+                </>
+              ) : (
+                <>
+                  {getFieldDecorator(
+                    formField.id,
+                    fieldOption
+                  )(getFormComponent(formField.component))}
+                  {getFieldDecorator(
+                    formField.formSubItemProps.id,
+                    formField.formSubItemProps.fieldOption
+                  )(getFormComponent(formField.formSubItemProps.component))}
+                </>
+              )}
+              {/*<Col>*/}
+              {/*  {getFieldDecorator(*/}
+              {/*    formField.id,*/}
+              {/*    fieldOption*/}
+              {/*  )(getFormComponent(formField.component))}*/}
+              {/*</Col>*/}
+              {/*<Col>*/}
+              {/*  {getFieldDecorator(*/}
+              {/*    formField.formSubItemProps.id,*/}
+              {/*    formField.formSubItemProps.fieldOption*/}
+              {/*  )(getFormComponent(formField.formSubItemProps.component))}*/}
+              {/*</Col>*/}
             </InputGroup>
           </FormItem>
         </Col>

@@ -98,7 +98,7 @@ class StoreDiscountAply extends React.PureComponent<any, IState> {
   };
 
   handleDiscountAply = (values: ICorpTicketObj[]) => {
-    console.log('handleDiscountAply', values);
+    // console.log('handleDiscountAply', values);
     const data = values
       .filter((v) => v.applyCnt !== undefined && v.applyCnt > 0)
       .map((v) => {

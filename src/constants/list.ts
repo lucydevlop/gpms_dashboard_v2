@@ -503,3 +503,13 @@ export const paymentTypeOpt: ISelectOptions[] = [
   { value: EPaymentType.PAYMENT, label: '출차정산', color: 'black' },
   { value: EPaymentType.PREPAYMENT, label: '사전정산', color: 'black' }
 ];
+
+export enum ETicketApplyTargetTyoe {
+  IN = 'IN',
+  NOW = 'NOW'
+}
+
+export const ticketApplyTargetTypeOpt: ISelectOptions[] = [
+  { value: ETicketApplyTargetTyoe.IN, label: '입차시간', color: 'black' },
+  { value: ETicketApplyTargetTyoe.NOW, label: '현재시간', color: 'black' }
+];

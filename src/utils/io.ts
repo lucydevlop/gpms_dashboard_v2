@@ -53,16 +53,18 @@ class Request {
 
   // 错误处理
   handleError = (error: any) => {
-    const { message, status } = error;
+    const { message, status, data } = error.response;
     switch (status) {
       case 401:
         break;
       case 404:
         break;
+      case 409:
+        break;
       case 500:
         break;
       default:
-        this.notify(message || error);
+        this.notify(data.msg || error);
         break;
     }
     return Promise.reject(error);
@@ -81,7 +83,7 @@ class Request {
         ...options
       })
       .then((res) => (returnConfig ? res : res.data))
-      .catch(this.handleError);
+      .catch((res) => this.handleError(res));
   }
 
   get(path: string, data: IoOptions = {}) {

@@ -66,21 +66,26 @@ class VisitorRegister extends PureComponent<IProps, IState> {
       if (!flag) {
         return;
       }
-      visitorAdds(this.state.visitorCardList).then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState(
-              {
-                visitorCardList: []
-              },
-              () => {
-                zdsTips.success('방문권 등록 완료'), this.renderVisitorRegisterCard();
-              }
-            );
-          });
-        }
-      });
+      visitorAdds(this.state.visitorCardList)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              this.setState(
+                {
+                  visitorCardList: []
+                },
+                () => {
+                  zdsTips.success('방문권 등록 완료'), this.renderVisitorRegisterCard();
+                }
+              );
+            });
+          }
+        })
+        .catch((res: any) => {
+          const { message } = res;
+          zdsTips.error('방문권 등록 실패');
+        });
     });
   }
 

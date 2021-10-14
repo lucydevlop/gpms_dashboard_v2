@@ -1,7 +1,7 @@
 {
   "menu.dashboard": "dashboard",
   "menu.inout": "입출차",
-  "menu.ticket": "정기권관리",
+  "menu.ticket": "정기권",
   "menu.tenant": "입주사",
   "menu.users": "사용자관리",
   "menu.setting": "설정관리",
@@ -18,6 +18,8 @@
   "menu.tenant.tickets": "입주사할인권",
   "menu.inout.list": "입출차현황",
   "menu.inout.payment": "입출차결제현황",
+  "menu.ticket.list": "정기권현황",
+  "menu.ticket.visitor": "방문권등록",
 
   "menu.setting.parkinglot": "주차장기본정보",
   "menu.setting.facility": "시설정보",
@@ -25,6 +27,7 @@
   "menu.setting.product": "상품정보",
   "menu.setting.user": "사용자정보",
   "menu.setting.barcode": "바코드할인기본정보",
+  "menu.setting.holiday": "특근일정보",
 
   "menu.visitor.register": "방문권등록",
   "menu.visitor.list": "방문권현황",
