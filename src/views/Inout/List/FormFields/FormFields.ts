@@ -59,7 +59,8 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
         type: FormType.Select,
         option: {
           placeholder: localeObj['label.choose'] || '선택해주세요',
-          allowClear: true
+          allowClear: true,
+          col: 0
         },
         selectOptions: inoutSearchDateTypeOpt
       },

@@ -12,7 +12,10 @@ import {
   gateTypeOpt
 } from '@/constants/list';
 
-export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] {
+export function gateFields(
+  handleShowModalClick: (openType: EGateOpenActionType) => void,
+  gate?: IGateObj
+): IFormFieldConfig<keyof IGateObj>[] {
   return [
     {
       id: 'gateId',
@@ -179,6 +182,9 @@ export function gateFields(gate?: IGateObj): IFormFieldConfig<keyof IGateObj>[] 
       },
       component: {
         type: FormType.Select,
+        option: {
+          onChange: (e: any) => handleShowModalClick(e)
+        },
         selectOptions: gateOpenActionTypeOpt
       }
     },

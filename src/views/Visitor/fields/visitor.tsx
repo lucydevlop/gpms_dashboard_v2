@@ -195,7 +195,10 @@ export function SearchVisitorFields(): IFormFieldConfig<keyof IVisitorSearchReq>
       },
       component: {
         type: FormType.Select,
-        selectOptions: ticketSearchTypeOpt
+        selectOptions: ticketSearchTypeOpt,
+        option: {
+          col: 0
+        }
       },
       formSubItemProps: {
         id: 'createTm',

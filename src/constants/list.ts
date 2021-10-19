@@ -261,13 +261,15 @@ export const gateActionTypeOpt: ISelectOptions[] = [
 export enum EGateOpenActionType {
   NONE = 'NONE',
   RECOGNITION = 'RECOGNITION',
-  RESTRICT = 'RESTRICT'
+  RESTRICT = 'RESTRICT',
+  MULTI = 'MULTI'
 }
 
 export const gateOpenActionTypeOpt: ISelectOptions[] = [
   { value: EGateOpenActionType.NONE, label: '모두허용', color: 'black' },
   { value: EGateOpenActionType.RECOGNITION, label: '인식차량허용', color: 'black' },
-  { value: EGateOpenActionType.RESTRICT, label: '등록차량허용', color: 'black' }
+  { value: EGateOpenActionType.RESTRICT, label: '등록차량허용', color: 'black' },
+  { value: EGateOpenActionType.MULTI, label: '복합허용', color: 'black' }
 ];
 
 export enum EMessageClassType {

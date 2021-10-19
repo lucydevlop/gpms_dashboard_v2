@@ -54,7 +54,10 @@ export function searchCorpFields(): IFormFieldConfig<keyof ICorpSearchReq>[] {
       },
       component: {
         type: FormType.Select,
-        selectOptions: corpSearchOpt
+        selectOptions: corpSearchOpt,
+        option: {
+          col: 0
+        }
       },
       formSubItemProps: {
         id: 'searchText',

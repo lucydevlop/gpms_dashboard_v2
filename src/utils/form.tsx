@@ -52,7 +52,7 @@ export interface IFormFieldOption {
   type: FormType;
   option?: IComponentOption;
   selectOptions?: ISelectOptions[];
-  handler?: () => void;
+  handler?: any;
   option2?: IComponentOption;
   col?: number;
 }
@@ -85,7 +85,7 @@ interface IGetFieldDecorator {
  * @return return antd 的 form 组件
  */
 const getFormComponent = (component: IFormFieldOption) => {
-  const { type, selectOptions = [], option, option2 } = { ...component };
+  const { type, selectOptions = [], option, option2, handler } = { ...component };
   switch (type) {
     case FormType.Input:
       return <Input size="middle" {...option} />;
@@ -280,7 +280,7 @@ export const getFormFields = (
             style={{ marginBottom: 10 }}
           >
             <InputGroup compact style={{ width: '100%', flex: 1, display: 'flex' }}>
-              {formField.component.option.col ? (
+              {formField.component.option.col !== 0 ? (
                 <>
                   <Col span={formField.component.option.col}>
                     {getFieldDecorator(
