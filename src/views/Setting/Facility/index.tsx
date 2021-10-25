@@ -163,8 +163,7 @@ class FacilitySetting extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            const add = data[0];
-            const displayMessages = [...this.state.displayMessages, add];
+            const displayMessages = [...this.state.displayMessages, data];
             this.setState({ displayMessages: displayMessages });
           });
         }
@@ -173,17 +172,14 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   handleDisplayUpdate = async (record: IDisplayMsgObj) => {
-    const wrapper: Array<IDisplayMsgObj> = [];
-    wrapper.push(record);
-    updateDisplay(wrapper)
+    updateDisplay(record)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            const changeData = record;
             const displayMessages = this.state.displayMessages.map((e) => {
-              if (e.sn === changeData.sn) {
-                return { ...changeData };
+              if (e.sn === data.sn) {
+                return { ...data };
               } else {
                 return { ...e };
               }

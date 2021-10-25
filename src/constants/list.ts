@@ -409,7 +409,7 @@ export const colorTypeOpt: ISelectOptions[] = [
   { value: EColorType.C1, label: '초록색', color: 'black' },
   { value: EColorType.C3, label: '하늘색', color: 'black' },
   { value: EColorType.C4, label: '빨강색', color: 'black' },
-  { value: EColorType.C5, label: '핑크색', color: 'black' }
+  { value: EColorType.C5, label: '노란색', color: 'black' }
 ];
 
 export const lineOpt: ISelectOptions[] = [

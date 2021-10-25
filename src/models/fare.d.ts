@@ -46,6 +46,7 @@ export interface IFarePolicyObj {
   effectDate?: Date;
   expireDate?: Date;
   week: string[];
+  orderNo: number;
   delYn: string;
   createBy?: string;
   createDate?: Date;

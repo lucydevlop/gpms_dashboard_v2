@@ -56,6 +56,45 @@ class FeeSetting extends PureComponent<any, IState> {
     };
   }
 
+  componentDidMount() {
+    this.setState({ loading: true });
+    getFareInfo()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ fareInfos: data });
+          });
+        }
+      })
+      .catch(() => {});
+
+    getFareBasic()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ fareBasic: data });
+          });
+        }
+      })
+      .catch(() => {});
+
+    getFarePolicies()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ farePolicies: data });
+            console.log(this.state.farePolicies);
+          });
+        }
+      })
+      .catch(() => {});
+
+    this.setState({ loading: false });
+  }
+
   handleFareBasicClick(key: string) {
     this.setState({ fareBasicModal: true });
   }
@@ -190,45 +229,6 @@ class FeeSetting extends PureComponent<any, IState> {
     }
     this.setState({ fareInfoModal: false });
   };
-
-  componentDidMount() {
-    this.setState({ loading: true });
-    getFareInfo()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ fareInfos: data });
-          });
-        }
-      })
-      .catch(() => {});
-
-    getFareBasic()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ fareBasic: data });
-          });
-        }
-      })
-      .catch(() => {});
-
-    getFarePolicies()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ farePolicies: data });
-            console.log(this.state.farePolicies);
-          });
-        }
-      })
-      .catch(() => {});
-
-    this.setState({ loading: false });
-  }
 
   renderFareBasic() {
     const attibutes: Attribute[] = [
@@ -374,6 +374,10 @@ class FeeSetting extends PureComponent<any, IState> {
                 '{y}-{m}-{d}'
               )}`
             : ''
+        },
+        {
+          name: '우선적용순위(낮은순)',
+          value: f ? `${f.orderNo}` : '0'
         }
       ];
       return (

@@ -135,7 +135,7 @@ class RowInfoCard extends React.Component<IProps, IState> {
             item.outDisplayStatus ? item.outDisplayStatus : 'NONE'
           )}
           {this.renderFacilityStatus('차단기', item.breakerStatus ? item.breakerStatus : 'NONE')}
-          {item.paystationStatus
+          {item.paystationStatus !== 'NONE'
             ? this.renderFacilityStatus(
                 '정산기',
                 item.paystationStatus ? item.paystationStatus : 'NONE'
@@ -149,7 +149,7 @@ class RowInfoCard extends React.Component<IProps, IState> {
         {this.renderFacilityStatus('LPR', item.lprStatus ? item.lprStatus : 'NONE')}
         {this.renderFacilityStatus('전광판', item.displayStatus ? item.displayStatus : 'NONE')}
         {this.renderFacilityStatus('차단기', item.breakerStatus ? item.breakerStatus : 'NONE')}
-        {item.paystationStatus && item.gateType !== 'IN'
+        {item.paystationStatus !== 'NONE' && item.gateType !== 'IN'
           ? this.renderFacilityStatus(
               '정산기',
               item.paystationStatus ? item.paystationStatus : 'NONE'

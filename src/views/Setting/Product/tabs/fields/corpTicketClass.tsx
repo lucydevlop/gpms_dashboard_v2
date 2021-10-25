@@ -21,7 +21,10 @@ function setLimit(form: WrappedFormUtils<any>, fieldName: string, value: string)
 }
 
 function getLimit(form: WrappedFormUtils<any>, fieldName: string) {
-  return form.getFieldValue(fieldName) === '999999999';
+  console.log('getLimit', fieldName, form.getFieldValue(fieldName));
+  return (
+    form.getFieldValue(fieldName) === '999999999' || form.getFieldValue(fieldName) === '무제한'
+  );
 }
 
 export const corpDiscountFields = (
@@ -231,7 +234,9 @@ export const corpDiscountFields = (
       type: FormType.Input,
       option: {
         // placeholder: '무제한 설정 999999999 입력',
-        disabled: getLimit(form, 'onceMax'),
+        disabled:
+          form.getFieldValue('onceMax') === '999999999' ||
+          form.getFieldValue('onceMax') === '무제한',
         onChange: (e: any) => {
           e.target.value === '999999999' ? '무제한' : e.target.value;
         },
@@ -245,8 +250,11 @@ export const corpDiscountFields = (
         type: FormType.Checkbox,
         option: {
           text: '무제한',
-          checked: !getLimit(form, 'onceMax'),
-          onChange: (e: any) => setLimit(form, 'onceMax', e.target.checked ? '999999999' : '1')
+          defaultChecked:
+            form.getFieldValue('onceMax') === '999999999' ||
+            form.getFieldValue('onceMax') === '무제한', //!getLimit(form, 'onceMax'),
+          onChange: (e: any) =>
+            form.setFieldsValue({ ['onceMax']: e.target.checked ? '999999999' : '1' })
         }
       }
     }
@@ -281,7 +289,8 @@ export const corpDiscountFields = (
       type: FormType.Input,
       option: {
         // placeholder: '무제한 설정 999999999 입력',
-        disabled: getLimit(form, 'dayMax'),
+        disabled:
+          form.getFieldValue('dayMax') === '999999999' || form.getFieldValue('dayMax') === '무제한',
         onChange: (e: any) => {
           e.target.value === '999999999' ? '무제한' : e.target.value;
         },
@@ -295,8 +304,12 @@ export const corpDiscountFields = (
         type: FormType.Checkbox,
         option: {
           text: '무제한',
-          checked: !getLimit(form, 'dayMax'),
-          onChange: (e: any) => setLimit(form, 'dayMax', e.target.checked ? '999999999' : '1')
+          // checked: !getLimit(form, 'dayMax'),
+          defaultChecked:
+            form.getFieldValue('dayMax') === '999999999' ||
+            form.getFieldValue('dayMax') === '무제한',
+          onChange: (e: any) =>
+            form.setFieldsValue({ ['dayMax']: e.target.checked ? '999999999' : '1' })
         }
       }
     }
@@ -331,7 +344,9 @@ export const corpDiscountFields = (
       type: FormType.Input,
       option: {
         // placeholder: '무제한 설정 999999999 입력',
-        disabled: getLimit(form, 'monthMax'),
+        disabled:
+          form.getFieldValue('monthMax') === '999999999' ||
+          form.getFieldValue('monthMax') === '무제한',
         onChange: (e: any) => {
           e.target.value === '999999999' ? '무제한' : e.target.value;
         },
@@ -345,8 +360,11 @@ export const corpDiscountFields = (
         type: FormType.Checkbox,
         option: {
           text: '무제한',
-          checked: !getLimit(form, 'monthMax'),
-          onChange: (e: any) => setLimit(form, 'monthMax', e.target.checked ? '999999999' : '1')
+          defaultChecked:
+            form.getFieldValue('monthMax') === '999999999' ||
+            form.getFieldValue('monthMax') === '무제한',
+          onChange: (e: any) =>
+            form.setFieldsValue({ ['monthMax']: e.target.checked ? '999999999' : '1' })
         }
       }
     }
