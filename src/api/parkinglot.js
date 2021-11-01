@@ -192,7 +192,7 @@ export function getParkinglotDashboard() {
 // }
 
 export function getParkinglot() {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglot');
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots');
 }
 
 export function getGateList() {

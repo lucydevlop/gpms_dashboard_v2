@@ -106,6 +106,8 @@
   "label.ticket.update": "정기권 상세",
 
   "label.setting.space": "만차제어",
+  "label.setting.visitorExternal": "방문차량 외부연계",
+  "label.setting.enterNoti": "입차통보",
 
   "label.user.create": "사용자 등록",
   "label.user.detail": "사용자 상세 내역",

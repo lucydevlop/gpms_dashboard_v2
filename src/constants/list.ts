@@ -515,3 +515,13 @@ export const ticketApplyTargetTypeOpt: ISelectOptions[] = [
   { value: ETicketApplyTargetTyoe.IN, label: '입차시간', color: 'black' },
   { value: ETicketApplyTargetTyoe.NOW, label: '현재시간', color: 'black' }
 ];
+
+export enum EDiscountApplyCriteriaType {
+  FRONT = 'FRONT',
+  BACK = 'BACK'
+}
+
+export const discountApplyCriteriaTypeOpt: ISelectOptions[] = [
+  { value: EDiscountApplyCriteriaType.FRONT, label: '입차시간', color: 'black' },
+  { value: EDiscountApplyCriteriaType.BACK, label: '출차시간', color: 'black' }
+];

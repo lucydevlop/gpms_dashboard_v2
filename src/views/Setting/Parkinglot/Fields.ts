@@ -1,9 +1,12 @@
 import { IFormFieldConfig } from '@utils/form';
-import { IParkinglotObj, Space } from '@models/parkinglot';
+import { EnterNoti, IParkinglotObj, Space } from '@models/parkinglot';
 import { FormType } from '@/constants/form';
 import {
   cityOpt,
+  discountApplyCriteriaTypeOpt,
   EDayRangeType,
+  EDelYn,
+  EDiscountApplyCriteriaType,
   EOnOff,
   EStatus,
   externalSvrTypeOpt,
@@ -14,7 +17,6 @@ import {
   vehicleDayOpt,
   VisitorExternalTypeOpt
 } from '@/constants/list';
-import { parkinglotStore } from '@/store/parkinglotStore';
 
 export function ParkinglotSettingFields(
   visitorExternalKey: string | null | undefined,
@@ -24,11 +26,13 @@ export function ParkinglotSettingFields(
   onSpaceSettingModal?: () => void,
   offSpaceSettingModal?: () => void,
   onVisitorExternalModal?: () => void,
-  offVisitorExternalModal?: () => void
+  offVisitorExternalModal?: () => void,
+  onEnterNotiModal?: () => void,
+  offEnterNotiModal?: () => void
 ): IFormFieldConfig<keyof IParkinglotObj>[] {
   return [
     {
-      id: 'siteid',
+      id: 'siteId',
       label: '주차장 ID',
       colProps: {
         span: 24,
@@ -50,7 +54,7 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot ? parkinglot.siteid : '',
+        initialValue: parkinglot ? parkinglot.siteId : '',
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       component: {
@@ -61,7 +65,7 @@ export function ParkinglotSettingFields(
       }
     },
     {
-      id: 'sitename',
+      id: 'siteName',
       label: '주차장명',
       colProps: {
         span: 24,
@@ -83,7 +87,7 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot ? parkinglot.sitename : '',
+        initialValue: parkinglot ? parkinglot.siteName : '',
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       component: {
@@ -590,8 +594,8 @@ export function ParkinglotSettingFields(
       }
     },
     {
-      id: 'visitorRegister',
-      label: '입주사방문권등록',
+      id: 'enterNoti',
+      label: '입차통보',
       colProps: {
         span: 24,
         xs: 24,
@@ -611,14 +615,71 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot ? parkinglot.visitorRegister : EOnOff.OFF
+        initialValue: parkinglot?.enterNoti
+          ? parkinglot?.enterNoti.use === 'ON'
+            ? 'On'
+            : 'Off'
+          : EStatus.Off
+      },
+      component: {
+        type: FormType.Radio,
+        option: {
+          placeholder: '입력하세요',
+          open: onEnterNotiModal,
+          close: offEnterNotiModal
+        },
+        selectOptions: radioSelectOpt
+      }
+    },
+    {
+      id: 'criteria',
+      label: '할인적용기준',
+      colProps: {
+        span: 24,
+        xs: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5,
+          xs: 9,
+          xl: 8
+        },
+        wrapperCol: {
+          span: 15,
+          xs: 15,
+          xl: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: parkinglot?.discApply
+          ? parkinglot?.discApply.criteria
+          : EDiscountApplyCriteriaType.FRONT
       },
       component: {
         type: FormType.Select,
+        selectOptions: discountApplyCriteriaTypeOpt,
         option: {
-          placeholder: '입력하세요'
-        },
-        selectOptions: onOffSelectOpt
+          col: 14
+        }
+      },
+      formSubItemProps: {
+        id: 'baseFeeInclude',
+        label: '기본요금포함',
+        component: {
+          type: FormType.Checkbox,
+          option: {
+            text: '기본포함',
+            defaultChecked: parkinglot?.discApply
+              ? parkinglot?.discApply.baseFeeInclude === EDelYn.Y
+              : false
+            // ,
+            // onChange: (e: any) =>
+            //   e.target.checked ? parkinglot?.discountApply.baseFeeInclude = 'N' :
+            //   form.setFieldsValue({ ['dayMax']: e.target.checked ? '999999999' : '1' })
+          }
+        }
       }
     }
   ];
@@ -764,4 +825,73 @@ export function ParkingVisitorExternalFields(
       }
     ];
   }
+}
+
+export function ParkinglotEnterNotiFields(
+  enterNoti?: EnterNoti
+): IFormFieldConfig<keyof EnterNoti>[] {
+  return [
+    {
+      id: 'use',
+      label: '사용여부',
+      colProps: {
+        span: 24,
+        xs: 24,
+        xl: 24
+      },
+      formItemProps: {
+        labelCol: {
+          span: 9,
+          xs: 9,
+          xl: 9
+        },
+        required: true,
+        wrapperCol: {
+          span: 15,
+          xs: 15,
+          xl: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: enterNoti ? enterNoti.use : ''
+      },
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: '입력하세요'
+        },
+        selectOptions: onOffSelectOpt
+      }
+    },
+    {
+      id: 'url',
+      label: 'URL',
+      colProps: {
+        span: 24,
+        xs: 24,
+        xl: 24
+      },
+      formItemProps: {
+        labelCol: {
+          span: 9,
+          xs: 9,
+          xl: 9
+        },
+        required: true,
+        wrapperCol: {
+          span: 15,
+          xs: 15,
+          xl: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: enterNoti ? enterNoti.url : ''
+      },
+      component: {
+        type: FormType.Input
+      }
+    }
+  ];
 }

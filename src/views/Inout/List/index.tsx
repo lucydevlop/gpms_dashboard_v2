@@ -4,6 +4,7 @@ import {
   calcParkinglotInout,
   createParkinglotInout,
   deleteParkinglotInout,
+  getInoutDetail,
   getInouts,
   transferParkinglotInout,
   updateParkinglotInout
@@ -286,7 +287,21 @@ class Inout extends PureComponent<any, IState> {
   }
 
   handleBtnClick = (info: IInoutObj) => {
-    this.setState({ detailModal: true, createModal: false, selected: info });
+    getInoutDetail(info.parkinSn)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            // console.log(data);
+            this.setState({ selected: data });
+          });
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        this.setState({ loading: false, detailModal: true, createModal: false });
+      });
+    // this.setState({ detailModal: true, createModal: false });
   };
 
   sum = (array: any[], key: string) => {
