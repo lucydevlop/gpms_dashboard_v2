@@ -515,7 +515,7 @@ class Inout extends PureComponent<any, IState> {
               }
             }
           }}
-          onSelectRow={(row: ITicketObj[]) => {
+          onSelectRow={(row: IInoutObj[]) => {
             this.setState({ deleteList: row });
           }}
           summary={() => (

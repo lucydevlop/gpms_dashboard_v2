@@ -25,6 +25,8 @@ export interface IDiscountClassObj {
   expireDate: Date;
   delYn: EDelYn;
   aplyCnt?: number;
+  rcsUse: boolean;
+  orderNo: number;
   //not metadata
   disable: boolean;
 }

@@ -38,7 +38,7 @@ class DiscountModal extends PureComponent<IDiscounttModalProps, IDiscountModalSt
               this.handlerSubmit();
             }}
           >
-            <Row gutter={24}>{getFormFields(getFieldDecorator, discountFields, true, 7)}</Row>
+            <Row gutter={24}>{getFormFields(getFieldDecorator, discountFields, true, 9)}</Row>
             <Button
               type="primary"
               htmlType="submit"

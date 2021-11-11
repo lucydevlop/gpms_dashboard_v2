@@ -19,7 +19,6 @@ interface InfoCardProps {
 
 interface IProps {
   item: IDashboardObj;
-  key: number;
 }
 
 interface IState {

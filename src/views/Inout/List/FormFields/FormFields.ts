@@ -26,6 +26,10 @@ const regisDateRangeConfig = {
   initialValue: [moment(new Date()).subtract(3, 'days'), moment(new Date())]
 };
 
+const sum = (num1: any, num2: any) => {
+  return num1 + num2;
+};
+
 export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
   const { localeObj } = localeStore;
   return [
@@ -615,7 +619,7 @@ export function newInoutDetailFileds(
         }
       },
       fieldOption: {
-        initialValue: inout ? inout.discountfee : '0'
+        initialValue: inout ? sum(inout.dayDiscountfee, inout.discountfee) : '0'
       },
       component: {
         type: FormType.Input,

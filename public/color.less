@@ -48,7 +48,7 @@ html {--antd-wave-shadow-color: @primary-color;}
 .ant-alert-info .ant-alert-icon {color: @primary-color;}
 .ant-alert-warning {background-color: #fffbe6;border: 1px solid #ffe58f;}
 .ant-alert-warning .ant-alert-icon {color: #faad14;}
-.ant-alert-error {background-color: #fff2f0;border: 1px solid #ffccc7;}
+.ant-alert-error {background-color: color(~`colorPalette("@{border-color-base}", 1)`);border: 1px solid #ffccc7;}
 .ant-alert-error .ant-alert-icon {color: #ff4d4f;}
 .ant-alert-close-icon {background-color: transparent;border: none;}
 .ant-alert-close-icon .anticon-close {color: rgba(0, 0, 0, 0.45);}
@@ -1447,7 +1447,7 @@ tr.ant-table-expanded-row:hover > td {background: #fbfbfb;}
 .ant-tag-gold-inverse {color: #fff;background: #faad14;border-color: #faad14;}
 .ant-tag-cyan {color: #08979c;background: #e6fffb;border-color: #87e8de;}
 .ant-tag-cyan-inverse {color: #fff;background: #13c2c2;border-color: #13c2c2;}
-.ant-tag-lime {color: #7cb305;background: color(~`colorPalette("@{popover-customize-border-color}", 1)`);border-color: #eaff8f;}
+.ant-tag-lime {color: #7cb305;background: #fcffe6;border-color: #eaff8f;}
 .ant-tag-lime-inverse {color: #fff;background: #a0d911;border-color: #a0d911;}
 .ant-tag-green {color: #389e0d;background: #f6ffed;border-color: #b7eb8f;}
 .ant-tag-green-inverse {color: #fff;background: #52c41a;border-color: #52c41a;}
@@ -1455,7 +1455,7 @@ tr.ant-table-expanded-row:hover > td {background: #fbfbfb;}
 .ant-tag-blue-inverse {color: #fff;background: #1890ff;border-color: #1890ff;}
 .ant-tag-geekblue {color: #1d39c4;background: #f0f5ff;border-color: #adc6ff;}
 .ant-tag-geekblue-inverse {color: #fff;background: #2f54eb;border-color: #2f54eb;}
-.ant-tag-purple {color: #531dab;background: #f9f0ff;border-color: #d3adf7;}
+.ant-tag-purple {color: #531dab;background: color(~`colorPalette("@{background-color-base}", 1)`);border-color: #d3adf7;}
 .ant-tag-purple-inverse {color: #fff;background: #722ed1;border-color: #722ed1;}
 .ant-tag-success {color: #52c41a;background: #f6ffed;border-color: #b7eb8f;}
 .ant-tag-processing {color: #1890ff;background: #e6f7ff;border-color: #91d5ff;}
@@ -1697,6 +1697,7 @@ a.ant-typography.ant-typography-disabled:hover, .ant-typography a.ant-typography
 :root .ant-input-number:focus,
 :root .ant-input-number-focused,
 :root .ant-cascader-picker:focus .ant-cascader-input {box-shadow: 0 0 0 2px var(--antd-select-focus-shadow);}
+:root .ant-radio-inner {border-color: #818080;}
 :root .ant-picker-cell-in-view.ant-picker-cell-range-hover-start:not(.ant-picker-cell-in-range):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end)::after,
 :root .ant-picker-cell-in-view.ant-picker-cell-range-hover-end:not(.ant-picker-cell-in-range):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end)::after,
 :root .ant-picker-cell-in-view.ant-picker-cell-range-hover-start.ant-picker-cell-range-start-single::after,

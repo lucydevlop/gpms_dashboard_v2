@@ -8,6 +8,7 @@ import { inject, observer } from 'mobx-react';
 import { IDashboardObj } from '@models/dashboard';
 import { parkinglotStore } from '@store/parkinglotStore';
 import { IParkinglotObj } from '@models/parkinglot';
+import PageWrapper from '@components/PageWrapper';
 
 interface IDashboardState {
   loading: boolean;
@@ -17,7 +18,7 @@ interface IDashboardState {
 
 @inject('localeStore', 'parkinglotStore')
 @observer
-class Dashboard extends React.Component<any, IDashboardState> {
+class Dashboard extends React.Component<{ history: any }, IDashboardState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -26,14 +27,14 @@ class Dashboard extends React.Component<any, IDashboardState> {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.setState({ loading: true });
     parkinglotStore.get().then(() => {
       runInAction(() => {
         this.setState({ parkinglot: parkinglotStore.parkinglot });
       });
     });
-    this.pollData();
+    this.pollData().then((r) => this.setState({ loading: false }));
   }
 
   async pollData() {
@@ -59,13 +60,13 @@ class Dashboard extends React.Component<any, IDashboardState> {
   renderGate(item: IDashboardObj, index: number) {
     if (item.gateType === 'IN_OUT') {
       return (
-        <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+        <Col xl={24} lg={24} md={24} sm={24} xs={24} key={index}>
           <RowInfoCard item={item} key={index} />
         </Col>
       );
     }
     return (
-      <Col xl={12} lg={12} md={24} sm={24} xs={24}>
+      <Col xl={12} lg={12} md={24} sm={24} xs={24} key={index}>
         <RowInfoCard item={item} key={index} />
       </Col>
     );
@@ -74,13 +75,13 @@ class Dashboard extends React.Component<any, IDashboardState> {
   render() {
     const { localeObj } = localeStore;
     return (
-      <div className="dashboard">
+      <PageWrapper>
         <Row gutter={24}>
           {this.state.dashboardObjs
             .filter((d) => d.gateType !== 'ETC')
             .map((item, index) => this.renderGate(item, index))}
         </Row>
-      </div>
+      </PageWrapper>
     );
   }
 }

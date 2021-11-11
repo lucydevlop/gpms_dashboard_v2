@@ -311,6 +311,16 @@ export const useOrUnuseOpt: ISelectOptions[] = [
   { value: 'ALL', label: '전체', color: 'black' }
 ];
 
+export enum EUseType {
+  TRUE = 1,
+  FALSE = 0
+}
+
+export const useOpt: ISelectOptions[] = [
+  { value: EUseType.FALSE, label: '미사용', color: 'blue' },
+  { value: EUseType.TRUE, label: '사용', color: 'red' }
+];
+
 export enum ESearchLable {
   CARNUM = 'CARNUM',
   USERNAME = 'USERNAME'

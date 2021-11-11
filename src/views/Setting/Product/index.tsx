@@ -69,9 +69,7 @@ class ProductSetting extends PureComponent<IProps, IState> {
               .forEach((e) => {
                 unique.push({ value: String(e.sn), label: e.discountNm });
               });
-            this.setState({ discountSelectClasses: unique }, () =>
-              console.log(this.state.discountSelectClasses)
-            );
+            this.setState({ discountSelectClasses: unique });
           });
         }
       })

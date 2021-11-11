@@ -7,7 +7,9 @@ import {
   discountApplyRateOpt,
   discountApplyTypeOpt,
   discountTypeOpt,
-  EDelYn
+  EDelYn,
+  useOpt,
+  useOrUnuseOpt
 } from '@/constants/list';
 import { conversionDate, conversionEnumValue } from '@utils/conversion';
 import StandardTable from '@components/StandardTable';
@@ -132,6 +134,15 @@ class DiscountTab extends PureComponent<IProps, IState> {
         width: 110,
         align: 'center',
         render: (text: string, record: IDiscountClassObj) => record.unitTime
+      },
+      {
+        title: 'RCS사용',
+        key: 'rcsUse',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IDiscountClassObj) => {
+          return record.rcsUse ? '사용' : '미사용';
+        }
       },
       {
         title: 'Action',

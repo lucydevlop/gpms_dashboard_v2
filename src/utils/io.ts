@@ -1,6 +1,9 @@
 import Axios from 'axios';
 import { notification } from 'antd';
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import { createHashHistory } from 'history';
+
+const router = createHashHistory();
 
 interface IoOptions extends AxiosRequestConfig {
   returnConfig?: boolean; // 是否返回req配置项
@@ -47,7 +50,8 @@ class Request {
       description: `${
         message ||
         'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
-      }`
+      }`,
+      placement: 'bottomRight'
     });
   }
 
@@ -56,6 +60,9 @@ class Request {
     const { message, status, data } = error.response;
     switch (status) {
       case 401:
+        break;
+      case 403:
+        localStorage.removeItem('RCS-authorization');
         break;
       case 404:
         break;
@@ -74,6 +81,19 @@ class Request {
     const { params, returnConfig, data, options } = details;
     const token = localStorage.getItem('RCS-authorization');
     this.setHeader('Authorization', 'Bearer ' + token);
+
+    if (!url.includes('login') && token === null) {
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          if (!window.location.href.includes('user/login')) {
+            router.push('/user/login');
+            history.go(0);
+          }
+          resolve();
+        }, 800);
+      }).catch(() => console.log('Oops errors!'));
+    }
+
     return this.instance
       .request({
         url,
