@@ -29,11 +29,9 @@ class VehicleList extends PureComponent<IProps, IState> {
         dataIndex: 'inDate',
         width: 100,
         align: 'center',
-        render: (text: string, record: ICorpSearchVehicleObj) =>
-          //conversionDateTime(record.inDate, '{y}-{m}-{d} {h}:{i}') || '--'
-          moment(conversionDateTime(record.inDate, '{y}-{m}-{d} {h}:{i}')).format(
-            'YYYY-MM-DD HH:mm'
-          )
+        render: (text: string, record: ICorpSearchVehicleObj) => {
+          return moment(record.inDate).format('YYYY-MM-DD HH:mm');
+        }
       }
     ];
 
