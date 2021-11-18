@@ -1,6 +1,13 @@
 import { IQueryListParams } from '@models/global';
 import { Moment } from 'moment';
-import { ECity, EDayRangeType, ERemoteTool } from '@/constants/list';
+import {
+  ECity,
+  EDayRangeType,
+  EDelYn,
+  EDiscountApplyCriteriaType,
+  EOnOff,
+  ERemoteTool
+} from '@/constants/list';
 import { IActionsHistoryObj } from '@models/history';
 
 /**
@@ -8,8 +15,8 @@ import { IActionsHistoryObj } from '@models/history';
  */
 export interface IParkinglotObj {
   parkId: string;
-  siteid: string;
-  sitename: string;
+  siteId: string;
+  siteName: string;
   limitqty: number;
   saupno?: string;
   tel?: string;
@@ -38,15 +45,31 @@ export interface IParkinglotObj {
   visitorExternal?: string;
   visitorExternalKey?: string | null;
   operatingDays?: EDayRangeType;
+  visitorRegister?: EOnOff;
   createBy?: string;
   createDate?: Date;
   updateBy?: string;
   updateDate?: Date;
+  enterNoti?: EnterNoti;
+  discApply?: DiscountApply;
+  //non entity
+  criteria?: EDiscountApplyCriteriaType;
+  baseFeeInclude?: EDelYn;
 }
 
 export type Space = {
   gateGroupId: string;
   space: number;
+};
+
+export type EnterNoti = {
+  use?: EOnOff;
+  url?: string;
+};
+
+export type DiscountApply = {
+  criteria?: EDiscountApplyCriteriaType;
+  baseFeeInclude?: EDelYn;
 };
 
 export interface IParkinglotListReq extends IQueryListParams {

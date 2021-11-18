@@ -24,7 +24,6 @@ import { InputProps, TextAreaProps } from 'antd/lib/input';
 import { FormType } from '@/constants/form';
 import { GetFieldDecoratorOptions } from '@ant-design/compatible/lib/form/Form';
 import { DatePickerProps, RangePickerProps } from 'antd/lib/date-picker';
-import { DeleteOutlined } from '@ant-design/icons';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -53,7 +52,9 @@ export interface IFormFieldOption {
   type: FormType;
   option?: IComponentOption;
   selectOptions?: ISelectOptions[];
-  handler?: () => void;
+  handler?: any;
+  option2?: IComponentOption;
+  col?: number;
 }
 
 export interface IFromFieldBaseConfig {
@@ -84,7 +85,7 @@ interface IGetFieldDecorator {
  * @return return antd 的 form 组件
  */
 const getFormComponent = (component: IFormFieldOption) => {
-  const { type, selectOptions = [], option } = { ...component };
+  const { type, selectOptions = [], option, option2, handler } = { ...component };
   switch (type) {
     case FormType.Input:
       return <Input size="middle" {...option} />;
@@ -181,6 +182,26 @@ const getFormComponent = (component: IFormFieldOption) => {
           ))}
         </Checkbox.Group>
       );
+    case FormType.InputAndCheck:
+      return (
+        <>
+          <InputGroup style={{ display: 'flex' }}>
+            <Col span={14}>
+              <Input size="middle" {...option} />
+            </Col>
+            <Col span={10}>
+              <Checkbox
+                style={{ alignItems: 'center', marginLeft: '7px' }}
+                // key={option2.key}
+                // checked={option2.value}
+                onChange={(event) => option2.onChange(event.target.checked)}
+              >
+                {option2.text}
+              </Checkbox>
+            </Col>
+          </InputGroup>
+        </>
+      );
     default:
       return <Input size="middle" {...option} />;
   }
@@ -259,11 +280,45 @@ export const getFormFields = (
             style={{ marginBottom: 10 }}
           >
             <InputGroup compact style={{ width: '100%', flex: 1, display: 'flex' }}>
-              {getFieldDecorator(formField.id, fieldOption)(getFormComponent(formField.component))}
-              {getFieldDecorator(
-                formField.formSubItemProps.id,
-                formField.formSubItemProps.fieldOption
-              )(getFormComponent(formField.formSubItemProps.component))}
+              {formField.component.option.col !== 0 ? (
+                <>
+                  <Col span={formField.component.option.col}>
+                    {getFieldDecorator(
+                      formField.id,
+                      fieldOption
+                    )(getFormComponent(formField.component))}
+                  </Col>
+                  <Col style={{ alignItems: 'center', marginLeft: '7px' }}>
+                    {getFieldDecorator(
+                      formField.formSubItemProps.id,
+                      formField.formSubItemProps.fieldOption
+                    )(getFormComponent(formField.formSubItemProps.component))}
+                  </Col>
+                </>
+              ) : (
+                <>
+                  {getFieldDecorator(
+                    formField.id,
+                    fieldOption
+                  )(getFormComponent(formField.component))}
+                  {getFieldDecorator(
+                    formField.formSubItemProps.id,
+                    formField.formSubItemProps.fieldOption
+                  )(getFormComponent(formField.formSubItemProps.component))}
+                </>
+              )}
+              {/*<Col>*/}
+              {/*  {getFieldDecorator(*/}
+              {/*    formField.id,*/}
+              {/*    fieldOption*/}
+              {/*  )(getFormComponent(formField.component))}*/}
+              {/*</Col>*/}
+              {/*<Col>*/}
+              {/*  {getFieldDecorator(*/}
+              {/*    formField.formSubItemProps.id,*/}
+              {/*    formField.formSubItemProps.fieldOption*/}
+              {/*  )(getFormComponent(formField.formSubItemProps.component))}*/}
+              {/*</Col>*/}
             </InputGroup>
           </FormItem>
         </Col>

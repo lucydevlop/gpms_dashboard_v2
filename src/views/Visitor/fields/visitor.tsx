@@ -33,7 +33,13 @@ export function VisitorRegisterFields(
       label: '차량번호',
       fieldOption: {
         initialValue: visitor ? visitor.vehicleNo : null,
-        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+        rules: [
+          { required: true, whitespace: true, message: '필수 입력 값입니다' },
+          {
+            pattern: /\d{2,3}[가-힣]\d{4}/gm,
+            message: '차량번호 확인해주세요'
+          }
+        ]
       },
       component: {
         type: FormType.Input,
@@ -195,7 +201,10 @@ export function SearchVisitorFields(): IFormFieldConfig<keyof IVisitorSearchReq>
       },
       component: {
         type: FormType.Select,
-        selectOptions: ticketSearchTypeOpt
+        selectOptions: ticketSearchTypeOpt,
+        option: {
+          col: 0
+        }
       },
       formSubItemProps: {
         id: 'createTm',
@@ -234,6 +243,14 @@ export function SearchVisitorFields(): IFormFieldConfig<keyof IVisitorSearchReq>
         option: {
           placeholder: '입력하세요'
         }
+      },
+      fieldOption: {
+        rules: [
+          {
+            pattern: /\d{2,3}[가-힣]\d{4}/gm,
+            message: '차량번호 확인해주세요'
+          }
+        ]
       }
     }
   ];

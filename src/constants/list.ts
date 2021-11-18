@@ -91,13 +91,15 @@ export const categoryOpt: ISelectOptions[] = [
 export enum EGateType {
   IN = 'IN',
   OUT = 'OUT',
-  INOUT = 'IN_OUT'
+  INOUT = 'IN_OUT',
+  ETC = 'ETC'
 }
 
 export const gateTypeOpt: ISelectOptions[] = [
   { value: EGateType.IN, label: '입구전용', color: 'black' },
   { value: EGateType.OUT, label: '출구전용', color: 'blue' },
-  { value: EGateType.INOUT, label: '입출구', color: 'green' }
+  { value: EGateType.INOUT, label: '입출구', color: 'green' },
+  { value: EGateType.ETC, label: '기타', color: 'red' }
 ];
 
 export enum EBreakerStatus {
@@ -208,6 +210,16 @@ export const discountApplyTypeOpt: ISelectOptions[] = [
   { value: EDiscountApplyType.PERCENT, label: '%', color: 'black' }
 ];
 
+export enum EDiscountApplyRate {
+  FIX = 'FIX',
+  VARIABLE = 'VARIABLE'
+}
+
+export const discountApplyRateOpt: ISelectOptions[] = [
+  { value: EDiscountApplyRate.FIX, label: '고정할인', color: 'black' },
+  { value: EDiscountApplyRate.VARIABLE, label: '변동할인', color: 'black' }
+];
+
 export enum EDayRangeType {
   ALL = 'ALL',
   WEEKDAY = 'WEEKDAY',
@@ -249,13 +261,15 @@ export const gateActionTypeOpt: ISelectOptions[] = [
 export enum EGateOpenActionType {
   NONE = 'NONE',
   RECOGNITION = 'RECOGNITION',
-  RESTRICT = 'RESTRICT'
+  RESTRICT = 'RESTRICT',
+  MULTI = 'MULTI'
 }
 
 export const gateOpenActionTypeOpt: ISelectOptions[] = [
   { value: EGateOpenActionType.NONE, label: '모두허용', color: 'black' },
   { value: EGateOpenActionType.RECOGNITION, label: '인식차량허용', color: 'black' },
-  { value: EGateOpenActionType.RESTRICT, label: '등록차량허용', color: 'black' }
+  { value: EGateOpenActionType.RESTRICT, label: '등록차량허용', color: 'black' },
+  { value: EGateOpenActionType.MULTI, label: '복합허용', color: 'black' }
 ];
 
 export enum EMessageClassType {
@@ -295,6 +309,16 @@ export const useOrUnuseOpt: ISelectOptions[] = [
   { value: EDelYn.N, label: '사용', color: 'blue' },
   { value: EDelYn.Y, label: '미사용', color: 'red' },
   { value: 'ALL', label: '전체', color: 'black' }
+];
+
+export enum EUseType {
+  TRUE = 1,
+  FALSE = 0
+}
+
+export const useOpt: ISelectOptions[] = [
+  { value: EUseType.FALSE, label: '미사용', color: 'blue' },
+  { value: EUseType.TRUE, label: '사용', color: 'red' }
 ];
 
 export enum ESearchLable {
@@ -395,7 +419,7 @@ export const colorTypeOpt: ISelectOptions[] = [
   { value: EColorType.C1, label: '초록색', color: 'black' },
   { value: EColorType.C3, label: '하늘색', color: 'black' },
   { value: EColorType.C4, label: '빨강색', color: 'black' },
-  { value: EColorType.C5, label: '핑크색', color: 'black' }
+  { value: EColorType.C5, label: '노란색', color: 'black' }
 ];
 
 export const lineOpt: ISelectOptions[] = [
@@ -480,4 +504,36 @@ export const dayTYpeOpt: ISelectOptions[] = [
   { value: EDayType.SAT, label: '토', color: 'black' },
   { value: EDayType.SUN, label: '일', color: 'black' },
   { value: EDayType.ALL, label: '전체', color: 'black' }
+];
+
+export enum EPaymentType {
+  PAYMENT = 'PAYMENT',
+  PREPAYMENT = 'PREPAYMENT',
+  MANPAYMENT = 'MANPAYMENT'
+}
+
+export const paymentTypeOpt: ISelectOptions[] = [
+  { value: EPaymentType.PAYMENT, label: '출차정산', color: 'black' },
+  { value: EPaymentType.MANPAYMENT, label: '출차정산', color: 'black' },
+  { value: EPaymentType.PREPAYMENT, label: '사전정산', color: 'black' }
+];
+
+export enum ETicketApplyTargetTyoe {
+  IN = 'IN',
+  NOW = 'NOW'
+}
+
+export const ticketApplyTargetTypeOpt: ISelectOptions[] = [
+  { value: ETicketApplyTargetTyoe.IN, label: '입차시간', color: 'black' },
+  { value: ETicketApplyTargetTyoe.NOW, label: '현재시간', color: 'black' }
+];
+
+export enum EDiscountApplyCriteriaType {
+  FRONT = 'FRONT',
+  BACK = 'BACK'
+}
+
+export const discountApplyCriteriaTypeOpt: ISelectOptions[] = [
+  { value: EDiscountApplyCriteriaType.FRONT, label: '입차시간', color: 'black' },
+  { value: EDiscountApplyCriteriaType.BACK, label: '출차시간', color: 'black' }
 ];

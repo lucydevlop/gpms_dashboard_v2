@@ -4,6 +4,12 @@ import './pageWrapper.less';
 import { PageWrapperProps } from '@models/global';
 
 class PageWrapper extends React.Component<PageWrapperProps, any> {
+  // componentDidMount() {
+  //   if (localStorage.getItem('RCS-authorization') === null) {
+  //
+  //   }
+  // }
+
   render() {
     const { hideHeader, children, style, ...restProps } = this.props;
     return (

@@ -29,6 +29,7 @@ import FareInfoModal from '@views/Setting/Fee/Modal/FareInfoModal';
 import { v4 as generateUUID } from 'uuid';
 import { EDelYn, fareTypeOpt } from '@/constants/list';
 import zdsTips from '@utils/tips';
+import moment from 'moment';
 
 interface IState {
   loading: boolean;
@@ -54,6 +55,45 @@ class FeeSetting extends PureComponent<any, IState> {
       farePolicyModal: false,
       fareInfoModal: false
     };
+  }
+
+  componentDidMount() {
+    this.setState({ loading: true });
+    getFareInfo()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ fareInfos: data });
+          });
+        }
+      })
+      .catch(() => {});
+
+    getFareBasic()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ fareBasic: data });
+          });
+        }
+      })
+      .catch(() => {});
+
+    getFarePolicies()
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ farePolicies: data });
+            console.log(this.state.farePolicies);
+          });
+        }
+      })
+      .catch(() => {});
+
+    this.setState({ loading: false });
   }
 
   handleFareBasicClick(key: string) {
@@ -190,45 +230,6 @@ class FeeSetting extends PureComponent<any, IState> {
     }
     this.setState({ fareInfoModal: false });
   };
-
-  componentDidMount() {
-    this.setState({ loading: true });
-    getFareInfo()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ fareInfos: data });
-          });
-        }
-      })
-      .catch(() => {});
-
-    getFareBasic()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ fareBasic: data });
-          });
-        }
-      })
-      .catch(() => {});
-
-    getFarePolicies()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ farePolicies: data });
-            console.log(this.state.farePolicies);
-          });
-        }
-      })
-      .catch(() => {});
-
-    this.setState({ loading: false });
-  }
 
   renderFareBasic() {
     const attibutes: Attribute[] = [
@@ -369,11 +370,14 @@ class FeeSetting extends PureComponent<any, IState> {
         {
           name: '적용시점',
           value: f
-            ? `${conversionDate(f.effectDate!!, '{y}-{m}-{d}')} ~ ${conversionDate(
-                f.expireDate!!,
-                '{y}-{m}-{d}'
+            ? `${moment(f.effectDate!!).format('YYYY-MM-DD')} ~ ${moment(f.expireDate!!).format(
+                'YYYY-MM-DD'
               )}`
             : ''
+        },
+        {
+          name: '우선적용순위(낮은순)',
+          value: f ? `${f.orderNo}` : '0'
         }
       ];
       return (

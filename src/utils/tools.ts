@@ -223,3 +223,13 @@ export function string2mobile(text: string) {
     .replace('--', '-');
   return mobile;
 }
+
+export function isValidateCarNumber(x: string) {
+  const regex = /\d{2,3}[가-힣]{1}\d{4}/gm;
+  return regex.exec(x) !== null;
+}
+
+export function getMinutesBetweenDates(startDate: number, endDate: number) {
+  var diff = endDate - startDate;
+  return Math.round(diff / 60000);
+}

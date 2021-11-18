@@ -1,7 +1,7 @@
 import React, { BaseSyntheticEvent, createRef, PureComponent, RefObject } from 'react';
 import { inject, observer } from 'mobx-react';
 import { parkinglotStore } from '@store/parkinglotStore';
-import { IParkinglotObj, Space } from '@models/parkinglot';
+import { EnterNoti, IParkinglotObj, Space } from '@models/parkinglot';
 import PageWrapper from '@components/PageWrapper';
 import { Button, Card, Input, Radio, Row, Select } from 'antd';
 import { Form } from '@ant-design/compatible';
@@ -21,6 +21,7 @@ import { number } from 'echarts/core';
 import { getGateGroups, updateParkinglot } from '@/api/parkinglot';
 import ParkingVisitorExternalModalForm from './Modal/ParkingVisitorExternalModal';
 import zdsTips from '@utils/tips';
+import ParkingEnterNotiModal from '@views/Setting/Parkinglot/Modal/ParkingEnterNotiModal';
 
 interface IProps extends FormComponentProps {}
 interface IState {
@@ -33,6 +34,8 @@ interface IState {
   space?: Space | null;
   gates: any[];
   gateGroups: any[];
+  enterNotiModal: boolean;
+  enterNoti?: EnterNoti | null;
 }
 
 @inject('localeStore', 'parkinglotStore')
@@ -44,6 +47,7 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
       loading: true,
       spaceSettingModal: false,
       visitorExternalModal: false,
+      enterNotiModal: false,
       gates: [],
       gateGroups: []
     };
@@ -64,6 +68,7 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
         this.setState({ space: this.state.parkinglot?.space });
         this.setState({ visitorExternal: this.state.parkinglot?.visitorExternal });
         this.setState({ visitorExternalKey: this.state.parkinglot?.visitorExternalKey });
+        this.setState({ enterNoti: this.state.parkinglot?.enterNoti });
       });
     });
     parkinglotStore.initGateGroups().then(() => {
@@ -78,10 +83,11 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
 
   onFinish = async () => {
     this.props.form.validateFields((err, fieldsValue) => {
+      console.log('parkinglot', fieldsValue);
       const sendData: any = {
         parkId: fieldsValue.parkId,
-        siteId: fieldsValue.siteid,
-        siteName: fieldsValue.sitename,
+        siteId: fieldsValue.siteId,
+        siteName: fieldsValue.siteName,
         ceoname: fieldsValue.ceoname,
         city: fieldsValue.city,
         address: fieldsValue.address,
@@ -96,7 +102,13 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
           fieldsValue.visitorExternal === 'On' ? this.state.visitorExternalKey : null,
         visitorExternal: fieldsValue.visitorExternal === 'On' ? this.state.visitorExternal : null,
         space: fieldsValue.space === 'Off' ? null : this.state.space,
-        operatingDays: fieldsValue.operatingDays
+        operatingDays: fieldsValue.operatingDays,
+        visitorRegister: fieldsValue.visitorRegister,
+        enterNoti: fieldsValue.enterNoti === 'Off' ? { use: 'OFF' } : this.state.enterNoti,
+        discApply: {
+          criteria: fieldsValue.criteria,
+          baseFeeInclude: fieldsValue.baseFeeInclude ? 'Y' : 'N'
+        }
       };
       if (!err) {
         updateParkinglot(sendData).then((res: any) => {
@@ -130,6 +142,14 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
     this.setState({ visitorExternal: null });
   };
 
+  onEnterNotiModal = () => {
+    this.setState({ enterNotiModal: true });
+  };
+
+  offEnterNotiModal = () => {
+    this.setState({ enterNotiModal: false });
+  };
+
   SpaceSetting = (value: Space) => {
     this.setState({ space: { gateGroupId: value.gateGroupId, space: Number(value.space) } });
     this.setState({ spaceSettingModal: false });
@@ -139,6 +159,12 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
     this.setState({ visitorExternalKey: value.visitorExternalKey });
     this.setState({ visitorExternal: value.visitorExternal });
     this.setState({ visitorExternalModal: false });
+  };
+
+  EnterNotiSetting = (value: EnterNoti) => {
+    console.log('enterNotiSetting', value);
+    this.setState({ enterNoti: value });
+    this.setState({ enterNotiModal: false });
   };
 
   render() {
@@ -152,7 +178,9 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
       this.onSpaceSettingModal,
       this.offSpaceSettingModal,
       this.onVisitorExternalModal,
-      this.offVisitorExternalModal
+      this.offVisitorExternalModal,
+      this.onEnterNotiModal,
+      this.offEnterNotiModal
     );
     if (this.state.loading) return <PageWrapper />;
     return (
@@ -217,7 +245,20 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
               onSubmit={(value) => this.VisitorExternalSetting(value)}
               visitorExternalKey={this.state.visitorExternalKey || undefined}
               visitorExternal={this.state.visitorExternal || undefined}
-            ></ParkingVisitorExternalModalForm>
+            />
+          </DraggableModal>
+        ) : null}
+        {this.state.enterNotiModal ? (
+          <DraggableModal
+            title={localeObj['label.setting.enterNoti' || '입차통보']}
+            visible={this.state.enterNotiModal}
+            width={600}
+            onOk={() => this.setState({ enterNotiModal: false })}
+            onCancel={(): void => {
+              this.setState({ enterNotiModal: false });
+            }}
+          >
+            <ParkingEnterNotiModal onSubmit={(value) => this.EnterNotiSetting(value)} />
           </DraggableModal>
         ) : null}
       </PageWrapper>

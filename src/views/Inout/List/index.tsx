@@ -4,7 +4,7 @@ import {
   calcParkinglotInout,
   createParkinglotInout,
   deleteParkinglotInout,
-  editParkinglotInout,
+  getInoutDetail,
   getInouts,
   transferParkinglotInout,
   updateParkinglotInout
@@ -17,7 +17,7 @@ import PageWrapper from '@components/PageWrapper';
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
 import { TablePaginationConfig } from 'antd/es/table';
-import { Button } from 'antd';
+import { Button, Divider } from 'antd';
 import { searchInoutFields } from '@views/Inout/List/FormFields/FormFields';
 import {
   conversionDate,
@@ -176,7 +176,7 @@ class Inout extends PureComponent<any, IState> {
   }
 
   getSearchData = (info: IInoutSelectReq) => {
-    console.log('getSearchData', info);
+    // console.log('getSearchData', info);
     const searchParam: IInoutSelectReq = {
       dateType: info.dateType,
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),
@@ -286,8 +286,33 @@ class Inout extends PureComponent<any, IState> {
     await generateCsv(downLoadData, headers, '입출차현황');
   }
 
-  handleBtnClick = (info: IInoutObj) => {
-    this.setState({ detailModal: true, createModal: false, selected: info });
+  handleBtnClick = (info: IInoutObj, key: string) => {
+    if (key === 'DELETE') {
+      deleteParkinglotInout(info.parkinSn).then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.pollData();
+          });
+        }
+      });
+    } else {
+      getInoutDetail(info.parkinSn)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              // console.log(data);
+              this.setState({ selected: data });
+            });
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.setState({ loading: false, detailModal: true, createModal: false });
+        });
+    }
+    // this.setState({ detailModal: true, createModal: false });
   };
 
   sum = (array: any[], key: string) => {
@@ -372,7 +397,7 @@ class Inout extends PureComponent<any, IState> {
           return atime - btime;
         },
         render: (text: string, record: IInoutObj) =>
-          conversionDateTime(record.inDate, '{y}-{m}-{d} {h}:{i}') || '--'
+          moment(record.inDate).format('YYYY-MM-DD HH:mm')
       },
       {
         title: '출차Gate',
@@ -387,9 +412,7 @@ class Inout extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (text: string, record: IInoutObj) => {
-          return record.outDate
-            ? conversionDateTime(record.outDate, '{y}-{m}-{d} {h}:{i}') || '--'
-            : null;
+          return record.outDate ? moment(record.outDate).format('YYYY-MM-DD HH:mm') : null;
         }
       },
       {
@@ -454,7 +477,7 @@ class Inout extends PureComponent<any, IState> {
       },
       {
         title: 'Action',
-        width: 100,
+        width: 110,
         align: 'center',
         fixed: 'right',
         render: (item: IInoutObj) => (
@@ -462,10 +485,19 @@ class Inout extends PureComponent<any, IState> {
             <a
               onClick={(e: any) => {
                 e.stopPropagation();
-                this.handleBtnClick(item);
+                this.handleBtnClick(item, 'EDIT');
               }}
             >
               상세
+            </a>
+            <Divider type="vertical" />
+            <a
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.handleBtnClick(item, 'DELETE');
+              }}
+            >
+              강제출차
             </a>
           </div>
         )
@@ -501,7 +533,7 @@ class Inout extends PureComponent<any, IState> {
               }
             }
           }}
-          onSelectRow={(row: ITicketObj[]) => {
+          onSelectRow={(row: IInoutObj[]) => {
             this.setState({ deleteList: row });
           }}
           summary={() => (
@@ -511,28 +543,29 @@ class Inout extends PureComponent<any, IState> {
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>Total: {total}</span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={1}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    일반: {list.filter((l) => l.parkcartype === ETicketType.NORMAL).length}
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
+                    일반차량: {list.filter((l) => l.parkcartype === ETicketType.NORMAL).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={2}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    정기권: {list.filter((l) => l.parkcartype === ETicketType.SEASONTICKET).length}
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
+                    유료정기권:{' '}
+                    {list.filter((l) => l.parkcartype === ETicketType.SEASONTICKET).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={3}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     방문권: {list.filter((l) => l.parkcartype === ETicketType.VISITTICKET).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={4}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
-                    무료주차권:{' '}
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
+                    무료정기권:{' '}
                     {list.filter((l) => l.parkcartype === ETicketType.FREETICKET).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={5}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     미인식: {list.filter((l) => l.parkcartype === ETicketType.UNRECOGNIZED).length}
                   </span>
                 </Table.Summary.Cell>
@@ -540,29 +573,29 @@ class Inout extends PureComponent<any, IState> {
                 <Table.Summary.Cell index={7} />
                 <Table.Summary.Cell index={8} />
                 <Table.Summary.Cell index={9}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'parkfee'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={10}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     {convertNumberWithCommas(
                       this.sum(list, 'discountfee') + this.sum(list, 'dayDiscountfee')
                     )}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={11}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'payfee'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={12}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'paymentAmount'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={13}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     {convertNumberWithCommas(this.sum(list, 'nonPayment'))}
                   </span>
                 </Table.Summary.Cell>

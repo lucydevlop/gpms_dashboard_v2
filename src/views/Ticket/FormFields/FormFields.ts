@@ -81,7 +81,8 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
           (d) =>
             d.value !== ETicketType.NORMAL &&
             d.value !== ETicketType.UNRECOGNIZED &&
-            d.value !== ETicketType.DISCOUNT
+            d.value !== ETicketType.DISCOUNT &&
+            d.value !== ETicketType.PARTRECOGNIZED
         )
       }
     },
@@ -144,7 +145,8 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
         type: FormType.Select,
         option: {
           placeholder: localeObj['label.choose'] || '선택해주세요',
-          allowClear: true
+          allowClear: true,
+          col: 0
         },
         selectOptions: ticketSearchTypeOpt
       },
@@ -189,7 +191,8 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
         type: FormType.Select,
         option: {
           placeholder: localeObj['label.choose'] || '선택해주세요',
-          allowClear: true
+          allowClear: true,
+          col: 0
         },
         selectOptions: searchLableOpt
       },
@@ -488,7 +491,7 @@ export function NewTicketFields(
         children: null
       },
       fieldOption: {
-        initialValue: ticket ? ticket.corpSn : corpSelectList[0].value
+        initialValue: ticket ? ticket.corpSn : null
       },
       component: {
         type: FormType.Select,

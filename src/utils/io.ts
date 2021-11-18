@@ -1,6 +1,9 @@
 import Axios from 'axios';
 import { notification } from 'antd';
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import { createHashHistory } from 'history';
+
+const router = createHashHistory();
 
 interface IoOptions extends AxiosRequestConfig {
   returnConfig?: boolean; // 是否返回req配置项
@@ -47,22 +50,28 @@ class Request {
       description: `${
         message ||
         'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
-      }`
+      }`,
+      placement: 'bottomRight'
     });
   }
 
   // 错误处理
   handleError = (error: any) => {
-    const { message, status } = error;
+    const { message, status, data } = error.response;
     switch (status) {
       case 401:
         break;
+      case 403:
+        localStorage.removeItem('RCS-authorization');
+        break;
       case 404:
+        break;
+      case 409:
         break;
       case 500:
         break;
       default:
-        this.notify(message || error);
+        this.notify(data.msg || error);
         break;
     }
     return Promise.reject(error);
@@ -72,6 +81,19 @@ class Request {
     const { params, returnConfig, data, options } = details;
     const token = localStorage.getItem('RCS-authorization');
     this.setHeader('Authorization', 'Bearer ' + token);
+
+    if (!url.includes('login') && token === null) {
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          if (!window.location.href.includes('user/login')) {
+            router.push('/user/login');
+            history.go(0);
+          }
+          resolve();
+        }, 800);
+      }).catch(() => console.log('Oops errors!'));
+    }
+
     return this.instance
       .request({
         url,
@@ -81,7 +103,7 @@ class Request {
         ...options
       })
       .then((res) => (returnConfig ? res : res.data))
-      .catch(this.handleError);
+      .catch((res) => this.handleError(res));
   }
 
   get(path: string, data: IoOptions = {}) {

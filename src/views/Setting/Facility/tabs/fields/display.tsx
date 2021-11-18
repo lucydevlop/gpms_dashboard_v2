@@ -3,7 +3,9 @@ import { IDisplayMsgObj } from '@models/display';
 import { FormType } from '@/constants/form';
 import {
   colorTypeOpt,
+  delYnOpt,
   EColorType,
+  EDelYn,
   ELineStatus,
   elineStatusOpt,
   EMessageClassType,
@@ -178,6 +180,33 @@ export function displayFields(display?: IDisplayMsgObj): IFormFieldConfig<keyof 
         option: {
           placeholder: '입력해주세요.'
         }
+      }
+    },
+    {
+      id: 'delYn',
+      label: '사용',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: display ? display.delYn : EDelYn.N,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: delYnOpt.filter((d) => d.value !== EDelYn.ALL)
       }
     },
     {

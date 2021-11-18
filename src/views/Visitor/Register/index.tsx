@@ -9,12 +9,14 @@ import { IVisitorObj } from '@models/visitor';
 import { EDelYn, ETicketType } from '@/constants/list';
 import VisitorRegisterCardForm from '@views/Visitor/Register/registerCard';
 import { getFormFields } from '@utils/form';
-import { conversionDateTime } from '@utils/conversion';
+import { conversionDate, conversionDateTime } from '@utils/conversion';
 import { visitorAdds } from '@api/visitor';
 import { runInAction } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { userStore } from '@store/userStore';
 import zdsTips from '@utils/tips';
+import moment from 'moment';
+import { isValidateCarNumber } from '@utils/tools';
 
 interface IProps extends FormComponentProps {}
 interface IState {
@@ -51,36 +53,55 @@ class VisitorRegister extends PureComponent<IProps, IState> {
   handleSubmit() {
     let flag = true;
     const { userInfo } = userStore;
+
     this.props.form.validateFields((err, fieldsValue) => {
-      fieldsValue.effectDate = conversionDateTime(fieldsValue.effectDate, '{y}-{m}-{d} 00:00:00');
-      fieldsValue.expireDate = conversionDateTime(fieldsValue.effectDate, '{y}-{m}-{d} 23:59:59');
-      this.state.visitorCardList.forEach((e) => {
-        if (e.vehicleNo === '' || e.vehicleNo === undefined || e.vehicleNo === null) {
-          zdsTips.error('필수값 확인');
-          flag = false;
+      if (!err) {
+        const date = fieldsValue.effectDate;
+        fieldsValue.effectDate = moment(conversionDateTime(date, '{y}-{m}-{d} 00:00:00')).format(
+          'YYYY-MM-DD HH:mm:ss'
+        );
+        fieldsValue.expireDate = moment(conversionDateTime(date, '{y}-{m}-{d} 23:59:59')).format(
+          'YYYY-MM-DD HH:mm:ss'
+        );
+
+        this.state.visitorCardList.forEach((e) => {
+          if (
+            e.vehicleNo === '' ||
+            e.vehicleNo === undefined ||
+            e.vehicleNo === null ||
+            !isValidateCarNumber(e.vehicleNo)
+          ) {
+            zdsTips.error('필수값 확인');
+            flag = false;
+          }
+          e.effectDate = fieldsValue.effectDate;
+          e.expireDate = fieldsValue.expireDate;
+          e.corpSn = userInfo.corpSn;
+        });
+        if (!flag) {
+          return;
         }
-        e.effectDate = fieldsValue.effectDate;
-        e.expireDate = fieldsValue.expireDate;
-        e.corpSn = userInfo.corpSn;
-      });
-      if (!flag) {
-        return;
-      }
-      visitorAdds(this.state.visitorCardList).then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState(
-              {
-                visitorCardList: []
-              },
-              () => {
-                zdsTips.success('방문권 등록 완료'), this.renderVisitorRegisterCard();
-              }
-            );
+        visitorAdds(this.state.visitorCardList)
+          .then((res: any) => {
+            const { msg, data } = res;
+            if (msg === 'success') {
+              runInAction(() => {
+                this.setState(
+                  {
+                    visitorCardList: []
+                  },
+                  () => {
+                    zdsTips.success('방문권 등록 완료'), this.renderVisitorRegisterCard();
+                  }
+                );
+              });
+            }
+          })
+          .catch((res: any) => {
+            const { message } = res;
+            zdsTips.error('방문권 등록 실패');
           });
-        }
-      });
+      }
     });
   }
 

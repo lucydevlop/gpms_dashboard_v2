@@ -1,4 +1,4 @@
-import { EDelYn, EOnOff, EPayType, EStatus } from '@/constants/list';
+import { EDayRangeType, EDelYn, EOnOff, EPayType, ETicketApplyTargetTyoe } from '@/constants/list';
 import { IDiscountClassObj } from '@models/discountClass';
 import { ICorpObj } from '@models/corp';
 
@@ -23,6 +23,8 @@ export interface ICorpTicketClassObj {
   discountType?: number;
   calcYn?: EDelYn;
   ticketClassSn?: number;
+  applyTarget?: ETicketApplyTargetTyoe;
+  applyType?: EDayRangeType;
 }
 
 export interface ICorpTicketSummaryObj {

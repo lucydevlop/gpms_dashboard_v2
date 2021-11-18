@@ -52,7 +52,7 @@ class LoginForm extends React.Component<LoginFormProps, IState> {
 
   handleSuccess = () => {
     const { handleSuccess: propsHandleSuccess, history: history } = this.props;
-    console.log(this.props);
+    // console.log(this.props);
     if (this.state.isAdmin) {
       propsHandleSuccess();
     } else {

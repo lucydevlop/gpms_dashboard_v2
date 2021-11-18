@@ -80,13 +80,13 @@ export function updateFacility(data) {
 }
 
 export function updateDisplay(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/message/update`, {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/display/message`, {
     data: data
   });
 }
 
 export function createDisplay(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/message/create`, {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/display/message`, {
     data: data
   });
 }

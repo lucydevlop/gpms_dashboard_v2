@@ -138,7 +138,10 @@ class VisitorList extends PureComponent<any, IState> {
         render: (test: string, record: IVisitorObj) => (
           <div>
             <span style={{ color: 'var(--text-color-secondary)' }}>
-              <p>{conversionDate(record.effectDate as Date, '{y}-{m}-{d}') || '--'}</p>
+              <p>
+                {moment(record.effectDate).format('YYYY-MM-DD')}
+                {/*{conversionDate(moment(record.effectDate).valueOf(), '{y}-{m}-{d}') || '--'}*/}
+              </p>
             </span>
             <span style={{ fontSize: '15px' }}>{record.vehicleNo}</span>
           </div>

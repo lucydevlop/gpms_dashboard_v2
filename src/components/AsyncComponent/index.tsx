@@ -48,6 +48,7 @@ class AsyncComponent extends React.Component<AsyncProps, AsyncState> {
     layoutStore.checkIsInitial(route);
     let C: any;
     if (typeof componentOrPath === 'string') {
+      console.log('componentOrPath', componentOrPath);
       const { default: component } = await import(
         /* webpackChunkName: "[request]" */ `../../../src${componentOrPath}`
       );
@@ -60,6 +61,10 @@ class AsyncComponent extends React.Component<AsyncProps, AsyncState> {
       component: C,
       animate: animate
     });
+  }
+
+  componentWillUnmount() {
+    this.setState({ component: '', animate: '' });
   }
 
   componentDidUpdate() {

@@ -4,9 +4,12 @@ import { ColumnProps } from 'antd/lib/table';
 import {
   dayRangeTypeOpt,
   delYnOpt,
+  discountApplyRateOpt,
   discountApplyTypeOpt,
   discountTypeOpt,
-  EDelYn
+  EDelYn,
+  useOpt,
+  useOrUnuseOpt
 } from '@/constants/list';
 import { conversionDate, conversionEnumValue } from '@utils/conversion';
 import StandardTable from '@components/StandardTable';
@@ -16,6 +19,7 @@ import { localeStore } from '@store/localeStore';
 import DraggableModal from '@components/DraggableModal';
 import DiscountModal from '@views/Setting/Product/tabs/modals/DiscountModal';
 import zdsTips from '@utils/tips';
+import moment from 'moment';
 
 interface IProps {
   loading: boolean;
@@ -82,8 +86,8 @@ class DiscountTab extends PureComponent<IProps, IState> {
         align: 'center',
         render: (text: string, record: IDiscountClassObj) => (
           <span>
-            {conversionDate(record.effectDate, '{y}-{m}-{d}') || '--'}&nbsp;~&nbsp;
-            {conversionDate(record.expireDate, '{y}-{m}-{d}') || '--'}
+            {moment(record.effectDate).format('YYYY-MM-DD')}&nbsp;~&nbsp;
+            {moment(record.expireDate).format('YYYY-MM-DD')}
           </span>
         )
       },
@@ -118,11 +122,28 @@ class DiscountTab extends PureComponent<IProps, IState> {
           conversionEnumValue(record.discountApplyType, discountApplyTypeOpt).label
       },
       {
+        title: '할인적용율',
+        key: 'discountApplyRate',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IDiscountClassObj) =>
+          conversionEnumValue(record.discountApplyRate, discountApplyRateOpt).label
+      },
+      {
         title: '할인적용값',
         key: 'unitTime',
         width: 110,
         align: 'center',
         render: (text: string, record: IDiscountClassObj) => record.unitTime
+      },
+      {
+        title: 'RCS사용',
+        key: 'rcsUse',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IDiscountClassObj) => {
+          return record.rcsUse ? '사용' : '미사용';
+        }
       },
       {
         title: 'Action',

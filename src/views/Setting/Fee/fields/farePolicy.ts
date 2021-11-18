@@ -127,6 +127,35 @@ export function getFarePolicyFields(
       }
     },
     {
+      id: 'orderNo',
+      label: '우선적용',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 8,
+          xs: 8
+        },
+        wrapperCol: {
+          xl: 16,
+          xs: 16
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: farePolicy ? farePolicy.orderNo : '1',
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+      },
+      component: {
+        type: FormType.InputNumber,
+        option: {
+          min: 0
+        }
+      }
+    },
+    {
       id: 'week',
       label: '적용일',
       colProps: {
