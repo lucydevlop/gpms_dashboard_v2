@@ -29,6 +29,7 @@ import FareInfoModal from '@views/Setting/Fee/Modal/FareInfoModal';
 import { v4 as generateUUID } from 'uuid';
 import { EDelYn, fareTypeOpt } from '@/constants/list';
 import zdsTips from '@utils/tips';
+import moment from 'moment';
 
 interface IState {
   loading: boolean;
@@ -369,9 +370,8 @@ class FeeSetting extends PureComponent<any, IState> {
         {
           name: '적용시점',
           value: f
-            ? `${conversionDate(f.effectDate!!, '{y}-{m}-{d}')} ~ ${conversionDate(
-                f.expireDate!!,
-                '{y}-{m}-{d}'
+            ? `${moment(f.effectDate!!).format('YYYY-MM-DD')} ~ ${moment(f.expireDate!!).format(
+                'YYYY-MM-DD'
               )}`
             : ''
         },

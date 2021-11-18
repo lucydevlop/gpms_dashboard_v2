@@ -19,6 +19,7 @@ import { localeStore } from '@store/localeStore';
 import DraggableModal from '@components/DraggableModal';
 import DiscountModal from '@views/Setting/Product/tabs/modals/DiscountModal';
 import zdsTips from '@utils/tips';
+import moment from 'moment';
 
 interface IProps {
   loading: boolean;
@@ -85,8 +86,8 @@ class DiscountTab extends PureComponent<IProps, IState> {
         align: 'center',
         render: (text: string, record: IDiscountClassObj) => (
           <span>
-            {conversionDate(record.effectDate, '{y}-{m}-{d}') || '--'}&nbsp;~&nbsp;
-            {conversionDate(record.expireDate, '{y}-{m}-{d}') || '--'}
+            {moment(record.effectDate).format('YYYY-MM-DD')}&nbsp;~&nbsp;
+            {moment(record.expireDate).format('YYYY-MM-DD')}
           </span>
         )
       },

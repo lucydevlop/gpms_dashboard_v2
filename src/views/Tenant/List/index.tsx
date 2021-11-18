@@ -203,7 +203,7 @@ class TenantList extends PureComponent<any, IState> {
   };
 
   handleRegisterTenant = (value: ICorpObj) => {
-    value.password = 'store123!@#';
+    value.password = value.password ? value.password : 'store123!@#';
     corpRegister(value).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'success') {

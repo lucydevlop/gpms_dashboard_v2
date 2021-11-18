@@ -10,11 +10,14 @@ import { conversionDateTime } from '@utils/conversion';
 import { ITicketObj } from '@models/ticket';
 import { MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { ICorpTicketObj } from '@models/corpTicket';
+import { getMinutesBetweenDates } from '@utils/tools';
+import moment from 'moment';
 
 interface IProps extends FormComponentProps {
   ableTickets: ICorpTicketObj[];
   image: string | null;
   onSubmit: (values: ICorpTicketObj[]) => void;
+  item: ICorpSearchVehicleObj | null;
 }
 
 interface IState {
@@ -137,13 +140,29 @@ class TicketAplyModal extends PureComponent<IProps, IState> {
         <Row style={{ marginTop: '10px', display: 'block' }}>
           <Row gutter={24}>
             <Col xl={12} lg={12} md={24} sm={24} xs={24}>
-              <Image
-                src={`${this.props.image}`}
-                ratio={1.8}
-                // src={
-                //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
-                // }
-              />
+              <Row>
+                <Image
+                  src={`${this.props.image}`}
+                  ratio={1.8}
+                  // src={
+                  //   'http://192.168.20.201:3000/park/save/2021-08-06/GLNT001_FCL0000003_83263%EB%9D%BC3206.jpg'
+                  // }
+                />
+              </Row>
+              <Row>
+                <span
+                  style={{ margin: '1rem', fontSize: '15px', fontWeight: 500, color: '#03166c' }}
+                >
+                  주차시간{' '}
+                  {this.props.item
+                    ? getMinutesBetweenDates(
+                        moment(this.props.item.inDate, 'YYYY-MM-DD HH:mm:ss').valueOf(),
+                        moment(new Date(), 'YYYY-MM-DD HH:mm:ss').valueOf()
+                      )
+                    : 0}{' '}
+                  분
+                </span>
+              </Row>
             </Col>
             <Col xl={12} lg={12} md={24} sm={24} xs={24}>
               <Table

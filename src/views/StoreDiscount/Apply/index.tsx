@@ -175,7 +175,7 @@ class StoreDiscountAply extends React.PureComponent<any, IState> {
         </Row>
         {this.state.selectModal ? (
           <DraggableModal
-            title={localeObj['label.ticket.create'] || '정기권 등록'}
+            title={'할인권 등록'}
             visible={this.state.selectModal}
             width={800}
             onOk={() => this.setState({ selectModal: false, display: 'default' })}
@@ -184,6 +184,7 @@ class StoreDiscountAply extends React.PureComponent<any, IState> {
             }}
           >
             <TicketAplyModal
+              item={this.state.selected ? this.state.selected : null}
               ableTickets={this.state.selecteTicket.filter((t) => t.ableCnt > 0)}
               image={this.state.selected ? this.state.selected.imImagePath!! : null}
               onSubmit={(value) => this.handleDiscountAply(value)}

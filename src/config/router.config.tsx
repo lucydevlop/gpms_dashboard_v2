@@ -89,7 +89,7 @@ export const asyncRouteConfig: RouteChild[] = [
         name: 'list',
         path: '/tickets/list',
         component: ['/views/Ticket'],
-        authority: ['ADMIN', 'SUPER_ADMIN'],
+        authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
         loading: true,
         localeKey: 'menu.ticket.list'
       },
@@ -242,11 +242,21 @@ export const asyncRouteConfig: RouteChild[] = [
     ]
   },
   {
-    name: 'setting',
-    icon: <SettingOutlined />,
-    path: '/parkinglotsetting',
-    component: ['/views/StoreDiscount'],
-    authority: ['admin', 'ROLE_SUPER'],
-    localeKey: 'menu.setting'
+    name: 'userInfo',
+    icon: <UserOutlined />,
+    path: '/userinfo',
+    component: ['/views/User/Info'],
+    //authority: ['admin'],
+    // loading: true,
+    // localeKey: 'menu.user',
+    hideMenu: true
   }
+  // {
+  //   name: 'setting',
+  //   icon: <SettingOutlined />,
+  //   path: '/parkinglotsetting',
+  //   component: ['/views/StoreDiscount'],
+  //   authority: ['admin', 'ROLE_SUPER'],
+  //   localeKey: 'menu.setting'
+  // }
 ];

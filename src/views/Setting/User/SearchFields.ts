@@ -395,7 +395,8 @@ export function newUserFields(user?: IUserObj): IFormFieldConfig<keyof IUserObj>
       id: 'userPhone',
       label: '전화번호',
       fieldOption: {
-        initialValue: user ? user.userPhone : null
+        initialValue: user ? user.userPhone : null,
+        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       colProps: {
         xl: 12,

@@ -508,11 +508,13 @@ export const dayTYpeOpt: ISelectOptions[] = [
 
 export enum EPaymentType {
   PAYMENT = 'PAYMENT',
-  PREPAYMENT = 'PREPAYMENT'
+  PREPAYMENT = 'PREPAYMENT',
+  MANPAYMENT = 'MANPAYMENT'
 }
 
 export const paymentTypeOpt: ISelectOptions[] = [
   { value: EPaymentType.PAYMENT, label: '출차정산', color: 'black' },
+  { value: EPaymentType.MANPAYMENT, label: '출차정산', color: 'black' },
   { value: EPaymentType.PREPAYMENT, label: '사전정산', color: 'black' }
 ];
 

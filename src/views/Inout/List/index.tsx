@@ -17,7 +17,7 @@ import PageWrapper from '@components/PageWrapper';
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
 import { TablePaginationConfig } from 'antd/es/table';
-import { Button } from 'antd';
+import { Button, Divider } from 'antd';
 import { searchInoutFields } from '@views/Inout/List/FormFields/FormFields';
 import {
   conversionDate,
@@ -286,21 +286,32 @@ class Inout extends PureComponent<any, IState> {
     await generateCsv(downLoadData, headers, '입출차현황');
   }
 
-  handleBtnClick = (info: IInoutObj) => {
-    getInoutDetail(info.parkinSn)
-      .then((res: any) => {
+  handleBtnClick = (info: IInoutObj, key: string) => {
+    if (key === 'DELETE') {
+      deleteParkinglotInout(info.parkinSn).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            // console.log(data);
-            this.setState({ selected: data });
+            this.pollData();
           });
         }
-      })
-      .catch(() => {})
-      .finally(() => {
-        this.setState({ loading: false, detailModal: true, createModal: false });
       });
+    } else {
+      getInoutDetail(info.parkinSn)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              // console.log(data);
+              this.setState({ selected: data });
+            });
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.setState({ loading: false, detailModal: true, createModal: false });
+        });
+    }
     // this.setState({ detailModal: true, createModal: false });
   };
 
@@ -386,7 +397,7 @@ class Inout extends PureComponent<any, IState> {
           return atime - btime;
         },
         render: (text: string, record: IInoutObj) =>
-          conversionDateTime(record.inDate, '{y}-{m}-{d} {h}:{i}') || '--'
+          moment(record.inDate).format('YYYY-MM-DD HH:mm')
       },
       {
         title: '출차Gate',
@@ -401,9 +412,7 @@ class Inout extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (text: string, record: IInoutObj) => {
-          return record.outDate
-            ? conversionDateTime(record.outDate, '{y}-{m}-{d} {h}:{i}') || '--'
-            : null;
+          return record.outDate ? moment(record.outDate).format('YYYY-MM-DD HH:mm') : null;
         }
       },
       {
@@ -468,7 +477,7 @@ class Inout extends PureComponent<any, IState> {
       },
       {
         title: 'Action',
-        width: 100,
+        width: 110,
         align: 'center',
         fixed: 'right',
         render: (item: IInoutObj) => (
@@ -476,10 +485,19 @@ class Inout extends PureComponent<any, IState> {
             <a
               onClick={(e: any) => {
                 e.stopPropagation();
-                this.handleBtnClick(item);
+                this.handleBtnClick(item, 'EDIT');
               }}
             >
               상세
+            </a>
+            <Divider type="vertical" />
+            <a
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.handleBtnClick(item, 'DELETE');
+              }}
+            >
+              강제출차
             </a>
           </div>
         )

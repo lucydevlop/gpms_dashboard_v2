@@ -79,10 +79,7 @@ export function getParkinglotRcsCorpInfo(parkinglotId) {
 }
 
 export function deleteParkinglotInout(id) {
-  return io.delete(
-    `${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/inout/delete/${id}`,
-    id
-  );
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/forced/exit/${id}`, id);
 }
 
 export function getInoutPayment(data) {

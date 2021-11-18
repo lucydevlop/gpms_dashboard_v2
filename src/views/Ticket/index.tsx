@@ -387,7 +387,8 @@ class Ticket extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (test: string, record: ITicketObj) =>
-          conversionDateTime(record.effectDate as Date, '{y}-{m}-{d} {h}:{i}') || '--'
+          moment(record.effectDate).format('YYYY-MM-DD HH:mm')
+        //conversionDateTime(record.effectDate as Date, '{y}-{m}-{d} {h}:{i}') || '--'
       },
       {
         title: '종료일자',
@@ -395,7 +396,8 @@ class Ticket extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (test: string, record: ITicketObj) =>
-          conversionDate(record.expireDate as Date, '{y}-{m}-{d} {h}:{i}') || '--'
+          moment(record.expireDate).format('YYYY-MM-DD HH:mm')
+        //conversionDate(record.expireDate as Date, '{y}-{m}-{d} {h}:{i}') || '--'
       },
       {
         title: '이름',
