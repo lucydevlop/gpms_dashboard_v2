@@ -129,6 +129,10 @@ class UserStore {
       }
     });
   };
+
+  @action isAuthenticated = () => {
+    return localStorage.getItem('RCS-authorization') !== null;
+  };
 }
 
 export const userStore = new UserStore();

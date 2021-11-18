@@ -40,14 +40,12 @@ class CorpStore {
   }
 
   @action setCorpList(data: any) {
+    const corpSelectList: { value: any; label: any }[] = [];
+    data.forEach((element: any) => {
+      corpSelectList.push({ value: element.sn, label: element.corpName });
+    });
+    this.corpSelectList = corpSelectList;
     this.corpList = data;
-    data
-      .filter((element: ICorpObj) => {
-        return element.delYn === EDelYn.N;
-      })
-      .forEach((element: any) => {
-        this.corpSelectList.push({ value: element.sn, label: element.corpName });
-      });
   }
 
   @action setCorpAllList(data: any) {

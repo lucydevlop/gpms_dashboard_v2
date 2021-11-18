@@ -38,9 +38,13 @@ const UserInfo: React.FC = (props) => {
     history.push('/exception/home');
   };
 
+  const handleUserInfo = () => {
+    history.push('/userinfo');
+  };
+
   const getMenu = () => (
     <Menu>
-      <Menu.Item>
+      <Menu.Item onClick={handleUserInfo}>
         <UserOutlined />
         <span className="RCS-userInfo-menuItem">user info</span>
       </Menu.Item>

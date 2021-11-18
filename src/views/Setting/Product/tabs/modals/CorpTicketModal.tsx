@@ -22,19 +22,25 @@ interface ICorpTicketModalState {}
 class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketModalState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
+      console.log('handlerSubmit', fieldsValue);
       const discountClass: IDiscountClassObj = this.props.discountClasses.filter((e) => {
         return e.sn === Number(fieldsValue.discountClassSn);
       })[0];
       fieldsValue.effectDate = conversionDateTime(discountClass.effectDate, '{y}-{m}-{d} 00:00:00');
       fieldsValue.expireDate = conversionDateTime(discountClass.expireDate, '{y}-{m}-{d} 23:59:59');
+      fieldsValue.onceMax = fieldsValue.onceMax === '무제한' ? 999999999 : fieldsValue.onceMax;
+      fieldsValue.dayMax = fieldsValue.dayMax === '무제한' ? 999999999 : fieldsValue.dayMax;
+      fieldsValue.monthMax = fieldsValue.monthMax === '무제한' ? 999999999 : fieldsValue.monthMax;
       if (!err) this.props.onSubmit(fieldsValue);
     });
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const CorpDiscountFields = corpDiscountFields(
       this.props.discount,
-      this.props.discountSelectClasses
+      this.props.discountSelectClasses,
+      this.props.form
     );
     return (
       <>
@@ -45,7 +51,7 @@ class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketMo
               this.handlerSubmit();
             }}
           >
-            <Row gutter={24}>{getFormFields(getFieldDecorator, CorpDiscountFields, true, 8)}</Row>
+            <Row gutter={24}>{getFormFields(getFieldDecorator, CorpDiscountFields, true, 10)}</Row>
             <Button
               type="primary"
               htmlType="submit"

@@ -26,6 +26,10 @@ const regisDateRangeConfig = {
   initialValue: [moment(new Date()).subtract(3, 'days'), moment(new Date())]
 };
 
+const sum = (num1: any, num2: any) => {
+  return num1 + num2;
+};
+
 export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
   const { localeObj } = localeStore;
   return [
@@ -59,7 +63,8 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
         type: FormType.Select,
         option: {
           placeholder: localeObj['label.choose'] || '선택해주세요',
-          allowClear: true
+          allowClear: true,
+          col: 0
         },
         selectOptions: inoutSearchDateTypeOpt
       },
@@ -202,7 +207,11 @@ export function newInoutFields(gates: any[]): IFormFieldConfig<keyof IInoutObj>[
       component: {
         type: FormType.Select,
         selectOptions: ticketTypeOpt.filter(
-          (t) => t.value !== ETicketType.ALL && t.value !== ETicketType.DISCOUNT
+          (t) =>
+            t.value !== ETicketType.ALL &&
+            t.value !== ETicketType.DISCOUNT &&
+            t.value !== ETicketType.UNRECOGNIZED &&
+            t.value !== ETicketType.PARTRECOGNIZED
         )
       }
     },
@@ -382,10 +391,7 @@ export function newInoutDetailFileds(
       component: {
         type: FormType.Select,
         selectOptions: ticketTypeOpt.filter(
-          (t) =>
-            t.value !== ETicketType.DISCOUNT &&
-            t.value !== ETicketType.ALL &&
-            t.value !== ETicketType.PARTRECOGNIZED
+          (t) => t.value !== ETicketType.DISCOUNT && t.value !== ETicketType.ALL
         )
       }
     },
@@ -488,7 +494,7 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout?.outGateId ? inout.outGateId : outGates!![0].gateId
+        initialValue: inout?.outGateId ? inout.outGateId : null
       },
       component: {
         type: FormType.Select,
@@ -613,7 +619,7 @@ export function newInoutDetailFileds(
         }
       },
       fieldOption: {
-        initialValue: inout ? inout.discountfee : '0'
+        initialValue: inout ? sum(inout.dayDiscountfee, inout.discountfee) : '0'
       },
       component: {
         type: FormType.Input,
@@ -684,5 +690,74 @@ export function newInoutDetailFileds(
         }
       }
     }
+  ];
+}
+
+export function searchInoutPaymentFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
+  const { localeObj } = localeStore;
+  return [
+    {
+      id: 'createTm',
+      label: '조회기간',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5,
+          xl: 5,
+          md: 5,
+          xs: 5
+        },
+        wrapperCol: {
+          span: 19,
+          xs: 19,
+          md: 19,
+          xl: 19
+        }
+      },
+      component: {
+        type: FormType.RangePicker,
+        option: {
+          placeholder: [
+            localeObj['label.startDate'] || '시작일',
+            localeObj['label.endDate'] || '종료일'
+          ],
+          allowClear: true,
+          disabledDate: disabledDateAfterToday
+        }
+      },
+      fieldOption: regisDateRangeConfig
+    }
+    // ,
+    // {
+    //   id: 'vehicleNo',
+    //   label: '차량번호',
+    //   colProps: {
+    //     span: 8,
+    //     xs: 24,
+    //     md: 24,
+    //     xl: 8
+    //   },
+    //   formItemProps: {
+    //     labelCol: {
+    //       xl: 5,
+    //       xs: 5
+    //     },
+    //     wrapperCol: {
+    //       xl: 10,
+    //       xs: 10
+    //     }
+    //   },
+    //   component: {
+    //     type: FormType.Input,
+    //     option: {
+    //       placeholder: '입력하세요'
+    //     }
+    //   }
+    // }
   ];
 }

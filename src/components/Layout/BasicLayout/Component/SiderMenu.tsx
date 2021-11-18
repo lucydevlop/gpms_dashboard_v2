@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Menu } from 'antd';
+import { Button, Menu } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
 import intersection from 'lodash/intersection';
@@ -8,10 +8,13 @@ import UserStore, { userStore } from '@store/userStore';
 import LayoutStore, { layoutStore } from '@store/layoutStore';
 import LocaleStore, { localeStore } from '@store/localeStore';
 import SiteDetail from './SiteDetail';
-import Icon from '@ant-design/icons';
+import Icon, { LogoutOutlined } from '@ant-design/icons';
 import Iconfont from '@components/Iconfont';
 import cloneDeep from 'lodash/cloneDeep';
 import { RouteChild } from '@models/global';
+import { createHashHistory } from 'history';
+
+const router = createHashHistory();
 
 interface InjectedProps {
   siderBar?: React.ReactNode;
@@ -207,6 +210,18 @@ class SiderMenu extends React.Component<InjectedProps, any> {
     isMobile && toggleCollapsed();
   };
 
+  handleLogout = () => {
+    const { userInfo, userLogout } = userStore;
+
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        userLogout();
+        router.push('/user/login');
+        resolve();
+      }, 800);
+    }).catch(() => console.log('Oops errors!'));
+  };
+
   RCSMenu = () => {
     const {
       routeConfig,
@@ -216,22 +231,33 @@ class SiderMenu extends React.Component<InjectedProps, any> {
     } = layoutStore;
     const [, appRoutes] = routeConfig;
     return (
-      this.props.siderBar || (
-        <Menu
-          className={classNames(
-            'RCS-menu',
-            isHorizontalNavigator && 'RCS-menu-horizontal',
-            isDarkTheme && 'RCS-menu-darkTheme',
-            collapsed && 'RCS-menu-collapsed'
-          )}
-          mode={isHorizontalNavigator ? 'horizontal' : 'inline'}
-          selectedKeys={[location.pathname]}
-          onOpenChange={this.handleOpenMenu}
-          {...this.state.menuProps}
-        >
-          {this.getNavMenuItem(appRoutes.routes || [])}
-        </Menu>
-      )
+      <>
+        {this.props.siderBar || (
+          <Menu
+            className={classNames(
+              'RCS-menu',
+              isHorizontalNavigator && 'RCS-menu-horizontal',
+              isDarkTheme && 'RCS-menu-darkTheme',
+              collapsed && 'RCS-menu-collapsed'
+            )}
+            mode={isHorizontalNavigator ? 'horizontal' : 'inline'}
+            selectedKeys={[location.pathname]}
+            onOpenChange={this.handleOpenMenu}
+            {...this.state.menuProps}
+          >
+            {this.getNavMenuItem(appRoutes.routes || [])}
+            <Menu.Item className="RCS-antd-menuItem">
+              <LogoutOutlined />
+              <span title={'로그아웃'} onClick={() => this.handleLogout()}>
+                로그아웃
+              </span>
+            </Menu.Item>
+          </Menu>
+        )}
+        <span style={{ alignSelf: 'center', marginBottom: '3rem', color: 'gray' }}>
+          Version {process.env.REACT_APP_VERSION}
+        </span>
+      </>
     );
   };
   VerticalMenu = () => {

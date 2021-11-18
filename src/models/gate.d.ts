@@ -15,11 +15,18 @@ export interface IGateObj {
   resetSvr?: string;
   delYn: string;
   gateGroupId?: string;
+  openType: IGateOpenTypeObj[];
   createBy?: string;
   createDate?: Date;
   updateBy?: string;
   updateDate?: Date;
   update: boolean;
+}
+
+export interface IGateOpenTypeObj {
+  openAction: EGateOpenActionType;
+  startTime: string;
+  endTime: string;
 }
 
 export class CGate {

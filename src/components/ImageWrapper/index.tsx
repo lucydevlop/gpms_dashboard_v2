@@ -7,6 +7,7 @@ interface State {
 }
 
 const ImageWrapper = styled.figure`
+  border: 1px solid #e5e7f0;
   position: relative;
   overflow: hidden;
   top: 0;

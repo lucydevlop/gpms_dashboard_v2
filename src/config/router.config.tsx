@@ -67,6 +67,14 @@ export const asyncRouteConfig: RouteChild[] = [
         // authority: ['admin', 'ROLE_SUPER'],
         loading: true,
         localeKey: 'menu.inout.list'
+      },
+      {
+        name: 'payments',
+        path: '/inout/payment',
+        component: ['/views/Inout/Payment'],
+        // authority: ['admin', 'ROLE_SUPER'],
+        loading: true,
+        localeKey: 'menu.inout.payment'
       }
     ]
   },
@@ -74,10 +82,25 @@ export const asyncRouteConfig: RouteChild[] = [
     name: 'tickets',
     icon: <AuditOutlined />,
     path: '/tickets',
-    component: ['/views/Ticket'],
     authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
-    loading: true,
-    localeKey: 'menu.ticket'
+    localeKey: 'menu.ticket',
+    routes: [
+      {
+        name: 'list',
+        path: '/tickets/list',
+        component: ['/views/Ticket'],
+        authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
+        loading: true,
+        localeKey: 'menu.ticket.list'
+      },
+      {
+        name: 'register',
+        path: '/tickets/visitor',
+        component: ['/views/Visitor/Register'],
+        loading: true,
+        localeKey: 'menu.ticket.visitor'
+      }
+    ]
   },
   {
     name: 'tenant',
@@ -171,30 +194,6 @@ export const asyncRouteConfig: RouteChild[] = [
         loading: true,
         localeKey: 'menu.statistics.inoutPayment'
       }
-      // ,
-      // {
-      //   name: 'inout',
-      //   path: '/statistics/inout',
-      //   component: ['/views/Statistics/Inout'],
-      //   loading: true,
-      //   localeKey: 'menu.statistics.inout'
-      // },
-      // {
-      //   name: 'erros',
-      //   path: '/parkinglot/error',
-      //   component: ['/views/ParkingLot/Error'],
-      //   authority: ['admin', 'ROLE_SUPER'],
-      //   loading: true,
-      //   localeKey: 'menu.parkinglot.error'
-      // },
-      // {
-      //   name: 'list',
-      //   path: '/parkinglot/parkinglot',
-      //   component: ['/views/ParkingLot/Parkinglot'],
-      //   authority: ['admin', 'ROLE_SUPER'],
-      //   loading: true,
-      //   localeKey: 'menu.parkinglot.parkinglot'
-      // }
     ]
   },
   {
@@ -233,15 +232,31 @@ export const asyncRouteConfig: RouteChild[] = [
         path: '/setting/user',
         component: ['/views/Setting/User'],
         localeKey: 'menu.setting.user'
+      },
+      {
+        name: 'holidaySetting',
+        path: '/setting/holiday',
+        component: ['/views/Setting/Holiday'],
+        localeKey: 'menu.setting.holiday'
       }
     ]
   },
   {
-    name: 'setting',
-    icon: <SettingOutlined />,
-    path: '/parkinglotsetting',
-    component: ['/views/StoreDiscount'],
-    authority: ['admin', 'ROLE_SUPER'],
-    localeKey: 'menu.setting'
+    name: 'userInfo',
+    icon: <UserOutlined />,
+    path: '/userinfo',
+    component: ['/views/User/Info'],
+    //authority: ['admin'],
+    // loading: true,
+    // localeKey: 'menu.user',
+    hideMenu: true
   }
+  // {
+  //   name: 'setting',
+  //   icon: <SettingOutlined />,
+  //   path: '/parkinglotsetting',
+  //   component: ['/views/StoreDiscount'],
+  //   authority: ['admin', 'ROLE_SUPER'],
+  //   localeKey: 'menu.setting'
+  // }
 ];

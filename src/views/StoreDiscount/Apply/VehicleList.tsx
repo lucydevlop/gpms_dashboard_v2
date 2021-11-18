@@ -3,6 +3,10 @@ import { ICorpSearchVehicleObj } from '@models/corp';
 import { ColumnProps } from 'antd/es/table';
 import { conversionDateTime } from '@utils/conversion';
 import { Table } from 'antd';
+import moment from 'moment';
+import classNames from 'classnames';
+import styled from 'styled-components';
+import './styles/index.less';
 
 interface IProps {
   vehicles: ICorpSearchVehicleObj[];
@@ -25,8 +29,9 @@ class VehicleList extends PureComponent<IProps, IState> {
         dataIndex: 'inDate',
         width: 100,
         align: 'center',
-        render: (text: string, record: ICorpSearchVehicleObj) =>
-          conversionDateTime(record.inDate, '{y}-{m}-{d} {h}:{i}') || '--'
+        render: (text: string, record: ICorpSearchVehicleObj) => {
+          return moment(record.inDate).format('YYYY-MM-DD HH:mm');
+        }
       }
     ];
 
@@ -43,6 +48,7 @@ class VehicleList extends PureComponent<IProps, IState> {
     return (
       <>
         <Table
+          className="Store-vehicle-table"
           scroll={{ x: 'max-content' }}
           columns={columns}
           loading={false}

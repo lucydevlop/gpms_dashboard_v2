@@ -1,7 +1,7 @@
 import io from '../utils/io';
 
 export function visitorAdds(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/product/ticket/adds', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/visitors', {
     data
   });
 }

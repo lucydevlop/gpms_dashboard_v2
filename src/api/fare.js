@@ -27,7 +27,7 @@ export function updateFareBasic(data) {
 }
 
 export function getFarePolicies() {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/fare/policy`);
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/fare/policies`);
 }
 
 export function updateFarePolicy(data) {

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { IDisplayMsgObj } from '@models/display';
-import { Button, Row } from 'antd';
+import { Button, Divider, Row } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
 import {
@@ -10,9 +10,9 @@ import {
 } from '@components/EditableTable/columnHelpers';
 import {
   colorTypeOpt,
+  delYnOpt,
+  EDelYn,
   ELineStatus,
-  EMessageClassType,
-  EMessageTypeType,
   lineOpt,
   messageClassTypeOpt,
   messageTypeTypeOpt,
@@ -70,9 +70,16 @@ class DisplayTab extends PureComponent<IProps, IState> {
     this.setState({ detailModal: false, createModal: true });
   }
 
-  handleBtnClick = (info: IDisplayMsgObj) => {
+  handleBtnClick = (info: IDisplayMsgObj, key: string) => {
     const { localeObj } = localeStore;
-    this.setState({ detailModal: true, createModal: false, selected: info });
+    if (key === 'delete') {
+      zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
+        info.delYn = EDelYn.Y;
+        this.props.onUpdate(info);
+      });
+    } else {
+      this.setState({ detailModal: true, createModal: false, selected: info });
+    }
   };
 
   updateFlowSetting = (req: any) => {
@@ -125,6 +132,18 @@ class DisplayTab extends PureComponent<IProps, IState> {
   render() {
     const { localeObj } = localeStore;
     const columns: ColumnProps<IDisplayMsgObj>[] = [
+      {
+        title: '사용여부',
+        key: 'delYn',
+        width: 100,
+        align: 'center',
+        filters: delYnOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.delYn.indexOf(value as string) === 0,
+        render: (text: string, record: IDisplayMsgObj) => {
+          const value = conversionEnumValue(record.delYn, delYnOpt);
+          return <span style={{ color: value.color }}>{value.label}</span>;
+        }
+      },
       {
         title: '메세지그룹',
         key: 'messageClass',
@@ -196,10 +215,19 @@ class DisplayTab extends PureComponent<IProps, IState> {
             <a
               onClick={(e: any) => {
                 e.stopPropagation();
-                this.handleBtnClick(item);
+                this.handleBtnClick(item, 'edit');
               }}
             >
               <EditOutlined />
+            </a>
+            <Divider type="vertical" />
+            <a
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.handleBtnClick(item, 'delete');
+              }}
+            >
+              <DeleteOutlined />
             </a>
           </div>
         )

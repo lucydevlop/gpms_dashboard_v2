@@ -1,13 +1,14 @@
 {
   "menu.dashboard": "dashboard",
   "menu.inout": "입출차",
-  "menu.ticket": "정기권관리",
+  "menu.ticket": "정기권",
   "menu.tenant": "입주사",
   "menu.users": "사용자관리",
   "menu.setting": "설정관리",
   "menu.statistics": "통계",
   "menu.visitor": "방문권",
   "menu.storeDiscount": "입주사할인",
+  "menu.user": "사용자정보",
 
   "menu.parkinglot.statistics": "주차장통계",
   "menu.parkinglot.parkinglot": "주차장목록",
@@ -17,6 +18,9 @@
   "menu.tenant.list": "입주사현황",
   "menu.tenant.tickets": "입주사할인권",
   "menu.inout.list": "입출차현황",
+  "menu.inout.payment": "입출차결제현황",
+  "menu.ticket.list": "정기권현황",
+  "menu.ticket.visitor": "방문권등록",
 
   "menu.setting.parkinglot": "주차장기본정보",
   "menu.setting.facility": "시설정보",
@@ -24,6 +28,7 @@
   "menu.setting.product": "상품정보",
   "menu.setting.user": "사용자정보",
   "menu.setting.barcode": "바코드할인기본정보",
+  "menu.setting.holiday": "특근일정보",
 
   "menu.visitor.register": "방문권등록",
   "menu.visitor.list": "방문권현황",
@@ -102,11 +107,16 @@
   "label.ticket.update": "정기권 상세",
 
   "label.setting.space": "만차제어",
+  "label.setting.visitorExternal": "방문차량 외부연계",
+  "label.setting.enterNoti": "입차통보",
 
   "label.user.create": "사용자 등록",
   "label.user.detail": "사용자 상세 내역",
   "label.facility.info": "시설물 상세",
+
   "label.gate.info": "게이트 상세",
+  "label.setting.gateOpenType": "게이트 오픈 타입 설정",
+
   "label.display.info": "전광판 상세",
   "label.display.flowSetting": "전광판 흐름설정",
 

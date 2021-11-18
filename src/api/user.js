@@ -78,3 +78,9 @@ export function editUser(data) {
 export function deleteUser(data) {
   return io.delete(process.env.REACT_APP_API_DOMAIN_URL + `/dashboard/admin/delete/${data}`, data);
 }
+
+export function changePassword(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/auth/change/password`, {
+    data
+  });
+}

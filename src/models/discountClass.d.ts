@@ -1,6 +1,7 @@
 import {
   EDayRangeType,
   EDelYn,
+  EDiscountApplyRate,
   EDiscountApplyType,
   EDiscountType,
   EPayType
@@ -12,6 +13,7 @@ export interface IDiscountClassObj {
   discountType: EDiscountType;
   discountNm: string;
   discountApplyType: EDiscountApplyType;
+  discountApplyRate: EDiscountApplyRate;
   dayRange: EDayRangeType;
   unitTime: number;
   disUse: EPayType;
@@ -23,6 +25,8 @@ export interface IDiscountClassObj {
   expireDate: Date;
   delYn: EDelYn;
   aplyCnt?: number;
+  rcsUse: boolean;
+  orderNo: number;
   //not metadata
   disable: boolean;
 }

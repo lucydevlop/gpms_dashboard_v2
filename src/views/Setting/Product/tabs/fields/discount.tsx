@@ -2,14 +2,15 @@ import { IDiscountClassObj } from '@models/discountClass';
 import { IFormFieldConfig } from '@utils/form';
 import { FormType } from '@/constants/form';
 import {
+  discountApplyRateOpt,
   discountApplyTypeOpt,
   discountTypeOpt,
+  EDelYn,
+  EDiscountApplyRate,
   EDiscountApplyType,
-  EDiscountType,
-  payTypeOpt
+  EDiscountType
 } from '@/constants/list';
 import moment from 'moment';
-import { ICorpTicketClassObj } from '@models/corpTicketClass';
 
 export function DiscountFields(
   discount?: IDiscountClassObj
@@ -171,6 +172,91 @@ export function DiscountFields(
         type: FormType.Input,
         option: {
           placeholder: '할인적용값을 입력해주세요.'
+        }
+      }
+    },
+    {
+      id: 'discountApplyRate',
+      label: '할인적용률',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: discount ? discount.discountApplyRate : EDiscountApplyRate.VARIABLE
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: discountApplyRateOpt
+      }
+    },
+    {
+      id: 'rcsUse',
+      label: 'RCS사용',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: discount ? discount.rcsUse : null
+      },
+      component: {
+        type: FormType.Switch,
+        option: {
+          defaultChecked: discount ? discount.rcsUse : false
+          // onChange: (e: any) => {
+          //   e === true ? (discount!!.rcsUse = EDelYn.Y) : (discount!!.rcsUse = EDelYn.N);
+          // }
+        }
+      }
+    },
+    {
+      id: 'orderNo',
+      label: 'RCS노출순서',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: discount ? discount.orderNo : null
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '할인노출순서 입력해주세요.'
         }
       }
     },

@@ -7,7 +7,6 @@ import AsyncComponent from '../AsyncComponent';
 import { createHashHistory } from 'history';
 import { RouteRoot } from '@models/global';
 import { userStore } from '@store/userStore';
-import { toJS } from 'mobx';
 
 interface InjectedProps {
   layoutStore: LayoutStore;
@@ -42,7 +41,7 @@ const RenderRoutes: React.FC = (props) => {
     );
   };
   const generateRoute = (routes: RouteRoot[], switchProps?: any) => {
-    const { userInfo } = userStore;
+    const { userInfo, isAuthenticated } = userStore;
     return routes ? (
       <Switch {...switchProps}>
         {routes.map((route: any, i: number) => {
@@ -58,6 +57,7 @@ const RenderRoutes: React.FC = (props) => {
             // authority,
             // name
           } = route;
+
           if (redirect) {
             if (userInfo.role === 'STORE') {
               console.log('redirect', userInfo.role);
@@ -107,9 +107,13 @@ const RenderRoutes: React.FC = (props) => {
     layoutStore: { routeConfig }
   } = injected();
   return (
-    <HashRouter>
-      <Router history={history}>{generateRoute(routeConfig)}</Router>
-    </HashRouter>
+    <Router history={history}>
+      <HashRouter>{generateRoute(routeConfig)}</HashRouter>
+    </Router>
+
+    // <HashRouter>
+    //   <Router history={history}>{generateRoute(routeConfig)}</Router>
+    // </HashRouter>
   );
 };
 
