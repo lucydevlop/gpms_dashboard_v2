@@ -79,18 +79,18 @@ class DiscountTab extends PureComponent<IProps, IState> {
         align: 'center',
         render: (text: string, record: IDiscountClassObj) => record.discountNm
       },
-      {
-        title: '적용시점',
-        key: 'applyDate',
-        width: 150,
-        align: 'center',
-        render: (text: string, record: IDiscountClassObj) => (
-          <span>
-            {moment(record.effectDate).format('YYYY-MM-DD')}&nbsp;~&nbsp;
-            {moment(record.expireDate).format('YYYY-MM-DD')}
-          </span>
-        )
-      },
+      // {
+      //   title: '적용시점',
+      //   key: 'applyDate',
+      //   width: 150,
+      //   align: 'center',
+      //   render: (text: string, record: IDiscountClassObj) => (
+      //     <span>
+      //       {moment(record.effectDate).format('YYYY-MM-DD')}&nbsp;~&nbsp;
+      //       {moment(record.expireDate).format('YYYY-MM-DD')}
+      //     </span>
+      //   )
+      // },
       {
         title: '할인타입',
         key: 'discountType',

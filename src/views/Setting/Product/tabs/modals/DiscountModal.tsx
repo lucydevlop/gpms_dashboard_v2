@@ -21,8 +21,8 @@ interface IDiscountModalState {}
 class DiscountModal extends PureComponent<IDiscounttModalProps, IDiscountModalState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
-      fieldsValue.effectDate = conversionDateTime(fieldsValue.effectDate, '{y}-{m}-{d} 00:00:00');
-      fieldsValue.expireDate = conversionDateTime(fieldsValue.expireDate, '{y}-{m}-{d} 23:59:59');
+      //fieldsValue.effectDate = conversionDateTime(fieldsValue.effectDate, '{y}-{m}-{d} 00:00:00');
+      //fieldsValue.expireDate = conversionDateTime(fieldsValue.expireDate, '{y}-{m}-{d} 23:59:59');
       if (!err) this.props.onSubmit(fieldsValue);
     });
   }
@@ -38,7 +38,7 @@ class DiscountModal extends PureComponent<IDiscounttModalProps, IDiscountModalSt
               this.handlerSubmit();
             }}
           >
-            <Row gutter={24}>{getFormFields(getFieldDecorator, discountFields, true, 9)}</Row>
+            <Row gutter={24}>{getFormFields(getFieldDecorator, discountFields, true, 8)}</Row>
             <Button
               type="primary"
               htmlType="submit"

@@ -2,6 +2,7 @@ import { IDiscountClassObj } from '@models/discountClass';
 import { IFormFieldConfig } from '@utils/form';
 import { FormType } from '@/constants/form';
 import {
+  delYnOpt,
   discountApplyRateOpt,
   discountApplyTypeOpt,
   discountTypeOpt,
@@ -71,56 +72,56 @@ export function DiscountFields(
         selectOptions: discountTypeOpt
       }
     },
-    {
-      id: 'effectDate',
-      label: '적용 시작일',
-      colProps: {
-        xl: 12,
-        xs: 24
-      },
-      formItemProps: {
-        labelCol: {
-          xl: 9,
-          xs: 9
-        },
-        wrapperCol: {
-          xl: 15,
-          xs: 15
-        },
-        children: null
-      },
-      fieldOption: {
-        initialValue: discount ? moment(discount.effectDate) : moment(new Date())
-      },
-      component: {
-        type: FormType.DatePicker
-      }
-    },
-    {
-      id: 'expireDate',
-      label: '적용 종료일',
-      colProps: {
-        xl: 12,
-        xs: 24
-      },
-      formItemProps: {
-        labelCol: {
-          xl: 9,
-          xs: 9
-        },
-        wrapperCol: {
-          xl: 15,
-          xs: 15
-        },
-        children: null
-      },
-      fieldOption: {
-        initialValue: discount ? moment(discount.expireDate) : moment('9999-12-31')
-      },
-      component: {
-        type: FormType.DatePicker
-      }
-    },
+    // {
+    //   id: 'effectDate',
+    //   label: '적용 시작일',
+    //   colProps: {
+    //     xl: 12,
+    //     xs: 24
+    //   },
+    //   formItemProps: {
+    //     labelCol: {
+    //       xl: 9,
+    //       xs: 9
+    //     },
+    //     wrapperCol: {
+    //       xl: 15,
+    //       xs: 15
+    //     },
+    //     children: null
+    //   },
+    //   fieldOption: {
+    //     initialValue: discount ? moment(discount.effectDate) : moment(new Date())
+    //   },
+    //   component: {
+    //     type: FormType.DatePicker
+    //   }
+    // },
+    // {
+    //   id: 'expireDate',
+    //   label: '적용 종료일',
+    //   colProps: {
+    //     xl: 12,
+    //     xs: 24
+    //   },
+    //   formItemProps: {
+    //     labelCol: {
+    //       xl: 9,
+    //       xs: 9
+    //     },
+    //     wrapperCol: {
+    //       xl: 15,
+    //       xs: 15
+    //     },
+    //     children: null
+    //   },
+    //   fieldOption: {
+    //     initialValue: discount ? moment(discount.expireDate) : moment('9999-12-31')
+    //   },
+    //   component: {
+    //     type: FormType.DatePicker
+    //   }
+    // },
     {
       id: 'discountApplyType',
       label: '할인적용유형',
@@ -261,18 +262,36 @@ export function DiscountFields(
       }
     },
     {
-      id: 'sn',
+      id: 'delYn',
+      label: '활성',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
       fieldOption: {
-        initialValue: discount ? discount.sn : null
+        initialValue: discount ? discount.delYn : null,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {
-        type: FormType.Input
+        type: FormType.Select,
+        selectOptions: delYnOpt.filter((d) => d.value !== EDelYn.ALL)
       }
     },
     {
-      id: 'delYn',
+      id: 'sn',
       fieldOption: {
-        initialValue: discount ? discount.delYn : null
+        initialValue: discount ? discount.sn : null
       },
       component: {
         type: FormType.Input

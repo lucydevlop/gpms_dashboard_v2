@@ -56,14 +56,16 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
             : (fieldsValue.type = EInoutType.IN);
           // fieldsValue.type = this.props.inout.type;
           this.setState({ isCalc: true });
-          fieldsValue.addDiscountClasses = this.state.selectedDiscountClass.map((item) => {
-            const discount: IInoutDiscountApplyObj = {
-              inSn: fieldsValue.parkinSn,
-              discountClassSn: item.sn,
-              cnt: item.aplyCnt ? item.aplyCnt : 0
-            };
-            return discount;
-          });
+          fieldsValue.addDiscountClasses = this.state.selectedDiscountClass
+            .filter((item) => !item.disable)
+            .map((item) => {
+              const discount: IInoutDiscountApplyObj = {
+                inSn: fieldsValue.parkinSn,
+                discountClassSn: item.sn,
+                cnt: item.aplyCnt ? item.aplyCnt : 0
+              };
+              return discount;
+            });
           console.log('calc', fieldsValue);
           if (!err) this.props.onCalc(fieldsValue);
         });
@@ -109,14 +111,16 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
             //   conversionDateTime(this.props.inout.inDate)
             // );
 
-            fieldsValue.addDiscountClasses = this.state.selectedDiscountClass.map((item) => {
-              const discount: IInoutDiscountApplyObj = {
-                inSn: fieldsValue.parkinSn,
-                discountClassSn: item.sn,
-                cnt: item.aplyCnt ? item.aplyCnt : 0
-              };
-              return discount;
-            });
+            fieldsValue.addDiscountClasses = this.state.selectedDiscountClass
+              .filter((d) => !d.disable)
+              .map((item) => {
+                const discount: IInoutDiscountApplyObj = {
+                  inSn: fieldsValue.parkinSn,
+                  discountClassSn: item.sn,
+                  cnt: item.aplyCnt ? item.aplyCnt : 0
+                };
+                return discount;
+              });
 
             if (
               this.props.inout.outDate !== null &&
@@ -163,7 +167,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
           this.setState((prevState) => ({
             selectedDiscountClass: [...prevState.selectedDiscountClass, { ...info, disable: false }]
           }));
-          // console.log('handleBtnClick', this.state.selectedDiscountClass);
+          console.log('handleBtnClick', this.state.selectedDiscountClass);
         }
         break;
       case 'CANCEL':
@@ -177,7 +181,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
 
   handleAplyCnt = (info: IDiscountClassObj, cnt: number) => {
     const update = this.state.selectedDiscountClass.map((e) => {
-      if (e.sn === info.sn) {
+      if (e.sn === info.sn && !e.disable) {
         info.aplyCnt = cnt;
         return { ...info };
       } else return { ...e };

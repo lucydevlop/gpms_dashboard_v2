@@ -4,8 +4,10 @@ import { FormType } from '@/constants/form';
 import { localeStore } from '@store/localeStore';
 import moment from 'moment';
 import { dayTYpeOpt } from '@/constants/list';
+import { WrappedFormUtils } from '@ant-design/compatible/lib/form/Form';
 
 export function getFarePolicyFields(
+  form: WrappedFormUtils<any>,
   fareInfos: ISelectOptions[],
   farePolicy?: IFarePolicyObj | null
 ): IFormFieldConfig<keyof IFarePolicyObj>[] {
@@ -69,7 +71,8 @@ export function getFarePolicyFields(
             localeObj['label.startTime'] || '시작시간',
             localeObj['label.endTime'] || '종료시간'
           ],
-          allowClear: true
+          allowClear: true,
+          order: false
         }
       }
     },
@@ -145,12 +148,16 @@ export function getFarePolicyFields(
         children: null
       },
       fieldOption: {
-        initialValue: farePolicy ? farePolicy.orderNo : '1',
-        rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
+        initialValue: farePolicy ? farePolicy.orderNo : 1,
+        rules: [{ required: true, message: '필수 입력 값입니다' }]
       },
       component: {
         type: FormType.InputNumber,
         option: {
+          // onChange: (value: any) => {
+          //   //console.log('orderNo', value, value.toString());
+          //   form.setFieldsValue({ ['orderNo']: value });
+          // },
           min: 0
         }
       }
