@@ -37,6 +37,7 @@ import { generateCsv } from '@utils/downloadUtil';
 import { getDiscountClasses } from '@api/discountClass';
 import { ISelectOptions } from '@utils/form';
 import { IDiscountClassObj } from '@models/discountClass';
+import zdsTips from '@utils/tips';
 
 interface IState {
   loading: boolean;
@@ -288,13 +289,15 @@ class Inout extends PureComponent<any, IState> {
 
   handleBtnClick = (info: IInoutObj, key: string) => {
     if (key === 'DELETE') {
-      deleteParkinglotInout(info.parkinSn).then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.pollData();
-          });
-        }
+      zdsTips.confirm('강제출차 하시겠습니까?', () => {
+        deleteParkinglotInout(info.parkinSn).then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              this.pollData();
+            });
+          }
+        });
       });
     } else {
       getInoutDetail(info.parkinSn)

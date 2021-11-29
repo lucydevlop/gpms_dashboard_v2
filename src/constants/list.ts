@@ -404,7 +404,7 @@ export const lprTypeTypeOpt: ISelectOptions[] = [
   { value: ELprTypeType.BACK, label: '후방', color: 'black' },
   { value: ELprTypeType.ASSIST, label: '보조', color: 'black' },
   { value: ELprTypeType.INFRONT, label: '양방향 입차전방', color: 'black' },
-  { value: ELprTypeType.INBACK, label: '양방향 입차보조', color: 'black' },
+  { value: ELprTypeType.INBACK, label: '양방향 입차후방', color: 'black' },
   { value: ELprTypeType.OUTFRONT, label: '양방향 출차전방', color: 'black' }
 ];
 

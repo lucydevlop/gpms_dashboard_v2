@@ -27,6 +27,8 @@ import { ISelectOptions } from '@utils/form';
 import { EDelYn } from '@/constants/list';
 import { IBarcodeClassObj, IBarcodeObj } from '@models/barcode';
 import BarcodeTab from '@views/Setting/Product/tabs/BarcodeTab';
+import { conversionDateTime } from '@utils/conversion';
+import moment from 'moment';
 
 interface IProps {}
 interface IState {
@@ -181,7 +183,7 @@ class ProductSetting extends PureComponent<IProps, IState> {
   };
 
   handleDiscount = (info: IDiscountClassObj) => {
-    console.log('handleDiscount', info);
+    // console.log('handleDiscount', info);
     if (info.sn === null) {
       info.delYn = EDelYn.N;
       createDiscountClasses(info)

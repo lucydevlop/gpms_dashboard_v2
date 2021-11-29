@@ -3,6 +3,7 @@ import { localeStore } from '@store/localeStore';
 import { ICorpTicketClassObj } from '@models/corpTicketClass';
 import { ColumnProps } from 'antd/lib/table';
 import {
+  dayRangeTypeOpt,
   delYnOpt,
   discountApplyTypeOpt,
   EDelYn,
@@ -107,6 +108,14 @@ class CorpTicketClassTab extends PureComponent<IProps, IState> {
             render: (text: string, record: ICorpTicketClassObj) => record.discountClass.unitTime
           }
         ]
+      },
+      {
+        title: '적용일',
+        key: 'applyType',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: ICorpTicketClassObj) =>
+          conversionEnumValue(record.applyType!!, dayRangeTypeOpt).label
       },
       {
         title: '판매타입',

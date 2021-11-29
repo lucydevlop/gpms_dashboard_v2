@@ -438,7 +438,7 @@ export function CorpUpdateFields(corp: ICorpObj): IFormFieldConfig<keyof ICorpOb
       },
       component: {
         type: FormType.Select,
-        selectOptions: delYnOpt
+        selectOptions: delYnOpt.filter((item) => item.value !== EDelYn.ALL)
       }
     },
     {

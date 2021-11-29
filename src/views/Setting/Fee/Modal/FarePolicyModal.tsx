@@ -61,7 +61,7 @@ class FarePolicyModal extends PureComponent<IProps, IState> {
       value: r.sn!!.toString(),
       color: 'black'
     }));
-    const gateFieldsConfig = getFarePolicyFields(fareInfos, this.props.farePolicy);
+    const gateFieldsConfig = getFarePolicyFields(this.props.form, fareInfos, this.props.farePolicy);
     const submitFormLayout = {
       wrapperCol: {
         xs: {
