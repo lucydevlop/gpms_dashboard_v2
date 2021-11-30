@@ -2,29 +2,27 @@ import PageWrapper from '@/components/PageWrapper';
 import SearchForm from '@/components/StandardTable/SearchForm';
 import {
   delYnOpt,
+  EDelYn,
   ETicketSearchDateType,
   ETicketType,
   ticketTypeOpt,
-  useOrUnuseOpt,
   vehicleTypeOpt
 } from '@/constants/list';
 import {
   createParkinglotTicket,
   createTicketByFile,
   deleteTikcet,
-  getCorpList,
   getParkinglotTickets
 } from '@/api/ticket';
 import { ITicketObj, ITicketSelectReq } from '@/models/ticket';
 import { localeStore } from '@/store/localeStore';
-import { conversionDate, conversionDateTime, conversionEnumValue } from '@/utils/conversion';
+import { conversionDate, conversionEnumValue } from '@/utils/conversion';
 import { Button, Col, Row, TablePaginationConfig } from 'antd';
 import Table, { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
-import React from 'react';
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { searchTicketFields } from './FormFields/FormFields';
-import { runInAction, toJS } from 'mobx';
+import { runInAction } from 'mobx';
 import StandardTable from '@/components/StandardTable';
 import DraggableModal from '@/components/DraggableModal';
 import { ICorpObj } from '@/models/corp';
@@ -33,9 +31,6 @@ import { generateCsv } from '@utils/downloadUtil';
 import TicketModal from './Modal/TicketModal';
 import UploadModal from '@components/UploadModal';
 import { readTicketObj } from '@utils/readFromCsv';
-import { FormComponentProps } from '@ant-design/compatible/lib/form';
-import { IDiscountClassObj } from '@models/discountClass';
-import { getDiscountClasses } from '@api/discountClass';
 import { getTicketClasses } from '@api/ticketClass';
 import { ISelectOptions } from '@utils/form';
 import { ITicketClassObj } from '@models/ticketClass';
@@ -91,7 +86,10 @@ class Ticket extends PureComponent<any, IState> {
       toDate: createTm[1].format('YYYY-MM-DD'),
       createTm: [createTm[0].unix(), createTm[1].unix()],
       searchDateLabel: ETicketSearchDateType.VALIDATE,
-      ticketType: ETicketType.ALL
+      ticketType: ETicketType.ALL,
+      searchLabel: '',
+      searchText: '',
+      delYn: EDelYn.N
     };
     this.getTicketClasses();
     this.setState(
@@ -128,9 +126,9 @@ class Ticket extends PureComponent<any, IState> {
       toDate: conversionDate(info.createTm[1]),
       createTm: info.createTm,
       delYn: info.delYn,
-      ticketType: info.ticketType,
+      ticketType: info.ticketType === undefined ? ETicketType.ALL : info.ticketType,
       searchLabel: info.searchLabel,
-      searchText: info.searchText
+      searchText: info.searchText === undefined ? '' : info.searchText
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };
@@ -155,9 +153,9 @@ class Ticket extends PureComponent<any, IState> {
   };
 
   async pollData() {
-    this.state.searchParam!!.ticketType === 'ALL'
-      ? (this.state.searchParam!!.ticketType = undefined)
-      : null;
+    // this.state.searchParam!!.ticketType === 'ALL'
+    //   ? (this.state.searchParam!!.ticketType = undefined)
+    //   : null;
     getParkinglotTickets(this.state.searchParam)
       .then((res: any) => {
         const { msg, data } = res;
@@ -500,6 +498,19 @@ class Ticket extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (test: string, record: ITicketObj) => record.etc1
+      },
+      {
+        title: '마지막입차',
+        key: 'lastInDate',
+        width: 110,
+        align: 'center',
+        sorter: (a, b) => {
+          let atime = new Date(a.lastInDate || '0').getTime();
+          let btime = new Date(b.lastInDate || '0').getTime();
+          return atime - btime;
+        },
+        render: (test: string, record: ITicketObj) =>
+          record.lastInDate ? moment(record.lastInDate).format('YYYY-MM-DD HH:mm') : null
       },
       {
         title: 'Action',

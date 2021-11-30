@@ -21,8 +21,16 @@ export function createParkinglotTicket(data) {
 }
 
 export function getParkinglotTickets(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/product/ticket/list', {
-    data
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/tickets', {
+    params: {
+      fromDate: data.fromDate,
+      toDate: data.toDate,
+      delYn: data.delYn,
+      searchDateLabel: data.searchDateLabel,
+      ticketType: data.ticketType,
+      searchLabel: data.searchLabel,
+      searchText: data.searchText
+    }
   });
 }
 

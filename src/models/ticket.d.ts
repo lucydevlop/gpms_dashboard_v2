@@ -20,6 +20,7 @@ export interface ITicketObj {
   corpName?: string;
   corpSn?: number;
   ticketSn?: number;
+  lastInDate?: Date;
 }
 
 export interface ITicketSelectReq {
