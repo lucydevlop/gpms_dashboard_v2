@@ -8,7 +8,8 @@ import {
   SettingOutlined,
   HomeOutlined,
   CreditCardOutlined,
-  AuditOutlined
+  AuditOutlined,
+  BugOutlined
 } from '@ant-design/icons';
 import { RouteChild, RouteRoot } from '@models/global';
 
@@ -253,7 +254,7 @@ export const asyncRouteConfig: RouteChild[] = [
   },
   {
     name: 'failure',
-    icon: <DashboardOutlined />,
+    icon: <BugOutlined />,
     path: '/failure',
     component: ['/views/Error'],
     authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
