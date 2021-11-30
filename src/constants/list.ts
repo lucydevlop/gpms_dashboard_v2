@@ -537,3 +537,17 @@ export const discountApplyCriteriaTypeOpt: ISelectOptions[] = [
   { value: EDiscountApplyCriteriaType.FRONT, label: '입차시간', color: 'black' },
   { value: EDiscountApplyCriteriaType.BACK, label: '출차시간', color: 'black' }
 ];
+
+export enum EFailureCodeType {
+  crossingGateLongTimeOpen = 'crossingGateLongTimeOpen',
+  paymentFailure = 'paymentFailure',
+  icCardReaderFailure = 'icCardReaderFailure',
+  printFailure = 'printFailure'
+}
+
+export const failureCodeTypeOpt: ISelectOptions[] = [
+  { value: EFailureCodeType.crossingGateLongTimeOpen, label: '장시간차단기오픈', color: 'black' },
+  { value: EFailureCodeType.paymentFailure, label: '정산기장애', color: 'black' },
+  { value: EFailureCodeType.icCardReaderFailure, label: '카드단말기장애', color: 'black' },
+  { value: EFailureCodeType.printFailure, label: '영수증프린터장애', color: 'black' }
+];

@@ -99,6 +99,7 @@ export const dateDifference = (time: number): string => {
 
 export const conversionEnumValue = (label: string, list: ISelectOptions[]): ISelectOptions => {
   const value = list.find((item) => label === item.value);
+  console.log('conversionEnumValue', label, value);
   return value ? value : { value: label, label: label, color: 'black' };
 };
 

@@ -250,6 +250,15 @@ export const asyncRouteConfig: RouteChild[] = [
     // loading: true,
     // localeKey: 'menu.user',
     hideMenu: true
+  },
+  {
+    name: 'failure',
+    icon: <DashboardOutlined />,
+    path: '/failure',
+    component: ['/views/Error'],
+    authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
+    loading: true,
+    localeKey: 'menu.failure'
   }
   // {
   //   name: 'setting',
