@@ -111,7 +111,7 @@ class InoutPaymentByMonth extends PureComponent<IProps, IState> {
       const discountFee = s.discountFee ? s.discountFee : 0;
       const dayDiscountFee = s.dayDiscountFee ? s.dayDiscountFee : 0;
       const data: any = {};
-      data.date = s.date;
+      data.date = s.date.substring(0, 7);
       data.parkFee = s.parkFee;
       data.discountFee = discountFee + dayDiscountFee;
       data.payFee = s.payFee;

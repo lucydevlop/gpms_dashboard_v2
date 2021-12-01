@@ -112,7 +112,7 @@ class InoutByMonth extends PureComponent<IProps, IState> {
 
     const downLoadData = this.state.list.map((s) => {
       const data: any = {};
-      data.date = s.date;
+      data.date = s.date.substring(0, 7);
       data.inCnt = s.inCnt;
       data.inNormalCnt = s.inNormalCnt;
       data.inTicketCnt = s.inTicketCnt;
