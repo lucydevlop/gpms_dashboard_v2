@@ -8,6 +8,10 @@ import { searchStatisticsInoutMonthFields } from '@views/Statistics/Inout/Count/
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
 import Table from 'antd/lib/table';
+import { localeStore } from '@store/localeStore';
+import { Button, Col, Row } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import { generateCsv } from '@utils/downloadUtil';
 
 interface IProps {}
 interface IState {
@@ -72,6 +76,66 @@ class InoutByMonth extends PureComponent<IProps, IState> {
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };
+
+  addProdRender = () => {
+    const { localeObj } = localeStore;
+    return (
+      <Row>
+        <Col xs={7}>
+          <Button
+            style={{ marginLeft: '1rem' }}
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleDownloadClick();
+            }}
+          >
+            <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
+          </Button>
+        </Col>
+      </Row>
+    );
+  };
+
+  async handleDownloadClick() {
+    const headers = [
+      '날짜',
+      '입차 총건수',
+      '입차 일반차량',
+      '입차 정기권차량',
+      '입차 미인식차량',
+      '출차 총건수',
+      '출차 일반차량',
+      '출차 정기권차량',
+      '출차 미인식차량'
+    ].join(',');
+
+    const downLoadData = this.state.list.map((s) => {
+      const data: any = {};
+      data.date = s.date;
+      data.inCnt = s.inCnt;
+      data.inNormalCnt = s.inNormalCnt;
+      data.inTicketCnt = s.inTicketCnt;
+      data.inUnrecognizedCnt = s.inUnrecognizedCnt;
+      data.outCnt = s.outCnt;
+      data.outNormalCnt = s.outNormalCnt;
+      data.outTicketCnt = s.outTicketCnt;
+      data.outUnrecognizedCnt = s.outUnrecognizedCnt;
+      return data;
+    });
+    downLoadData.push({
+      date: 'Total',
+      inCnt: this.sum(this.state.list, 'inCnt'),
+      inNormalCnt: this.sum(this.state.list, 'inNormalCnt'),
+      inTicketCnt: this.sum(this.state.list, 'inTicketCnt'),
+      inUnrecognizedCnt: this.sum(this.state.list, 'inUnrecognizedCnt'),
+      outCnt: this.sum(this.state.list, 'outCnt'),
+      outNormalCnt: this.sum(this.state.list, 'outNormalCnt'),
+      outTicketCnt: this.sum(this.state.list, 'outTicketCnt'),
+      outUnrecognizedCnt: this.sum(this.state.list, 'outUnrecognizedCnt')
+    });
+    await generateCsv(downLoadData, headers, '입출차현황(월별)');
+  }
 
   sum = (array: any[], key: string) => {
     return array.reduce((sum, item) => {
@@ -164,7 +228,7 @@ class InoutByMonth extends PureComponent<IProps, IState> {
         <SearchForm
           submit={(value) => this.getSearchData(value)}
           // location={this.props.location}
-          // footerRender={() => this.addProdRender()}
+          footerRender={() => this.addProdRender()}
           fieldConfig={searchFields}
         />
         <StandardTable

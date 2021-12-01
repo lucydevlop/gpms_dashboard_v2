@@ -1,6 +1,10 @@
 import React, { PureComponent } from 'react';
 import Table, { ColumnProps } from 'antd/lib/table';
-import { IStatisticsInoutDaySearchReq, IStatisticsInoutPaymentObj } from '@models/statisticsInout';
+import {
+  IStatisticsInoutCountObj,
+  IStatisticsInoutDaySearchReq,
+  IStatisticsInoutPaymentObj
+} from '@models/statisticsInout';
 import { getInoutByDay, getInoutPaymentByDay } from '@api/statistics';
 import { runInAction } from 'mobx';
 import moment from 'moment';
@@ -8,6 +12,10 @@ import { conversionDate, convertNumberWithCommas } from '@utils/conversion';
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
 import { searchStatisticsInoutDayFields } from '@views/Statistics/Inout/Count/tabs/inoutFields';
+import { localeStore } from '@store/localeStore';
+import { Button, Col, Row } from 'antd';
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { generateCsv } from '@utils/downloadUtil';
 
 interface IProps {}
 interface IState {
@@ -72,6 +80,53 @@ class InoutPaymentByDay extends PureComponent<IProps, IState> {
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };
+
+  addProdRender = () => {
+    const { localeObj } = localeStore;
+    return (
+      <Row>
+        <Col xs={7}>
+          <Button
+            style={{ marginLeft: '1rem' }}
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleDownloadClick();
+            }}
+          >
+            <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
+          </Button>
+        </Col>
+      </Row>
+    );
+  };
+
+  async handleDownloadClick() {
+    const headers = ['날짜', '주차요금', '할인요금', '결제요금', '미납요금', '정산요금'].join(',');
+
+    const downLoadData = this.state.list.map((s) => {
+      const discountFee = s.discountFee ? s.discountFee : 0;
+      const dayDiscountFee = s.dayDiscountFee ? s.dayDiscountFee : 0;
+      const data: any = {};
+      data.date = s.date;
+      data.parkFee = s.parkFee;
+      data.discountFee = discountFee + dayDiscountFee;
+      data.payFee = s.payFee;
+      data.nonPayment = s.nonPayment;
+      data.payment = s.payment;
+      return data;
+    });
+    downLoadData.push({
+      date: 'Total',
+      parkFee: this.sum(this.state.list, 'parkFee'),
+      discountFee:
+        this.sum(this.state.list, 'discountFee') + this.sum(this.state.list, 'dayDiscountFee'),
+      payFee: this.sum(this.state.list, 'payFee'),
+      nonPayment: this.sum(this.state.list, 'nonPayment'),
+      payment: this.sum(this.state.list, 'payment')
+    });
+    await generateCsv(downLoadData, headers, '입출차정산(일별)');
+  }
 
   sum = (array: any[], key: string) => {
     return array.reduce((sum, item) => {
@@ -138,7 +193,7 @@ class InoutPaymentByDay extends PureComponent<IProps, IState> {
         <SearchForm
           submit={(value) => this.getSearchData(value)}
           // location={this.props.location}
-          // footerRender={() => this.addProdRender()}
+          footerRender={() => this.addProdRender()}
           fieldConfig={searchFields}
         />
         <StandardTable
