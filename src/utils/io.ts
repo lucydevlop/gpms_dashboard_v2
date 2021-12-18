@@ -69,6 +69,7 @@ class Request {
       case 409:
         break;
       case 500:
+        this.notify(data.msg || error || message);
         break;
       default:
         this.notify(data.msg || error);

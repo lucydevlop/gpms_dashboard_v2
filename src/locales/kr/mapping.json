@@ -20,7 +20,9 @@
   "menu.tenant.tickets": "입주사할인권",
   "menu.inout.list": "입출차현황",
   "menu.inout.payment": "입출차결제현황",
-  "menu.ticket.list": "정기권현황",
+  "menu.ticket.seasonList": "유료주차권현황",
+  "menu.ticket.freeList": "무료주차권현황",
+  "menu.ticket.visitorList": "방문권현황",
   "menu.ticket.visitor": "방문권등록",
 
   "menu.setting.parkinglot": "주차장기본정보",

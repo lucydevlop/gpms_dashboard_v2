@@ -9,6 +9,7 @@ import { NewTicketFields } from '../FormFields/FormFields';
 import { conversionDateTime } from '@/utils/conversion';
 import { string2mobile } from '@utils/tools';
 import { IDiscountClassObj } from '@models/discountClass';
+import { NewFreeTicketFields } from '@views/Ticket/FormFields/FreeFormFields';
 
 interface ITicketModalProps extends FormComponentProps {
   ticket?: ITicketObj;
@@ -19,7 +20,7 @@ interface ITicketDetailModalState {}
 
 @inject('localeStore')
 @observer
-class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalState> {
+class FreeTicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
       // console.log('Ticket', fieldsValue);
@@ -32,7 +33,7 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const ticketDetailFields = NewTicketFields(this.props.ticket, this.props.ticketClasses!!);
+    const ticketDetailFields = NewFreeTicketFields(this.props.ticket, this.props.ticketClasses!!);
     return (
       <>
         <Row style={{ marginTop: '10px' }}>
@@ -57,6 +58,8 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
   }
 }
 
-const TicketModalForm = Form.create<ITicketModalProps>({ name: 'ticketModal' })(TicketModal);
+const FreeTicketModalForm = Form.create<ITicketModalProps>({ name: 'freeTicketModal' })(
+  FreeTicketModal
+);
 
-export default TicketModalForm;
+export default FreeTicketModalForm;

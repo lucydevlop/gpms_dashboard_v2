@@ -6,8 +6,10 @@ import {
   dayRangeTypeOpt,
   delYnOpt,
   EDelYn,
+  periodTypeOpt,
   ticketAplyTypeOpt,
   ticketTypeOpt,
+  useYnOpt,
   vehicleTypeOpt
 } from '@/constants/list';
 import { conversionEnumValue } from '@utils/conversion';
@@ -132,6 +134,31 @@ class TicketClassTab extends PureComponent<IProps, IState> {
         width: 110,
         align: 'center',
         render: (text: string, record: ITicketClassObj) => record.price
+      },
+      {
+        title: '기간',
+        key: 'period',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: ITicketClassObj) => {
+          return (
+            <span>{`${record.period?.number} ${
+              conversionEnumValue(record.period ? record.period.type : '', periodTypeOpt).label
+            }`}</span>
+          );
+        }
+      },
+      {
+        title: '연장여부',
+        key: 'extendYn',
+        width: 80,
+        align: 'center',
+        filters: useYnOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.extendYn.indexOf(value as string) === 0,
+        render: (text: string, record: ITicketClassObj) => {
+          const value = conversionEnumValue(record.extendYn, useYnOpt);
+          return <span style={{ color: value.color }}>{value.label}</span>;
+        }
       },
       {
         title: 'Action',

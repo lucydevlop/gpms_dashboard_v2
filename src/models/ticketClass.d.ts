@@ -20,6 +20,15 @@ export interface ITicketClassObj {
   vehicleType: EVehicleType;
   available?: number;
   delYn: EDelYn;
+  period?: Period | null;
+  extendYn: EDelYn;
   //none entity
   timeRange: number[];
+  periodType: string;
+  periodNumber: number;
 }
+
+export type Period = {
+  type: string;
+  number: number;
+};

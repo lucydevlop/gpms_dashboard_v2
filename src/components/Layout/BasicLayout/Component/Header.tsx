@@ -9,12 +9,22 @@ import TopMenu from './SiderMenu';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { usei18n } from '@config/setting';
 import { LayoutProps } from '../types';
+import { Button } from 'antd';
+import DraggableModal from '@components/DraggableModal';
+import VocModal from '@views/Header/VocModal';
+
+interface IState {
+  showCSModal: boolean;
+}
 
 @inject('layoutStore')
 @observer
-class Header extends React.Component<LayoutProps, any> {
+class Header extends React.Component<LayoutProps, IState> {
   constructor(props: LayoutProps) {
     super(props);
+    this.state = {
+      showCSModal: false
+    };
 
     this.IconCollapsed = this.IconCollapsed.bind(this);
     this.HorizontalMenuHeader = this.HorizontalMenuHeader.bind(this);
@@ -67,6 +77,14 @@ class Header extends React.Component<LayoutProps, any> {
       <>
         {isInlineLayout && (_siteLogo || <SiteDetail />)}
         {showSiderBar && !isInlineLayout && this.IconCollapsed()}
+        <Button
+          style={{ marginLeft: '2rem' }}
+          onClick={() => {
+            this.setState({ showCSModal: true });
+          }}
+        >
+          차량 검색
+        </Button>
         <div className="RCS-header-rightPlace">
           <UserInfo />
           {usei18n && <SelectLang />}
@@ -122,7 +140,27 @@ class Header extends React.Component<LayoutProps, any> {
 
   render() {
     const { isHorizontalNavigator } = layoutStore;
-    return <>{isHorizontalNavigator ? this.HorizontalMenuHeader() : this.VerticalMenuHeader()}</>;
+    return (
+      <>
+        {isHorizontalNavigator ? this.HorizontalMenuHeader() : this.VerticalMenuHeader()}
+        {this.state.showCSModal ? (
+          <>
+            <DraggableModal
+              style={{ height: 'calc(100vh - 200px)' }}
+              visible={this.state.showCSModal}
+              title={''}
+              width={1400}
+              onOk={() => this.setState({ showCSModal: false })}
+              onCancel={(): void => {
+                this.setState({ showCSModal: false });
+              }}
+            >
+              <VocModal />
+            </DraggableModal>
+          </>
+        ) : null}
+      </>
+    );
   }
 }
 

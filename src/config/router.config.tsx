@@ -82,21 +82,37 @@ export const asyncRouteConfig: RouteChild[] = [
   {
     name: 'tickets',
     icon: <AuditOutlined />,
-    path: '/tickets',
+    path: '/ticket',
     authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
     localeKey: 'menu.ticket',
     routes: [
       {
-        name: 'list',
-        path: '/tickets/list',
-        component: ['/views/Ticket'],
+        name: 'seasonTicket',
+        path: '/ticket/SeasonTicket',
+        component: ['/views/Ticket/SeasonTicket'],
         authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
         loading: true,
-        localeKey: 'menu.ticket.list'
+        localeKey: 'menu.ticket.seasonList'
+      },
+      {
+        name: 'free',
+        path: '/ticket/FreeTicket',
+        component: ['/views/Ticket/FreeTicket'],
+        authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
+        loading: true,
+        localeKey: 'menu.ticket.freeList'
+      },
+      {
+        name: 'visitor',
+        path: '/ticket/VisitorTicket',
+        component: ['/views/Ticket/VisitorTicket'],
+        authority: ['ADMIN', 'SUPER_ADMIN', 'OPERATION'],
+        loading: true,
+        localeKey: 'menu.ticket.visitorList'
       },
       {
         name: 'register',
-        path: '/tickets/visitor',
+        path: '/ticket/visitor',
         component: ['/views/Visitor/Register'],
         loading: true,
         localeKey: 'menu.ticket.visitor'

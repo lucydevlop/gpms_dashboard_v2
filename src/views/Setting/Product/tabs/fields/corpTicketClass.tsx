@@ -16,12 +16,12 @@ import {
 import { WrappedFormUtils } from '@ant-design/compatible/lib/form/Form';
 
 function setLimit(form: WrappedFormUtils<any>, fieldName: string, value: string) {
-  console.log('setLimit', fieldName, value);
+  //console.log('setLimit', fieldName, value);
   form.setFieldsValue({ [fieldName]: value });
 }
 
 function getLimit(form: WrappedFormUtils<any>, fieldName: string) {
-  console.log('getLimit', fieldName, form.getFieldValue(fieldName));
+  //console.log('getLimit', fieldName, form.getFieldValue(fieldName));
   return (
     form.getFieldValue(fieldName) === '999999999' || form.getFieldValue(fieldName) === '무제한'
   );

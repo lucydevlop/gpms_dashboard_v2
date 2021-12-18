@@ -10,30 +10,17 @@ export function getInoutDetail(data) {
 }
 
 export function getInouts(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/inout/list`, {
-    data: {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts`, {
+    params: {
       searchDateLabel: data.dateType,
-      fromDate: moment(data.startDate).format('yyyy-MM-DD'),
-      toDate: moment(data.endDate).format('yyyy-MM-DD'),
+      startDate: moment(data.startDate).format('yyyy-MM-DD'),
+      endDate: moment(data.endDate).format('yyyy-MM-DD'),
       searchLabel: 'CARNUM',
-      searchText: data.vehicleNo,
-      parkcartype: data.parkcartype === 'ALL' ? '' : data.parkcartype
+      vehicleNo: data.vehicleNo,
+      parkCarType: data.parkcartype === 'ALL' ? '' : data.parkcartype,
+      outSn: data.outSn
     }
   });
-}
-
-export function getParkinglotInouts(data) {
-  return io.get(
-    process.env.REACT_APP_API_DOMAIN_URL + '/cs/parkinglot/' + data.parkinglotId + '/inouts',
-    {
-      params: {
-        startDate: data.startDate,
-        endDate: data.endDate,
-        searchDateLabel: data.dateType,
-        vehicleNo: data.vehicleNo
-      }
-    }
-  );
 }
 
 export function createParkinglotInout(data) {
@@ -86,7 +73,8 @@ export function getInoutPayment(data) {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/payments`, {
     params: {
       fromDate: data.startDate,
-      toDate: data.endDate
+      toDate: data.endDate,
+      vehicleNo: data.vehicleNo
     }
   });
 }

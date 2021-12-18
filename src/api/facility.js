@@ -37,9 +37,9 @@ Mock.mock('/get/facilityList', () => {
   };
 });
 
-export function actionFacility(id, facilityId, action) {
+export function actionFacility(facilityId, action) {
   return io.get(
-    process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots/' + id + '/' + facilityId + '/' + action
+    `${process.env.REACT_APP_API_DOMAIN_URL}/facilities/action/${facilityId}/${action}`
   );
 }
 
@@ -99,4 +99,8 @@ export function displayflowSetting(data) {
 
 export function getDisplayFlowSetting() {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/message/info`);
+}
+
+export function getActiveFacilities() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities/active`);
 }

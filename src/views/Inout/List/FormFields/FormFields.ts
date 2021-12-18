@@ -731,33 +731,32 @@ export function searchInoutPaymentFields(): IFormFieldConfig<keyof IInoutSelectR
         }
       },
       fieldOption: regisDateRangeConfig
+    },
+    {
+      id: 'vehicleNo',
+      label: '차량번호',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 5,
+          xs: 5
+        },
+        wrapperCol: {
+          xl: 10,
+          xs: 10
+        }
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '입력하세요'
+        }
+      }
     }
-    // ,
-    // {
-    //   id: 'vehicleNo',
-    //   label: '차량번호',
-    //   colProps: {
-    //     span: 8,
-    //     xs: 24,
-    //     md: 24,
-    //     xl: 8
-    //   },
-    //   formItemProps: {
-    //     labelCol: {
-    //       xl: 5,
-    //       xs: 5
-    //     },
-    //     wrapperCol: {
-    //       xl: 10,
-    //       xs: 10
-    //     }
-    //   },
-    //   component: {
-    //     type: FormType.Input,
-    //     option: {
-    //       placeholder: '입력하세요'
-    //     }
-    //   }
-    // }
   ];
 }

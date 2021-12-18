@@ -5,21 +5,23 @@ import { Form } from '@ant-design/compatible';
 import { ITicketObj } from '@models/ticket';
 import { Button, Row } from 'antd';
 import { getFormFields, ISelectOptions } from '@utils/form';
-import { NewTicketFields } from '../FormFields/FormFields';
+import { NewSeasonTicketFields } from '../FormFields/SeasonFormFields';
 import { conversionDateTime } from '@/utils/conversion';
 import { string2mobile } from '@utils/tools';
 import { IDiscountClassObj } from '@models/discountClass';
+import { ITicketClassObj } from '@models/ticketClass';
 
 interface ITicketModalProps extends FormComponentProps {
   ticket?: ITicketObj;
   onSubmit: (ticket: ITicketObj) => void;
-  ticketClasses: ISelectOptions[];
+  ticketClassesSelect: ISelectOptions[];
+  ticketClasses: ITicketClassObj[];
 }
 interface ITicketDetailModalState {}
 
 @inject('localeStore')
 @observer
-class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalState> {
+class SeasonTicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalState> {
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
       // console.log('Ticket', fieldsValue);
@@ -32,7 +34,12 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const ticketDetailFields = NewTicketFields(this.props.ticket, this.props.ticketClasses!!);
+    const ticketDetailFields = NewSeasonTicketFields(
+      this.props.ticket,
+      this.props.ticketClassesSelect!!,
+      this.props.ticketClasses,
+      this.props.form
+    );
     return (
       <>
         <Row style={{ marginTop: '10px' }}>
@@ -42,7 +49,7 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
               this.handlerSubmit();
             }}
           >
-            <Row gutter={24}>{getFormFields(getFieldDecorator, ticketDetailFields, true, 12)}</Row>
+            <Row gutter={24}>{getFormFields(getFieldDecorator, ticketDetailFields, true, 15)}</Row>
             <Button
               type="primary"
               htmlType="submit"
@@ -57,6 +64,8 @@ class TicketModal extends PureComponent<ITicketModalProps, ITicketDetailModalSta
   }
 }
 
-const TicketModalForm = Form.create<ITicketModalProps>({ name: 'ticketModal' })(TicketModal);
+const SeasonTicketModalForm = Form.create<ITicketModalProps>({ name: 'seasonTicketModal' })(
+  SeasonTicketModal
+);
 
-export default TicketModalForm;
+export default SeasonTicketModalForm;

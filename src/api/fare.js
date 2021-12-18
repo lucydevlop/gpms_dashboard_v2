@@ -41,3 +41,7 @@ export function createFarePolicy(data) {
     data: data
   });
 }
+
+export function getFares() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/fares`);
+}

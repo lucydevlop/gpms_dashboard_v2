@@ -66,7 +66,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
               };
               return discount;
             });
-          console.log('calc', fieldsValue);
+          //console.log('calc', fieldsValue);
           if (!err) this.props.onCalc(fieldsValue);
         });
         break;

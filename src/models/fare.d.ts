@@ -57,3 +57,8 @@ export interface IFarePolicyObj {
   selectBasicFareSn: string;
   selectAddFareSn: string;
 }
+
+export interface IFareObj {
+  fareBasic: IFareBasicObj;
+  farePolicies: IFarePolicyObj[];
+}

@@ -20,6 +20,60 @@ export function createParkinglotTicket(data) {
   });
 }
 
+export function updateSeasonTicket(data) {
+  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/season', {
+    data
+  });
+}
+
+export function createSeasonTicket(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/season', {
+    data
+  });
+}
+
+export function createSeasonTickets(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/seasons', {
+    data
+  });
+}
+
+export function updateFreeTicket(data) {
+  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/free', {
+    data
+  });
+}
+
+export function createFreeTicket(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/free', {
+    data
+  });
+}
+
+export function createFreeTickets(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/frees', {
+    data
+  });
+}
+
+export function updateVisitTicket(data) {
+  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/visit', {
+    data
+  });
+}
+
+export function createVisitTicket(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/visit', {
+    data
+  });
+}
+
+export function createVisitTickets(data) {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/visits', {
+    data
+  });
+}
+
 export function getParkinglotTickets(data) {
   return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/tickets', {
     params: {

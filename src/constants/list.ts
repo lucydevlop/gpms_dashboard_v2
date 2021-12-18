@@ -12,6 +12,11 @@ export const delYnOpt: ISelectOptions[] = [
   { value: EDelYn.ALL, label: '전체', color: 'blue' }
 ];
 
+export const useYnOpt: ISelectOptions[] = [
+  { value: EDelYn.Y, label: '사용', color: 'blue' },
+  { value: EDelYn.N, label: '미사용', color: 'red' }
+];
+
 export enum EStatus {
   On = 'On',
   Off = 'Off'
@@ -550,4 +555,38 @@ export const failureCodeTypeOpt: ISelectOptions[] = [
   { value: EFailureCodeType.paymentFailure, label: '정산기장애', color: 'black' },
   { value: EFailureCodeType.icCardReaderFailure, label: '카드단말기장애', color: 'black' },
   { value: EFailureCodeType.printFailure, label: '영수증프린터장애', color: 'black' }
+];
+
+export enum EResultType {
+  ERROR = 'ERROR',
+  FAILURE = 'FAILURE',
+  WAIT = 'WAIT',
+  SUCCESS = 'SUCCESS'
+}
+
+export const resultTypeOpt: ISelectOptions[] = [
+  { value: EResultType.ERROR, label: '에러', color: 'red' },
+  { value: EResultType.FAILURE, label: '실패', color: 'blue' },
+  { value: EResultType.WAIT, label: '대기', color: 'light gray' },
+  { value: EResultType.SUCCESS, label: '성공', color: 'black' }
+];
+
+export enum EPeriodType {
+  MONTH = 'MONTH',
+  DAY = 'DAY'
+}
+
+export const periodTypeOpt: ISelectOptions[] = [
+  { value: EPeriodType.MONTH, label: '달', color: 'black' },
+  { value: EPeriodType.DAY, label: '일', color: 'black' }
+];
+
+export enum EPayMethod {
+  CARD = 'CARD',
+  CASH = 'CASH'
+}
+
+export const payMethodOpt: ISelectOptions[] = [
+  { value: EPayMethod.CARD, label: '카드', color: 'black' },
+  { value: EPayMethod.CASH, label: '현금', color: 'black' }
 ];

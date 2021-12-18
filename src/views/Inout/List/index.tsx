@@ -31,11 +31,9 @@ import DraggableModal from '@components/DraggableModal';
 import InoutCreateModalForm from '@views/Inout/List/Modal/InoutCreateModal';
 import InoutDetailModalForm from './Modal/InoutDetailModal';
 import { parkinglotStore } from '@store/parkinglotStore';
-import { ITicketObj } from '@models/ticket';
 import { DownloadOutlined } from '@ant-design/icons';
 import { generateCsv } from '@utils/downloadUtil';
 import { getDiscountClasses } from '@api/discountClass';
-import { ISelectOptions } from '@utils/form';
 import { IDiscountClassObj } from '@models/discountClass';
 import zdsTips from '@utils/tips';
 
@@ -109,7 +107,10 @@ class Inout extends PureComponent<any, IState> {
       startDate: createTm[0].format('YYYY-MM-DD'),
       endDate: createTm[1].format('YYYY-MM-DD'),
       createTm: [createTm[0].unix(), createTm[1].unix()],
-      dateType: EInoutType.IN
+      dateType: EInoutType.IN,
+      vehicleNo: '',
+      parkcartype: ETicketType.ALL,
+      outSn: ''
     };
     this.setState(
       {
@@ -123,7 +124,7 @@ class Inout extends PureComponent<any, IState> {
     // this.setState({ detailModal: false });
     updateParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
-      if (msg === 'ok') {
+      if (msg === 'success') {
         this.setState({ selected: data }, () => this.pollData());
       }
     });
@@ -133,7 +134,8 @@ class Inout extends PureComponent<any, IState> {
     // this.setState({ detailModal: false });
     transferParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
-      if (msg === 'ok') {
+      if (msg === 'success') {
+        zdsTips.success('주차요금 전송 완료했습니다');
         this.setState({ selected: data }, () => this.pollData());
       }
     });
@@ -184,7 +186,8 @@ class Inout extends PureComponent<any, IState> {
       endDate: conversionDate(info.createTm[1]), //info.createTm[1].format('YYYY-MM-DD'),
       createTm: info.createTm,
       vehicleNo: info.vehicleNo,
-      parkcartype: info.parkcartype
+      parkcartype: info.parkcartype,
+      outSn: ''
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };

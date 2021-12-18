@@ -214,7 +214,7 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
   ];
 }
 
-export function NewTicketFields(
+export function NewFreeTicketFields(
   ticket?: ITicketObj,
   ticketClasses?: ISelectOptions[]
 ): IFormFieldConfig<keyof ITicketObj>[] {
@@ -239,7 +239,7 @@ export function NewTicketFields(
         children: null
       },
       fieldOption: {
-        initialValue: ETicketType.VISITTICKET
+        initialValue: ETicketType.FREETICKET
       },
       component: {
         type: FormType.Select,
@@ -386,7 +386,7 @@ export function NewTicketFields(
         children: null
       },
       fieldOption: {
-        initialValue: ticket ? moment(ticket.expireDate) : moment(new Date())
+        initialValue: ticket ? moment(ticket.expireDate) : moment('9999-12-31')
       },
       component: {
         type: FormType.DatePicker,

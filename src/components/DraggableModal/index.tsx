@@ -10,6 +10,7 @@ interface IModalProps {
   onOk?: () => void;
   onCancel?: () => void;
   footer?: React.ReactNode;
+  style?: any;
 }
 
 class DraggableModal extends React.Component<IModalProps, any> {

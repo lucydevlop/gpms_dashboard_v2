@@ -71,6 +71,24 @@ class ParkinglotStore {
     this.parkinglot = data;
   }
 
+  @action getParkinglot(): IParkinglotObj | null {
+    if (this.parkinglot !== null) {
+      return this.parkinglot;
+    }
+
+    getParkinglot().then((res: any) => {
+      const { code, msg, data } = res;
+      if (msg === 'success') {
+        runInAction(() => {
+          this.setParkinglot(data);
+          return this.parkinglot;
+        });
+      }
+    });
+
+    return null;
+  }
+
   @action getTotalParkinglotStatistist() {
     return getParkinglotStatistist()
       .then((res: any) => {

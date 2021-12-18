@@ -1,4 +1,4 @@
-import { EDelYn, ETicketType, EVehicleType } from '@/constants/list';
+import { EDelYn, EPayMethod, ETicketType, EVehicleType } from '@/constants/list';
 import { ICorpObj } from '@models/corp';
 
 export interface ITicketObj {
@@ -13,7 +13,6 @@ export interface ITicketObj {
   dateType: string;
   name?: string;
   tel?: string;
-  productName?: string;
   vehiclekind?: string;
   etc?: string;
   etc1?: string;
@@ -21,6 +20,10 @@ export interface ITicketObj {
   corpSn?: number;
   ticketSn?: number;
   lastInDate?: Date;
+  extendYn: EDelYn;
+  nextSn: number | null;
+  payMethod: EPayMethod | null;
+  //non entity
 }
 
 export interface ITicketSelectReq {

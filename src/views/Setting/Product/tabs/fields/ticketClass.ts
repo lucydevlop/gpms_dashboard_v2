@@ -5,11 +5,14 @@ import {
   delYnOpt,
   EDayRangeType,
   EDelYn,
+  EPeriodType,
   ETicketAplyType,
   ETicketType,
   EVehicleType,
+  periodTypeOpt,
   ticketAplyTypeOpt,
   ticketTypeOpt,
+  useYnOpt,
   vehicleTypeOpt
 } from '@/constants/list';
 import { FormType } from '@/constants/form';
@@ -222,6 +225,73 @@ export function ticketClassFields(
       },
       component: {
         type: FormType.Input
+      }
+    },
+    {
+      id: 'periodNumber',
+      label: '기간',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: ticketClass ? ticketClass.period?.number : 0,
+        rules: [{ required: true, message: '필수 입력 값입니다' }]
+      },
+      component: {
+        type: FormType.InputNumber,
+        option: {
+          col: 0
+        }
+      },
+      formSubItemProps: {
+        id: 'periodType',
+        label: '',
+        component: {
+          type: FormType.Select,
+          selectOptions: periodTypeOpt
+        },
+        fieldOption: {
+          initialValue: ticketClass ? ticketClass.period?.type : EPeriodType.MONTH
+        }
+      }
+    },
+    {
+      id: 'extendYn',
+      label: '연장',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: ticketClass ? ticketClass.extendYn : null,
+        rules: [{ required: true, message: '필수 입력값 입니다' }]
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: useYnOpt
       }
     },
     {

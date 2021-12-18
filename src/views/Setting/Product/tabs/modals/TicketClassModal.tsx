@@ -36,7 +36,9 @@ class TicketClassModal extends PureComponent<IProps, IState> {
         fieldsValue.expireDate = this.props.ticketClass
           ? this.props.ticketClass.expireDate
           : moment(new Date(9999, 11, 31)).format('yyyy-MM-DD 23:59:59');
+        fieldsValue.period = { type: fieldsValue.periodType, number: fieldsValue.periodNumber };
         //fieldsValue.delYn = this.props.ticketClass ? this.props.ticketClass.delYn : EDelYn.N;
+        //console.log('ticketClass submit', fieldsValue);
         this.props.onSubmit(fieldsValue);
       }
     });
@@ -64,7 +66,7 @@ class TicketClassModal extends PureComponent<IProps, IState> {
           this.handlerSubmit();
         }}
       >
-        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 9)}</Row>
+        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 11)}</Row>
         <Form.Item
           {...submitFormLayout}
           style={{

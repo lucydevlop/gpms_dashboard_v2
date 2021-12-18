@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
 import moment from 'moment';
-import { EInoutType, ETicketType, paymentTypeOpt } from '@/constants/list';
+import { delYnOpt, EInoutType, ETicketType, paymentTypeOpt, resultTypeOpt } from '@/constants/list';
 import { getInoutPayment } from '@api/Inout';
 import { runInAction } from 'mobx';
 import { IInoutPaymentObj } from '@models/inoutPayment';
@@ -18,6 +18,10 @@ import PageWrapper from '@components/PageWrapper';
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
 import { TablePaginationConfig } from 'antd/es/table';
+import { localeStore } from '@store/localeStore';
+import { Button, Col, Row } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import { generateCsv } from '@utils/downloadUtil';
 
 interface IState {
   loading: boolean;
@@ -48,7 +52,9 @@ class InoutPayment extends PureComponent<any, IState> {
       startDate: createTm[0].format('YYYY-MM-DD'),
       endDate: createTm[1].format('YYYY-MM-DD'),
       createTm: [createTm[0].unix(), createTm[1].unix()],
-      dateType: EInoutType.IN
+      dateType: EInoutType.IN,
+      vehicleNo: '',
+      outSn: ''
     };
 
     this.setState(
@@ -66,9 +72,10 @@ class InoutPayment extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            console.log(data);
+            // console.log(data);
             this.setState({
-              list: data.filter((l: any) => l.result !== 'WAIT'),
+              // list: data.filter((l: any) => l.result !== 'WAIT'),
+              list: data.filter((l: any) => l.amount > 0),
               total: data.length
             });
           });
@@ -83,10 +90,12 @@ class InoutPayment extends PureComponent<any, IState> {
   getSearchData = (info: IInoutSelectReq) => {
     // console.log('getSearchData', info);
     const searchParam: IInoutSelectReq = {
+      outSn: '',
       dateType: info.dateType,
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),
       endDate: conversionDate(info.createTm[1]), //info.createTm[1].format('YYYY-MM-DD'),
-      createTm: info.createTm
+      createTm: info.createTm,
+      vehicleNo: info.vehicleNo === undefined ? '' : info.vehicleNo
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };
@@ -94,6 +103,66 @@ class InoutPayment extends PureComponent<any, IState> {
   paginationChange = (pagination: TablePaginationConfig) => {
     this.setState({ current: pagination.current || 1 });
   };
+
+  addProdRender = () => {
+    const { localeObj } = localeStore;
+    return (
+      <Row>
+        <Col xs={7}>
+          <Button
+            style={{ marginLeft: '1rem' }}
+            type="primary"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              this.handleDownloadClick();
+            }}
+          >
+            <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
+          </Button>
+        </Col>
+      </Row>
+    );
+  };
+
+  async handleDownloadClick() {
+    const headers = [
+      '차량번호',
+      '정산타입',
+      '결제일자',
+      '결제금액',
+      '결제방법',
+      '카드',
+      '카드번호',
+      '승인번호',
+      '결제여부'
+    ].join(',');
+
+    const downLoadData = this.state.list.map((record) => {
+      const data: any = {};
+      data.vehicleNo = record.vehicleNo;
+      data.type = conversionEnumValue(record.type, paymentTypeOpt).label;
+      data.approveDateTime = convertStringToDateTime(record.approveDateTime) || '--';
+      data.amount = record.amount;
+      data.payType = record.payType;
+      data.cardCorp = record.cardCorp;
+      data.cardNumber = record.cardNumber;
+      data.transactionId = record.transactionId;
+      data.result = record.result === 'SUCCESS' ? '성공' : `실패(${record.failureMessage})`;
+      return data;
+    });
+    downLoadData.push({
+      vehicleNo: '',
+      type: '',
+      approveDateTime: '',
+      amount: this.sum(this.state.list, 'amount'),
+      payType: '',
+      cardCorp: '',
+      cardNumber: '',
+      transactionId: '',
+      result: ''
+    });
+    await generateCsv(downLoadData, headers, '입출차결제현황');
+  }
 
   sum = (array: any[], key: string) => {
     return array.reduce((sum, item) => {
@@ -167,8 +236,13 @@ class InoutPayment extends PureComponent<any, IState> {
         key: 'result',
         width: 110,
         align: 'center',
+        filters: resultTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        onFilter: (value, record) => record.result.indexOf(value as string) === 0,
         render: (text: string, record: IInoutPaymentObj) => {
-          return record.result === 'SUCCESS' ? '성공' : `실패(${record.failureMessage})`;
+          const result = conversionEnumValue(record.result, resultTypeOpt).label;
+          return record.result === 'ERROR' || result === 'FAILURE'
+            ? `${result}(${record.failureMessage})`
+            : result;
         }
       }
     ];
@@ -180,6 +254,7 @@ class InoutPayment extends PureComponent<any, IState> {
           submit={(value) => this.getSearchData(value)}
           location={this.props.location}
           fieldConfig={searchFields}
+          footerRender={() => this.addProdRender()}
         />
         <StandardTable
           scroll={{ x: 'max-content', y: 800 }}

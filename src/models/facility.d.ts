@@ -19,6 +19,8 @@ export interface IFacilityObj {
   imagePath?: string;
   gateSvrKey?: string;
   fname: string;
+  health: string;
+  status: string;
   createBy?: string;
   createDate?: Date;
   updateBy?: string;

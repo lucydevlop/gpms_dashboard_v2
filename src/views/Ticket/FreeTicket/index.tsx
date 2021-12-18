@@ -1,5 +1,5 @@
-import PageWrapper from '@/components/PageWrapper';
-import SearchForm from '@/components/StandardTable/SearchForm';
+import PageWrapper from '@components/PageWrapper';
+import SearchForm from '@components/StandardTable/SearchForm';
 import {
   delYnOpt,
   EDelYn,
@@ -9,26 +9,25 @@ import {
   vehicleTypeOpt
 } from '@/constants/list';
 import {
-  createParkinglotTicket,
-  createTicketByFile,
-  deleteTikcet,
-  getParkinglotTickets
-} from '@/api/ticket';
-import { ITicketObj, ITicketSelectReq } from '@/models/ticket';
-import { localeStore } from '@/store/localeStore';
-import { conversionDate, conversionEnumValue } from '@/utils/conversion';
+  createFreeTicket,
+  createFreeTickets,
+  getParkinglotTickets,
+  updateFreeTicket
+} from '@api/ticket';
+import { ITicketObj, ITicketSelectReq } from '@models/ticket';
+import { localeStore } from '@store/localeStore';
+import { conversionDate, conversionDateTime, conversionEnumValue } from '@utils/conversion';
 import { Button, Col, Row, TablePaginationConfig } from 'antd';
 import Table, { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import React, { PureComponent } from 'react';
-import { searchTicketFields } from './FormFields/FormFields';
+import { searchTicketFields } from '../FormFields/FormFields';
 import { runInAction } from 'mobx';
-import StandardTable from '@/components/StandardTable';
-import DraggableModal from '@/components/DraggableModal';
-import { ICorpObj } from '@/models/corp';
+import StandardTable from '@components/StandardTable';
+import DraggableModal from '@components/DraggableModal';
+import { ICorpObj } from '@models/corp';
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { generateCsv } from '@utils/downloadUtil';
-import TicketModal from './Modal/TicketModal';
 import UploadModal from '@components/UploadModal';
 import { readTicketObj } from '@utils/readFromCsv';
 import { getTicketClasses } from '@api/ticketClass';
@@ -37,6 +36,8 @@ import { ITicketClassObj } from '@models/ticketClass';
 import { string2mobile } from '@utils/tools';
 import { inject, observer } from 'mobx-react';
 import { corpStore } from '@store/corpStore';
+import FreeTicketModal from '@views/Ticket/Modal/FreeTicketModal';
+import zdsTips from '@utils/tips';
 
 type IState = {
   loading: boolean;
@@ -86,12 +87,12 @@ class Ticket extends PureComponent<any, IState> {
       toDate: createTm[1].format('YYYY-MM-DD'),
       createTm: [createTm[0].unix(), createTm[1].unix()],
       searchDateLabel: ETicketSearchDateType.VALIDATE,
-      ticketType: ETicketType.ALL,
+      ticketType: ETicketType.FREETICKET,
       searchLabel: '',
       searchText: '',
       delYn: EDelYn.N
     };
-    this.getTicketClasses();
+
     this.setState(
       {
         searchParam: searchParam
@@ -99,23 +100,6 @@ class Ticket extends PureComponent<any, IState> {
       () => this.pollData()
     );
   }
-
-  getTicketClasses = () => {
-    getTicketClasses()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            const unique: ISelectOptions[] = [];
-            data.forEach((e: ITicketClassObj) => {
-              unique.push({ value: e.sn, label: e.ticketName });
-            });
-            this.setState({ ticketClassesSelect: unique });
-          });
-        }
-      })
-      .catch(() => {});
-  };
 
   getSearchData = (info: ITicketSelectReq) => {
     const searchParam: ITicketSelectReq = {
@@ -126,30 +110,11 @@ class Ticket extends PureComponent<any, IState> {
       toDate: conversionDate(info.createTm[1]),
       createTm: info.createTm,
       delYn: info.delYn,
-      ticketType: info.ticketType === undefined ? ETicketType.ALL : info.ticketType,
+      ticketType: ETicketType.FREETICKET,
       searchLabel: info.searchLabel,
       searchText: info.searchText === undefined ? '' : info.searchText
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
-  };
-
-  create = (info: ITicketObj) => {
-    // console.log('create', info);
-    if (info.corpSn === -1) {
-      info.corpSn = undefined;
-    }
-    this.setState({ createModal: false });
-    createParkinglotTicket(info).then((res: any) => {
-      const { msg, data } = res;
-      if (msg === 'success') {
-        runInAction(() => {
-          //const ticket = data;
-          //const tickets = [...this.state.list, ticket];
-          //this.setState({ list: tickets });
-          this.pollData();
-        });
-      }
-    });
   };
 
   async pollData() {
@@ -174,31 +139,63 @@ class Ticket extends PureComponent<any, IState> {
       });
   }
 
+  create = (info: ITicketObj) => {
+    if (info.corpSn === -1) {
+      info.corpSn = 0;
+    }
+    this.setState({ createModal: false });
+    createFreeTicket(info)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const tickets = [...this.state.list, data];
+            this.setState({ list: tickets });
+          });
+        }
+      })
+      .catch((res: any) => {
+        //console.log('create error', res);
+        const { msg, data } = res;
+        runInAction(() => {
+          zdsTips.error('무료주차권 등록에 실패하였습니다');
+        });
+      });
+  };
+
   update = (info: ITicketObj) => {
     if (info.corpSn === -1) {
-      info.corpSn = undefined;
+      info.corpSn = 0;
     }
+
     this.setState({ detailModal: false });
-    createParkinglotTicket(info).then((res: any) => {
-      const { msg, data } = res;
-      if (msg === 'success') {
-        runInAction(() => {
-          //this.pollData();
-          const ticket = data;
-          const tickets = this.state.list.map((t) => {
-            if (t.sn === ticket.sn) return { ...ticket };
-            return { ...t };
+    updateFreeTicket(info)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            //this.pollData();
+            const ticket = data;
+            const tickets = this.state.list.map((t) => {
+              if (t.sn === ticket.sn) return { ...ticket };
+              return { ...t };
+            });
+            this.setState({ list: tickets }, () => console.log(this.state.list));
           });
-          this.setState({ list: tickets }, () => console.log(this.state.list));
+        }
+      })
+      .catch(() => {
+        runInAction(() => {
+          zdsTips.error('무료주차권 변경에 실패하였습니다');
         });
-      }
-    });
+      });
   };
 
   async delete() {
     let count = 0;
-    this.state.deleteList.forEach((data: any) => {
-      deleteTikcet(data.sn).then((res: any) => {
+    this.state.deleteList.forEach((data: ITicketObj) => {
+      data.delYn = EDelYn.Y;
+      updateFreeTicket(data).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
@@ -284,7 +281,7 @@ class Ticket extends PureComponent<any, IState> {
   async handleDownloadClick() {
     const headers = [
       '차량번호',
-      '상품타입',
+      '상품타입(무료정기권)',
       '이름',
       '전화번호',
       '시작일',
@@ -294,10 +291,29 @@ class Ticket extends PureComponent<any, IState> {
       '입주사명(미입력 가능)',
       '회사정보1(미입력 가능)',
       '회사정보2(미입력 가능)',
+      '마지막입차일',
       '정기권seq(수정금지)'
     ].join(',');
 
-    const downLoadData = this.state.list.map((ticket) => {
+    const downLoadData: any[] = [];
+    const initialData: any = {};
+    initialData.vehicleNo = '11가1111(업로드 시 삭제)';
+    initialData.ticketType = '무료정기권';
+    initialData.name = '김아무개';
+    initialData.tel = '010-0000-0000';
+    initialData.effectDate = '2021-01-01';
+    initialData.expireDate = '9999-12-31';
+    initialData.vehicleType = '소형/중형/대형(정확히기입)';
+    initialData.vehiclekind = '현대 xxx';
+    initialData.corpName = '입주사명(정확히기입)';
+    initialData.etc = 'xxxxx';
+    initialData.etc1 = 'xxxxx';
+    initialData.lastInDate = '2021-01-01 00:00(미입력)';
+    initialData.sn = '신규 시 미입력,수정 시 다운로드 된 데이터 변경 불가 준수';
+
+    downLoadData.push(initialData);
+
+    this.state.list.map((ticket) => {
       const data: any = {};
       data.vehicleNo = ticket.vehicleNo;
       data.ticketType = conversionEnumValue(ticket.ticketType, ticketTypeOpt).label;
@@ -307,13 +323,13 @@ class Ticket extends PureComponent<any, IState> {
       data.expireDate = conversionDate(ticket.expireDate as Date, '{y}-{m}-{d}');
       data.vehicleType = conversionEnumValue(ticket.vehicleType, vehicleTypeOpt).label;
       data.vehiclekind = ticket.vehiclekind;
-      data.corpName = this.state.corpList
-        ? this.state.corpList.filter((c) => c.sn === ticket.corpSn)[0].corpName
-        : '';
+      data.corpName = ticket.corp?.corpName;
       data.etc = ticket.etc;
       data.etc1 = ticket.etc1;
+      data.lastInDate =
+        conversionDateTime(ticket.lastInDate as Date, '{y}-{m}-{d} {h}:{i}') || '--';
       data.sn = ticket.sn;
-      return data;
+      downLoadData.push(data);
     });
     await generateCsv(downLoadData, headers, '정기권');
   }
@@ -330,7 +346,7 @@ class Ticket extends PureComponent<any, IState> {
         const rawData = (fileReader.result as string).replace(/[="]/g, '');
         const parsedPassengerData: ITicketObj[] = readTicketObj(rawData);
         // console.log(' csv data ' + JSON.stringify(parsedPassengerData));
-        createTicketByFile(parsedPassengerData)
+        createFreeTickets(parsedPassengerData)
           .then((res: any) => {
             const { msg, data } = res;
             if (msg === 'success') {
@@ -362,6 +378,23 @@ class Ticket extends PureComponent<any, IState> {
         onFilter: (value, record) => record.delYn.indexOf(value as string) === 0,
         render: (test: string, record: ITicketObj) => {
           const type = conversionEnumValue(record.delYn, delYnOpt);
+          return {
+            props: {
+              style: {
+                color: type.color
+              }
+            },
+            children: <div>{type.label}</div>
+          };
+        }
+      },
+      {
+        title: '타입',
+        key: 'ticketType',
+        width: 110,
+        align: 'center',
+        render: (test: string, record: ITicketObj) => {
+          const type = conversionEnumValue(record.ticketType, ticketTypeOpt);
           return {
             props: {
               style: {
@@ -411,43 +444,6 @@ class Ticket extends PureComponent<any, IState> {
         align: 'center',
         render: (test: string, record: ITicketObj) =>
           record.tel ? string2mobile(record.tel) : null
-      },
-      {
-        title: '타입',
-        key: 'ticketType',
-        width: 110,
-        align: 'center',
-        filters: ticketTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
-        onFilter: (value, record) => record.ticketType.indexOf(value as string) === 0,
-        render: (test: string, record: ITicketObj) => {
-          const type = conversionEnumValue(record.ticketType, ticketTypeOpt);
-          return {
-            props: {
-              style: {
-                color: type.color
-              }
-            },
-            children: <div>{type.label}</div>
-          };
-        }
-      },
-      {
-        title: '정기권정보',
-        key: 'ticketSn',
-        width: 110,
-        align: 'center',
-        render: (test: string, record: ITicketObj) => {
-          // @ts-ignore
-          const type = conversionEnumValue(record.ticketSn, this.state.ticketClassesSelect);
-          return {
-            props: {
-              style: {
-                color: type.color
-              }
-            },
-            children: <div>{type.label}</div>
-          };
-        }
       },
       {
         title: '차량타입',
@@ -571,24 +567,24 @@ class Ticket extends PureComponent<any, IState> {
                 <Table.Summary.Cell index={1}>
                   <span style={{ fontSize: '15px', fontWeight: 600 }}>Total: {total}</span>
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={2}>
-                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    유료정기권:
-                    {list.filter((tmp) => tmp.ticketType === ETicketType.SEASONTICKET).length}
-                  </span>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={2}>
-                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    방문권:
-                    {list.filter((tmp) => tmp.ticketType === ETicketType.VISITTICKET).length}
-                  </span>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={2}>
-                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    무료정기권:
-                    {list.filter((tmp) => tmp.ticketType === ETicketType.FREETICKET).length}
-                  </span>
-                </Table.Summary.Cell>
+                {/*<Table.Summary.Cell index={2}>*/}
+                {/*  <span style={{ fontSize: '14px', fontWeight: 600 }}>*/}
+                {/*    유료정기권:*/}
+                {/*    {list.filter((tmp) => tmp.ticketType === ETicketType.SEASONTICKET).length}*/}
+                {/*  </span>*/}
+                {/*</Table.Summary.Cell>*/}
+                {/*<Table.Summary.Cell index={2}>*/}
+                {/*  <span style={{ fontSize: '14px', fontWeight: 600 }}>*/}
+                {/*    방문권:*/}
+                {/*    {list.filter((tmp) => tmp.ticketType === ETicketType.VISITTICKET).length}*/}
+                {/*  </span>*/}
+                {/*</Table.Summary.Cell>*/}
+                {/*<Table.Summary.Cell index={2}>*/}
+                {/*  <span style={{ fontSize: '14px', fontWeight: 600 }}>*/}
+                {/*    무료정기권:*/}
+                {/*    {list.filter((tmp) => tmp.ticketType === ETicketType.FREETICKET).length}*/}
+                {/*  </span>*/}
+                {/*</Table.Summary.Cell>*/}
               </Table.Summary.Row>
             </Table.Summary>
           )}
@@ -606,7 +602,7 @@ class Ticket extends PureComponent<any, IState> {
             }}
             footer={[]}
           >
-            <TicketModal
+            <FreeTicketModal
               onSubmit={(value) => this.create(value)}
               ticketClasses={this.state.ticketClassesSelect}
             />
@@ -623,7 +619,7 @@ class Ticket extends PureComponent<any, IState> {
             }}
             footer={[]}
           >
-            <TicketModal
+            <FreeTicketModal
               onSubmit={(value) => this.update(value)}
               ticket={this.state.selected!!}
               ticketClasses={this.state.ticketClassesSelect}
