@@ -19,6 +19,7 @@ import {
   calcParkinglotInout,
   createParkinglotInout,
   getInoutDetail,
+  getInoutPayment,
   getInouts,
   transferParkinglotInout
 } from '@api/Inout';
@@ -31,6 +32,8 @@ import {
   EDelYn,
   EInoutType,
   ETicketType,
+  paymentTypeOpt,
+  resultTypeOpt,
   ticketTypeOpt
 } from '@/constants/list';
 import { IDiscountClassObj } from '@models/discountClass';
@@ -38,7 +41,12 @@ import StandardTable from '@components/StandardTable';
 import { ColumnProps } from 'antd/lib/table';
 import { localeStore } from '@store/localeStore';
 import zdsTips from '@utils/tips';
-import { conversionDateTime, convertNumberWithCommas } from '@utils/conversion';
+import {
+  conversionDateTime,
+  conversionEnumValue,
+  convertNumberWithCommas,
+  convertStringToDateTime
+} from '@utils/conversion';
 import DraggableModal from '@components/DraggableModal';
 import FacilityModal from './FacilityModal';
 import { getFacilities } from '@api/facility';
@@ -56,6 +64,7 @@ import { ICorpTicketClassObj } from '@models/corpTicketClass';
 import { ITicketClassObj } from '@models/ticketClass';
 import { getTicketClasses } from '@api/ticketClass';
 import TicketsModal from '@views/Header/TicketsModal';
+import { IInoutPaymentObj } from '@models/inoutPayment';
 
 const { Option } = Select;
 
@@ -85,6 +94,7 @@ interface IState {
   parkinglot: IParkinglotObj | null;
   corpTicketClasses: ICorpTicketClassObj[];
   ticketClasses: ITicketClassObj[];
+  inoutPayment: IInoutPaymentObj[];
 }
 
 @inject('parkinglotStore', 'localeStore')
@@ -111,7 +121,8 @@ class VocModal extends PureComponent<IProps, IState> {
       productModal: false,
       parkinglot: null,
       corpTicketClasses: [],
-      ticketClasses: []
+      ticketClasses: [],
+      inoutPayment: []
     };
   }
   componentDidMount() {
@@ -203,6 +214,7 @@ class VocModal extends PureComponent<IProps, IState> {
     data.dateType = searchParam.dateType;
     data.vehicleNo = value;
     data.parkcartype = '';
+    data.gateId = '';
     data.outSn = -1;
 
     getInouts(data)
@@ -261,6 +273,17 @@ class VocModal extends PureComponent<IProps, IState> {
               });
             });
             this.setState({ discounts: discounts });
+          });
+        }
+      })
+      .catch();
+
+    getInoutPayment(sn)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ inoutPayment: data });
           });
         }
       })
@@ -462,6 +485,7 @@ class VocModal extends PureComponent<IProps, IState> {
           // headStyle={{ fontSize: 18, fontWeight: 700 }}
           // size="default"
           bordered={true}
+          bodyStyle={{ padding: '15px' }}
         >
           <h3>차량정보</h3>
           <Descriptions bordered column={24}>
@@ -537,14 +561,14 @@ class VocModal extends PureComponent<IProps, IState> {
               )}
             </Descriptions.Item>
             <Descriptions.Item
-              span={24}
+              span={12}
               label={'주차시간'}
               style={{ paddingLeft: '16px', paddingRight: '16px' }}
             >
               <span>{this.state.selected ? this.state.selected.parktime : ''}</span>
             </Descriptions.Item>
             <Descriptions.Item
-              span={24}
+              span={12}
               label={'메모'}
               style={{ paddingLeft: '16px', paddingRight: '16px' }}
             >
@@ -600,72 +624,64 @@ class VocModal extends PureComponent<IProps, IState> {
   renderCarImage() {
     const { Option } = Select;
     return (
-      <Card bordered={true}>
+      <Card bordered={true} bodyStyle={{ padding: '15px' }}>
         <h3>차량 사진</h3>
-        <Card hoverable style={{ padding: 20, marginBottom: 20 }}>
-          <Row gutter={24}>
-            <Col span={6}>
-              <Row>
-                <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>입차사진</span>
+        <Row gutter={24}>
+          <Col span={12}>
+            <Card hoverable style={{ marginBottom: 20 }}>
+              <Row gutter={24}>
+                <Col span={12}>
+                  <span style={{ fontSize: '.8rem', fontWeight: 500 }}>입차사진</span>
+                </Col>
+                <Col span={12}>
+                  <Select
+                    //disabled={!this.props.cs.facility.gateType.includes('IN')}
+                    placeholder="차단기동작"
+                    //onChange={(value) => this.handleBreaker(value, "")}
+                  >
+                    <Option value="UP">{'열림'}</Option>
+                    <Option value="DOWN">{'닫힘'}</Option>
+                    <Option value="UPLOCK">{'열림고정'}</Option>
+                    <Option value="UNLOCK">{'고정해제'}</Option>
+                  </Select>
+                </Col>
               </Row>
-              <Row>
-                <Select
-                  //disabled={!this.props.cs.facility.gateType.includes('IN')}
-                  placeholder="차단기동작"
-                  //onChange={(value) => this.handleBreaker(value, "")}
-                >
-                  <Option value="UP">{'열림'}</Option>
-                  <Option value="DOWN">{'닫힘'}</Option>
-                  <Option value="UPLOCK">{'열림고정'}</Option>
-                  <Option value="UNLOCK">{'고정해제'}</Option>
-                </Select>
+              <Row gutter={24} style={{ paddingTop: '10px' }}>
+                <Image
+                  alt={this.state.selected ? this.state.selected.vehicleNo : ''}
+                  src={this.state.selected ? `${this.state.selected?.inImgBase64Str}` : ''}
+                />
               </Row>
-            </Col>
-            <Col span={18}>
-              <Image
-                alt={this.state.selected ? this.state.selected.vehicleNo : ''}
-                src={this.state.selected ? `${this.state.selected?.inImgBase64Str}` : ''}
-              />
-            </Col>
-          </Row>
-        </Card>
-        <Card hoverable style={{ padding: 20, marginBottom: 20 }}>
-          <Row gutter={24}>
-            <Col span={6}>
-              <Row>
-                <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>출차사진</span>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card hoverable style={{ marginBottom: 20 }}>
+              <Row gutter={24}>
+                <Col span={12} style={{ alignSelf: 'center' }}>
+                  <span style={{ fontSize: '.8rem', fontWeight: 500 }}>출차사진</span>
+                </Col>
+                <Col span={12}>
+                  <Select
+                    //disabled={!this.props.cs.facility.gateType.includes('IN')}
+                    placeholder="차단기동작"
+                    //onChange={(value) => this.handleBreaker(value, "")}
+                  >
+                    <Option value="UP">{'열림'}</Option>
+                    <Option value="DOWN">{'닫힘'}</Option>
+                    <Option value="UPLOCK">{'열림고정'}</Option>
+                    <Option value="UNLOCK">{'고정해제'}</Option>
+                  </Select>
+                </Col>
               </Row>
-              <Row>
-                <Select
-                  // disabled={!this.props.cs.facility.gateType.includes('OUT')}
-                  placeholder="차단기동작"
-                  // onChange={(value) => this.handleBreaker(value, this.props.cs.facility)}
-                >
-                  <Option value="UP">{'열림'}</Option>
-                  <Option value="DOWN">{'닫힘'}</Option>
-                  <Option value="UPLOCK">{'열림고정'}</Option>
-                  <Option value="UNLOCK">{'고정해제'}</Option>
-                </Select>
-                {/*<Button*/}
-                {/*  disabled={!this.props.cs.facility.gateType.includes('IN')}*/}
-                {/*  style={{ marginTop: '20px' }}*/}
-                {/*  onClick={(e: BaseSyntheticEvent) => {*/}
-                {/*    e.preventDefault();*/}
-                {/*    this.handlerSubmit('open');*/}
-                {/*  }}*/}
-                {/*>*/}
-                {/*  실행*/}
-                {/*</Button>*/}
+              <Row gutter={24} style={{ paddingTop: '10px' }}>
+                <Image
+                  alt={this.state.selected ? this.state.selected.vehicleNo : ''}
+                  src={this.state.selected ? `${this.state.selected?.outImgBase64Str}` : ''}
+                />
               </Row>
-            </Col>
-            <Col span={18}>
-              <Image
-                alt={this.state.selected ? this.state.selected.vehicleNo : ''}
-                src={this.state.selected ? `${this.state.selected?.outImgBase64Str}` : ''}
-              />
-            </Col>
-          </Row>
-        </Card>
+            </Card>
+          </Col>
+        </Row>
       </Card>
     );
   }
@@ -816,14 +832,14 @@ class VocModal extends PureComponent<IProps, IState> {
     ];
 
     return (
-      <Card key="discount" bordered={false}>
+      <Card key="discount" bordered={false} bodyStyle={{ maxHeight: 350, overflow: 'auto' }}>
         <h3>할인 내역</h3>
         <Row gutter={24}>
           {this.state.discountClasses.map((discountClass) => (
-            <Col span={4.8} style={{ textAlign: 'center' }}>
+            <Col span={4.9} style={{ textAlign: 'center', padding: '3px' }}>
               <Button
                 type={'primary'}
-                style={{ width: '85px' }}
+                style={{ width: '100px' }}
                 onClick={(e: any) => {
                   e.stopPropagation();
                   this.handleAddDiscountClass(discountClass);
@@ -840,6 +856,77 @@ class VocModal extends PureComponent<IProps, IState> {
           columns={preApply}
           data={{
             list: this.state.discounts,
+            pagination: false
+          }}
+          hidePagination={true}
+        />
+      </Card>
+    );
+  }
+
+  renderPaymentInfo() {
+    const payment: ColumnProps<IInoutPaymentObj>[] = [
+      {
+        title: '차량번호',
+        key: 'vehicleNo',
+        fixed: 'left',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IInoutPaymentObj) => record.vehicleNo
+      },
+      {
+        title: '정산타입',
+        key: 'type',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IInoutPaymentObj) =>
+          conversionEnumValue(record.type, paymentTypeOpt).label
+      },
+      {
+        title: '결제일자',
+        key: 'vehicleNo',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IInoutPaymentObj) =>
+          convertStringToDateTime(record.approveDateTime) || '--'
+      },
+      {
+        title: '결제금액',
+        key: 'amount',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IInoutPaymentObj) => record.amount
+      },
+      {
+        title: '결제방법',
+        key: 'payType',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IInoutPaymentObj) => record.payType
+      },
+      {
+        title: '결제여부',
+        key: 'result',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IInoutPaymentObj) => {
+          const result = conversionEnumValue(record.result, resultTypeOpt).label;
+          return record.result === 'ERROR' || result === 'FAILURE'
+            ? `${result}(${record.failureMessage})`
+            : result;
+        }
+      }
+    ];
+
+    return (
+      <Card key="payment" bordered={false}>
+        <h3>결제 내역</h3>
+        <StandardTable
+          // @ts-ignore
+          rowKey={(record: any) => String(record.sn)}
+          columns={payment}
+          data={{
+            list: this.state.inoutPayment,
             pagination: false
           }}
           hidePagination={true}
@@ -945,7 +1032,8 @@ class VocModal extends PureComponent<IProps, IState> {
           <Col span={12}>
             <Row gutter={24}>
               <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                {this.renderParkinglot()}
+                {/*{this.renderParkinglot()}*/}
+                {this.renderCarImage()}
               </Col>
             </Row>
           </Col>
@@ -961,7 +1049,7 @@ class VocModal extends PureComponent<IProps, IState> {
           <Col span={12}>
             <Row gutter={24}>
               <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                {this.renderCarImage()}
+                {this.renderDiscountInfo()}
               </Col>
             </Row>
           </Col>
@@ -969,7 +1057,7 @@ class VocModal extends PureComponent<IProps, IState> {
             <Row gutter={24}>
               <Col xl={24} lg={24} md={24} sm={24} xs={24}>
                 {this.renderPayInfo()}
-                {this.renderDiscountInfo()}
+                {this.renderPaymentInfo()}
               </Col>
             </Row>
           </Col>

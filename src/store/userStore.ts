@@ -133,6 +133,11 @@ class UserStore {
   @action isAuthenticated = () => {
     return localStorage.getItem('RCS-authorization') !== null;
   };
+
+  get isStore() {
+    console.log('userinfo.role', this.userInfo.role);
+    return this.userInfo.role === 'STORE';
+  }
 }
 
 export const userStore = new UserStore();

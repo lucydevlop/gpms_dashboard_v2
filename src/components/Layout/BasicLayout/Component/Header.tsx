@@ -12,12 +12,14 @@ import { LayoutProps } from '../types';
 import { Button } from 'antd';
 import DraggableModal from '@components/DraggableModal';
 import VocModal from '@views/Header/VocModal';
+import { userStore } from '@store/userStore';
+import { parkinglotStore } from '@store/parkinglotStore';
 
 interface IState {
   showCSModal: boolean;
 }
 
-@inject('layoutStore')
+@inject('layoutStore', 'userStore', 'parkinglotStore')
 @observer
 class Header extends React.Component<LayoutProps, IState> {
   constructor(props: LayoutProps) {
@@ -68,23 +70,34 @@ class Header extends React.Component<LayoutProps, IState> {
   };
 
   VerticalMenuHeaderBody = () => {
+    const { isStore } = userStore;
     const {
       isInlineLayout,
-      layoutStatus: { showSiderBar }
+      layoutStatus: { showSiderBar, isMobile }
     } = layoutStore;
+    const { parkinglotName } = parkinglotStore;
     const { siteLogo: _siteLogo } = this.props;
     return (
       <>
         {isInlineLayout && (_siteLogo || <SiteDetail />)}
         {showSiderBar && !isInlineLayout && this.IconCollapsed()}
-        <Button
-          style={{ marginLeft: '2rem' }}
-          onClick={() => {
-            this.setState({ showCSModal: true });
-          }}
-        >
-          차량 검색
-        </Button>
+        {!isStore && !isMobile ? (
+          <>
+            <div
+              style={{ marginLeft: '2rem', fontSize: '1.1rem', color: 'darkgray', fontWeight: 600 }}
+            >
+              {parkinglotName}
+            </div>
+            <Button
+              style={{ marginLeft: '2rem' }}
+              onClick={() => {
+                this.setState({ showCSModal: true });
+              }}
+            >
+              차량 검색
+            </Button>
+          </>
+        ) : null}
         <div className="RCS-header-rightPlace">
           <UserInfo />
           {usei18n && <SelectLang />}

@@ -69,12 +69,20 @@ export function deleteParkinglotInout(id) {
   return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/forced/exit/${id}`, id);
 }
 
-export function getInoutPayment(data) {
+export function getInoutPayments(data) {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/payments`, {
     params: {
       fromDate: data.startDate,
       toDate: data.endDate,
       vehicleNo: data.vehicleNo
+    }
+  });
+}
+
+export function getInoutPayment(data) {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/payment`, {
+    params: {
+      sn: data
     }
   });
 }

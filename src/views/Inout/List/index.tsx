@@ -185,7 +185,7 @@ class Inout extends PureComponent<any, IState> {
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),
       endDate: conversionDate(info.createTm[1]), //info.createTm[1].format('YYYY-MM-DD'),
       createTm: info.createTm,
-      vehicleNo: info.vehicleNo,
+      vehicleNo: info.vehicleNo === undefined ? '' : info.vehicleNo,
       parkcartype: info.parkcartype,
       outSn: ''
     };

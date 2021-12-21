@@ -24,6 +24,7 @@ export interface IFareBasicObj {
   sn?: number;
   serviceTime: number;
   regTime: number;
+  ticketTime: number;
   dayMaxAmt: number;
   effectDate: Date;
   delYn: string;

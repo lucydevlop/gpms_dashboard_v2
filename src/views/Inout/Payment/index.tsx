@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
 import moment from 'moment';
 import { delYnOpt, EInoutType, ETicketType, paymentTypeOpt, resultTypeOpt } from '@/constants/list';
-import { getInoutPayment } from '@api/Inout';
+import { getInoutPayments } from '@api/Inout';
 import { runInAction } from 'mobx';
 import { IInoutPaymentObj } from '@models/inoutPayment';
 import Table, { ColumnProps } from 'antd/lib/table';
@@ -67,7 +67,7 @@ class InoutPayment extends PureComponent<any, IState> {
 
   async pollData() {
     this.setState({ loading: true });
-    getInoutPayment(this.state.searchParam)
+    getInoutPayments(this.state.searchParam)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {

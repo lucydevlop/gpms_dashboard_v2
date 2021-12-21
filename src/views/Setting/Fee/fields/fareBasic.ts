@@ -68,6 +68,31 @@ export function getFareBasicFields(
       }
     },
     {
+      id: 'ticketTime',
+      label: '할인권타임',
+      colProps: {
+        span: 24
+      },
+      formItemProps: {
+        labelCol: {
+          span: 10
+        },
+        wrapperCol: {
+          span: 10
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: fareBasic ? fareBasic.ticketTime : 0
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '입력하세요'
+        }
+      }
+    },
+    {
       id: 'dayMaxAmt',
       label: '일최대요금',
       colProps: {

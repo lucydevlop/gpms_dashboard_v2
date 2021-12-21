@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import PageWrapper from '@components/PageWrapper';
-import classNames from 'classnames';
 import { inject, observer } from 'mobx-react';
 import { layoutStore } from '@store/layoutStore';
 import { Col, Row, Collapse, Form, Input, Card, Descriptions, Button, Divider, Tabs } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { IFareBasicObj, IFareInfoObj, IFarePolicyObj } from '@models/fare';
 import {
+  createFareBasic,
   createFareInfo,
   createFarePolicy,
   getFareBasic,
@@ -103,16 +103,29 @@ class FeeSetting extends PureComponent<any, IState> {
   handleFareBasicSubmit = (info: IFareBasicObj) => {
     // console.log('handleFareBasicSubmit', info);
     this.setState({ fareBasicModal: false });
-    updateFareBasic(info)
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ fareBasic: data });
-          });
-        }
-      })
-      .catch(() => {});
+    if (info.sn === null || info.sn === undefined) {
+      createFareBasic(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              this.setState({ fareBasic: data });
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      updateFareBasic(info)
+        .then((res: any) => {
+          const { msg, data } = res;
+          if (msg === 'success') {
+            runInAction(() => {
+              this.setState({ fareBasic: data });
+            });
+          }
+        })
+        .catch(() => {});
+    }
   };
 
   handleFarePolicyClick(key: string, info?: IFarePolicyObj) {
@@ -240,6 +253,10 @@ class FeeSetting extends PureComponent<any, IState> {
       {
         name: '레그타임(분)',
         value: this.state.fareBasic ? this.state.fareBasic.regTime : ''
+      },
+      {
+        name: '할인권타임(분)',
+        value: this.state.fareBasic ? this.state.fareBasic.ticketTime : ''
       },
       {
         name: '일최대요금',

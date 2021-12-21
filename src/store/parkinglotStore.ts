@@ -9,7 +9,7 @@ import {
   updateParkinglot
 } from '@api/parkinglot';
 import { getFacilities } from '@api/facility';
-import { action, configure, observable, runInAction, toJS } from 'mobx';
+import { action, computed, configure, observable, runInAction, toJS } from 'mobx';
 import {
   IParkinglotDailyErrosObj,
   IParkinglotErrorReq,
@@ -219,6 +219,11 @@ class ParkinglotStore {
         });
       }
     });
+  }
+
+  @computed
+  get parkinglotName() {
+    return this.parkinglot ? this.parkinglot.siteName : '';
   }
 }
 export const parkinglotStore = new ParkinglotStore();
