@@ -9,11 +9,11 @@ import { runInAction } from 'mobx';
 import { searchFailureFields } from '@views/Error/FailureFields';
 import moment from 'moment';
 import { IStatisticsInoutDaySearchReq } from '@models/statisticsInout';
-import { IInoutObj } from '@models/inout';
 import StandardTable from '@components/StandardTable';
 import { TablePaginationConfig } from 'antd/es/table';
-import { failureCodeTypeOpt, ticketTypeOpt } from '@/constants/list';
+import { categoryOpt, failureCodeTypeOpt, ticketTypeOpt } from '@/constants/list';
 import { trim } from 'lodash';
+import { IFacilityObj } from '@models/facility';
 
 interface IState {
   searchParam?: IFailureSearchReq;
@@ -39,11 +39,12 @@ class Error extends PureComponent<any, IState> {
   }
 
   componentDidMount() {
-    const createTm = [moment(new Date()).subtract(7, 'days'), moment(new Date())];
-    const searchParam: IStatisticsInoutDaySearchReq = {
+    const createTm = [moment(new Date()).subtract(3, 'days'), moment(new Date())];
+    const searchParam: IFailureSearchReq = {
       startDate: createTm[0].format('YYYY-MM-DD'),
       endDate: createTm[1].format('YYYY-MM-DD'),
-      createTm: [createTm[0].unix(), createTm[1].unix()]
+      createTm: [createTm[0].unix(), createTm[1].unix()],
+      category: ''
     };
     this.setState(
       {
@@ -75,7 +76,8 @@ class Error extends PureComponent<any, IState> {
     const searchParam: IFailureSearchReq = {
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),
       endDate: conversionDate(info.createTm[1]), //info.createTm[1].format('YYYY-MM-DD'),
-      createTm: info.createTm
+      createTm: info.createTm,
+      category: info.category
     };
     this.setState({ searchParam: searchParam }, () => this.pollData());
   };
@@ -115,6 +117,23 @@ class Error extends PureComponent<any, IState> {
             ? moment(record.issueDateTime).format('YYYY-MM-DD HH:mm')
             : null;
         }
+      },
+      {
+        title: '게이트명',
+        key: 'gateName',
+        width: 100,
+        align: 'center',
+        render: (text: string, record: IFailureObj) => record.gateName
+      },
+      {
+        title: '카테고리',
+        key: 'category',
+        width: 110,
+        align: 'center',
+        // filters: categoryOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        //onFilter: (value, record) => record.category.indexOf(value as string) === 0,
+        render: (text: string, record: IFailureObj) =>
+          conversionEnumValue(record.category, categoryOpt).label
       },
       {
         title: '시설명',

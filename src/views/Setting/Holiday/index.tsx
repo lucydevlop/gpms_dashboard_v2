@@ -99,7 +99,7 @@ class SpecialDay extends PureComponent<any, IState> {
         })
         .catch(() => {})
         .finally(() => {
-          this.setState({ loading: false });
+          this.setState({ loading: false, showModal: false });
         });
     } else {
       updateHoliday(info)
@@ -107,19 +107,19 @@ class SpecialDay extends PureComponent<any, IState> {
           const { msg, data } = res;
           if (msg === 'success') {
             runInAction(() => {
-              const days = this.state.days.map((e) => {
-                if (e.sn === data.sn) {
-                  return { ...data };
-                } else {
-                  return { ...e };
-                }
-              });
+              const days =
+                info.delYn === EDelYn.Y
+                  ? this.state.days.filter((d) => d.sn != data.sn)
+                  : this.state.days.map((e) => {
+                      return e.sn === data.sn ? { ...data } : { ...e };
+                    });
+              this.setState({ days: days });
             });
           }
         })
         .catch(() => {})
         .finally(() => {
-          this.setState({ loading: false });
+          this.setState({ loading: false, showModal: false });
         });
     }
   };
@@ -134,7 +134,9 @@ class SpecialDay extends PureComponent<any, IState> {
         () => this.pollData()
       );
     }
-    const selectDays = this.state.days.filter((d) => d.startDate === value.format('YYYY-MM-DD'));
+    const selectDays = this.state.days.filter(
+      (d) => d.startDate.substring(0, 10) === value.format('YYYY-MM-DD')
+    );
     this.setState({
       selected: value.format('YYYY-MM-DD'),
       showModal: true,
@@ -173,7 +175,7 @@ class SpecialDay extends PureComponent<any, IState> {
             onCancel={(): void => {
               this.setState({ showModal: false });
             }}
-            width={600}
+            width={900}
             footer={[]}
           >
             <HolidayModal

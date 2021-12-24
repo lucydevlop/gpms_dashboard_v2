@@ -17,18 +17,21 @@ import {
   vehicleDayOpt,
   VisitorExternalTypeOpt
 } from '@/constants/list';
+import { WrappedFormUtils } from '@ant-design/compatible/lib/form/Form';
 
 export function ParkinglotSettingFields(
   visitorExternalKey: string | null | undefined,
   visitorExternal: string | null | undefined,
   space: Space | null | undefined,
+  feeInclude: boolean,
   parkinglot?: IParkinglotObj | null,
   onSpaceSettingModal?: () => void,
   offSpaceSettingModal?: () => void,
   onVisitorExternalModal?: () => void,
   offVisitorExternalModal?: () => void,
   onEnterNotiModal?: () => void,
-  offEnterNotiModal?: () => void
+  offEnterNotiModal?: () => void,
+  onChangeFeeInclude?: (value: any) => void
 ): IFormFieldConfig<keyof IParkinglotObj>[] {
   return [
     {
@@ -671,13 +674,12 @@ export function ParkinglotSettingFields(
           type: FormType.Checkbox,
           option: {
             text: '기본포함',
-            defaultChecked: parkinglot?.discApply
-              ? parkinglot?.discApply.baseFeeInclude === EDelYn.Y
-              : false
-            // ,
-            // onChange: (e: any) =>
-            //   e.target.checked ? parkinglot?.discountApply.baseFeeInclude = 'N' :
-            //   form.setFieldsValue({ ['dayMax']: e.target.checked ? '999999999' : '1' })
+            checked: feeInclude,
+            onChange: (e: any) => {
+              if (onChangeFeeInclude) {
+                onChangeFeeInclude(e.target.checked);
+              }
+            }
           }
         }
       }

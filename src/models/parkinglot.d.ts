@@ -69,7 +69,7 @@ export type EnterNoti = {
 
 export type DiscountApply = {
   criteria?: EDiscountApplyCriteriaType;
-  baseFeeInclude?: EDelYn;
+  baseFeeInclude?: EDelYn | null;
 };
 
 export interface IParkinglotListReq extends IQueryListParams {

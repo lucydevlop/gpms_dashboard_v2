@@ -201,7 +201,7 @@ class InoutPayment extends PureComponent<any, IState> {
         key: 'amount',
         width: 110,
         align: 'center',
-        render: (text: string, record: IInoutPaymentObj) => record.amount
+        render: (text: string, record: IInoutPaymentObj) => convertNumberWithCommas(record.amount)
       },
       {
         title: '결제방법',

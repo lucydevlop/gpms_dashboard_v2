@@ -4,6 +4,7 @@ import { FormType } from '@/constants/form';
 import { localeStore } from '@store/localeStore';
 import { datePickerFormat } from '@/constants';
 import moment from 'moment';
+import { categoryOpt } from '@/constants/list';
 
 const regisDateRangeConfig = {
   rules: [
@@ -14,7 +15,7 @@ const regisDateRangeConfig = {
     }
   ],
   format: datePickerFormat,
-  initialValue: [moment(new Date()).subtract(7, 'days'), moment(new Date())]
+  initialValue: [moment(new Date()).subtract(3, 'days'), moment(new Date())]
 };
 
 export function searchFailureFields(): IFormFieldConfig<keyof IFailureSearchReq>[] {
@@ -35,6 +36,18 @@ export function searchFailureFields(): IFormFieldConfig<keyof IFailureSearchReq>
         }
       },
       fieldOption: regisDateRangeConfig
+    },
+    {
+      id: 'category',
+      label: '구분',
+      component: {
+        type: FormType.Select,
+        option: {
+          placeholder: localeObj['label.choose'] || '선택해주세요',
+          allowClear: true
+        },
+        selectOptions: categoryOpt
+      }
     }
   ];
 }

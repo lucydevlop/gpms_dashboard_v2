@@ -1,27 +1,23 @@
-import React, { BaseSyntheticEvent, createRef, PureComponent, RefObject } from 'react';
+import React, { BaseSyntheticEvent, PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
 import { parkinglotStore } from '@store/parkinglotStore';
 import { EnterNoti, IParkinglotObj, Space } from '@models/parkinglot';
 import PageWrapper from '@components/PageWrapper';
-import { Button, Card, Input, Radio, Row, Select } from 'antd';
+import { Button, Card, Row } from 'antd';
 import { Form } from '@ant-design/compatible';
 import { FormComponentProps } from '@ant-design/compatible/lib/form';
-import { runInAction, toJS } from 'mobx';
-import {
-  ParkinglotSettingFields,
-  ParkinglotSpaceSettingFields
-} from '@views/Setting/Parkinglot/Fields';
+import { runInAction } from 'mobx';
+import { ParkinglotSettingFields } from '@views/Setting/Parkinglot/Fields';
 import { getFormFields } from '@utils/form';
 import { localeStore } from '@/store/localeStore';
-import { RedoOutlined } from '@ant-design/icons';
 import Col from 'antd/es/grid/col';
 import DraggableModal from '@/components/DraggableModal';
 import ParkingSpaceSettingModalForm from './Modal/ParkingSpaceSettingModal';
-import { number } from 'echarts/core';
-import { getGateGroups, updateParkinglot } from '@/api/parkinglot';
+import { updateParkinglot } from '@/api/parkinglot';
 import ParkingVisitorExternalModalForm from './Modal/ParkingVisitorExternalModal';
 import zdsTips from '@utils/tips';
 import ParkingEnterNotiModal from '@views/Setting/Parkinglot/Modal/ParkingEnterNotiModal';
+import { EDelYn } from '@/constants/list';
 
 interface IProps extends FormComponentProps {}
 interface IState {
@@ -36,6 +32,7 @@ interface IState {
   gateGroups: any[];
   enterNotiModal: boolean;
   enterNoti?: EnterNoti | null;
+  feeInclude: boolean;
 }
 
 @inject('localeStore', 'parkinglotStore')
@@ -49,7 +46,8 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
       visitorExternalModal: false,
       enterNotiModal: false,
       gates: [],
-      gateGroups: []
+      gateGroups: [],
+      feeInclude: false
     };
   }
 
@@ -69,6 +67,9 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
         this.setState({ visitorExternal: this.state.parkinglot?.visitorExternal });
         this.setState({ visitorExternalKey: this.state.parkinglot?.visitorExternalKey });
         this.setState({ enterNoti: this.state.parkinglot?.enterNoti });
+        this.setState({
+          feeInclude: this.state.parkinglot?.discApply?.baseFeeInclude === EDelYn.Y
+        });
       });
     });
     parkinglotStore.initGateGroups().then(() => {
@@ -162,9 +163,13 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
   };
 
   EnterNotiSetting = (value: EnterNoti) => {
-    console.log('enterNotiSetting', value);
+    // console.log('enterNotiSetting', value);
     this.setState({ enterNoti: value });
     this.setState({ enterNotiModal: false });
+  };
+
+  onChangeFeeInclude = (value: boolean) => {
+    this.setState({ feeInclude: value });
   };
 
   render() {
@@ -174,13 +179,15 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
       this.state.visitorExternalKey,
       this.state.visitorExternal,
       this.state.space,
+      this.state.feeInclude,
       this.state.parkinglot,
       this.onSpaceSettingModal,
       this.offSpaceSettingModal,
       this.onVisitorExternalModal,
       this.offVisitorExternalModal,
       this.onEnterNotiModal,
-      this.offEnterNotiModal
+      this.offEnterNotiModal,
+      this.onChangeFeeInclude
     );
     if (this.state.loading) return <PageWrapper />;
     return (

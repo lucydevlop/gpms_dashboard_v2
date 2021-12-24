@@ -433,7 +433,7 @@ class Inout extends PureComponent<any, IState> {
         key: 'parkfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) => record.parkfee
+        render: (text: string, record: IInoutObj) => convertNumberWithCommas(record.parkfee)
       },
       {
         title: '할인요금',
@@ -441,7 +441,7 @@ class Inout extends PureComponent<any, IState> {
         width: 100,
         align: 'center',
         render: (text: string, record: IInoutObj) => (
-          <span>{record.discountfee!! + record.dayDiscountfee!!}</span>
+          <span>{convertNumberWithCommas(record.discountfee!! + record.dayDiscountfee!!)}</span>
         )
       },
       {
@@ -449,14 +449,18 @@ class Inout extends PureComponent<any, IState> {
         key: 'payfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) => <span>{record.payfee}</span>
+        render: (text: string, record: IInoutObj) => (
+          <span>{convertNumberWithCommas(record.payfee)}</span>
+        )
       },
       {
         title: '결제요금',
         key: 'payfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) => <span>{record.paymentAmount}</span>
+        render: (text: string, record: IInoutObj) => (
+          <span>{convertNumberWithCommas(record.paymentAmount)}</span>
+        )
       },
       {
         title: '미납요금',

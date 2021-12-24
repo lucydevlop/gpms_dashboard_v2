@@ -214,16 +214,14 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
   };
 
   handleDelete = (key: string) => {
-    console.log('handleDelete', key);
+    // console.log('handleDelete', key);
     const newData = this.state.list.filter((item) => item.parkinSn !== Number(key));
     if (newData == null) return;
     deleteParkinglotInout(key)
       .then((res: any) => {
         const { msg, data } = res;
-        if (msg === 'ok') {
-          runInAction(async () => {
-            this.pollData();
-          });
+        if (msg === 'success') {
+          this.pollData();
         }
       })
       .finally(() => {

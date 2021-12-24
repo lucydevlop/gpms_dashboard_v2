@@ -6,6 +6,7 @@ export function getFailures(data) {
     params: {
       fromDate: moment(data.startDate).format('yyyy-MM-DD'),
       toDate: moment(data.endDate).format('yyyy-MM-DD'),
+      category: data.category === undefined ? '' : data.category,
       resolved: 'ALL'
     }
   });

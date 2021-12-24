@@ -29,6 +29,7 @@ import { IFacilityObj } from '@models/facility';
 import moment from 'moment';
 import {
   discountApplyTypeOpt,
+  ECategory,
   EDelYn,
   EInoutType,
   ETicketType,
@@ -49,7 +50,7 @@ import {
 } from '@utils/conversion';
 import DraggableModal from '@components/DraggableModal';
 import FacilityModal from './FacilityModal';
-import { getFacilities } from '@api/facility';
+import { actionFacility, getFacilities } from '@api/facility';
 import UnRecognizeModal from './UnRecognizeModal';
 import InoutListModal from './InoutListModal';
 import { IFareObj } from '@models/fare';
@@ -601,25 +602,25 @@ class VocModal extends PureComponent<IProps, IState> {
     );
   }
 
-  // handleBreaker = (value: any, facility: IFacilityObj) => {
-  //   console.log('handleBreaker', value);
-  //   this.state.facilities
-  //     .filter(
-  //       (f) =>
-  //         f.gateGroupId === this.props.cs.facility.gateGroupId && f.category === ECategory.BREAKER
-  //     )
-  //     .forEach((item) => {
-  //       if (item.status === 'XUPLOCK') {
-  //         zdsTips.error('수동 열림고정은 해제 할 수 없습니다');
-  //       } else {
-  //         actionFacility(
-  //           this.props.cs.parkinglot.parkinglotId,
-  //           item.facilityIdentity,
-  //           value
-  //         ).then();
-  //       }
-  //     });
-  // };
+  handleBreaker = (value: any, type: string) => {
+    // console.log('handleBreaker', value);
+    const breakers =
+      type === 'IN'
+        ? this.state.facilities.filter(
+            (f) => f.gateId === this.state.selected?.inGateId && f.category === ECategory.BREAKER
+          )
+        : this.state.facilities.filter(
+            (f) => f.gateId === this.state.selected?.outGateId && f.category === ECategory.BREAKER
+          );
+
+    breakers.forEach((item) => {
+      if (item.status === 'XUPLOCK') {
+        zdsTips.error('수동 열림고정은 해제 할 수 없습니다');
+      } else {
+        actionFacility(item.dtFacilitiesId, value).then();
+      }
+    });
+  };
 
   renderCarImage() {
     const { Option } = Select;
@@ -637,7 +638,7 @@ class VocModal extends PureComponent<IProps, IState> {
                   <Select
                     //disabled={!this.props.cs.facility.gateType.includes('IN')}
                     placeholder="차단기동작"
-                    //onChange={(value) => this.handleBreaker(value, "")}
+                    onChange={(value) => this.handleBreaker(value, 'IN')}
                   >
                     <Option value="UP">{'열림'}</Option>
                     <Option value="DOWN">{'닫힘'}</Option>
@@ -664,7 +665,7 @@ class VocModal extends PureComponent<IProps, IState> {
                   <Select
                     //disabled={!this.props.cs.facility.gateType.includes('IN')}
                     placeholder="차단기동작"
-                    //onChange={(value) => this.handleBreaker(value, "")}
+                    onChange={(value) => this.handleBreaker(value, 'OUT')}
                   >
                     <Option value="UP">{'열림'}</Option>
                     <Option value="DOWN">{'닫힘'}</Option>

@@ -88,6 +88,7 @@ const getFormComponent = (component: IFormFieldOption) => {
   const { type, selectOptions = [], option, option2, handler } = { ...component };
   switch (type) {
     case FormType.Input:
+      // console.log('Input', option);
       return <Input size="middle" {...option} />;
     case FormType.Select:
       return (

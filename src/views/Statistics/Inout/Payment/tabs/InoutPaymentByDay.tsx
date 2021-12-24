@@ -148,7 +148,9 @@ class InoutPaymentByDay extends PureComponent<IProps, IState> {
         dataIndex: 'parkFee',
         key: 'parkFee',
         width: 110,
-        align: 'center'
+        align: 'center',
+        render: (text: string, record: IStatisticsInoutPaymentObj) =>
+          convertNumberWithCommas(record.parkFee)
       },
       {
         title: '할인요금',
@@ -159,7 +161,7 @@ class InoutPaymentByDay extends PureComponent<IProps, IState> {
         render: (text: string, record: IStatisticsInoutPaymentObj) => {
           const discountFee = record.discountFee ? record.discountFee : 0;
           const dayDiscountFee = record.dayDiscountFee ? record.dayDiscountFee : 0;
-          return discountFee + dayDiscountFee;
+          return convertNumberWithCommas(discountFee + dayDiscountFee);
         }
       },
       {
@@ -167,21 +169,27 @@ class InoutPaymentByDay extends PureComponent<IProps, IState> {
         dataIndex: 'payFee',
         key: 'payFee',
         width: 110,
-        align: 'center'
+        align: 'center',
+        render: (text: string, record: IStatisticsInoutPaymentObj) =>
+          convertNumberWithCommas(record.payFee)
       },
       {
         title: '미납요금',
         dataIndex: 'nonPayment',
         key: 'nonPayment',
         width: 110,
-        align: 'center'
+        align: 'center',
+        render: (text: string, record: IStatisticsInoutPaymentObj) =>
+          convertNumberWithCommas(record.nonPayment)
       },
       {
         title: '정산요금',
         dataIndex: 'payment',
         key: 'payment',
         width: 110,
-        align: 'center'
+        align: 'center',
+        render: (text: string, record: IStatisticsInoutPaymentObj) =>
+          convertNumberWithCommas(record.payment)
       }
     ];
 
