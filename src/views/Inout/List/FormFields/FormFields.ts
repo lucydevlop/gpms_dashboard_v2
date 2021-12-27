@@ -5,8 +5,14 @@ import {
   formColProps6Config,
   IFormFieldConfig
 } from '@utils/form';
-import { IInoutObj, IInoutSelectReq } from '@models/inout';
-import { EInoutType, ETicketType, inoutSearchDateTypeOpt, ticketTypeOpt } from '@/constants/list';
+import { IInoutObj, IInoutPaymentSelectReq, IInoutSelectReq } from '@models/inout';
+import {
+  EInoutType,
+  ETicketType,
+  inoutSearchDateTypeOpt,
+  resultTypeOpt,
+  ticketTypeOpt
+} from '@/constants/list';
 import { FormType } from '@/constants/form';
 import { datePickerFormat } from '@/constants';
 import moment from 'moment';
@@ -693,7 +699,7 @@ export function newInoutDetailFileds(
   ];
 }
 
-export function searchInoutPaymentFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
+export function searchInoutPaymentFields(): IFormFieldConfig<keyof IInoutPaymentSelectReq>[] {
   const { localeObj } = localeStore;
   return [
     {
@@ -731,6 +737,33 @@ export function searchInoutPaymentFields(): IFormFieldConfig<keyof IInoutSelectR
         }
       },
       fieldOption: regisDateRangeConfig
+    },
+    {
+      id: 'resultType',
+      label: '결제여부',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 5,
+          xs: 5
+        },
+        wrapperCol: {
+          xl: 10,
+          xs: 10
+        }
+      },
+      fieldOption: {
+        initialValue: ''
+      },
+      component: {
+        type: FormType.Select,
+        selectOptions: resultTypeOpt
+      }
     },
     {
       id: 'vehicleNo',

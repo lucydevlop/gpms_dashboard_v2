@@ -74,7 +74,8 @@ export function getInoutPayments(data) {
     params: {
       fromDate: data.startDate,
       toDate: data.endDate,
-      vehicleNo: data.vehicleNo
+      vehicleNo: data.vehicleNo,
+      resultType: data.resultType
     }
   });
 }

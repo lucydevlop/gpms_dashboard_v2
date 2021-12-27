@@ -1,4 +1,4 @@
-import { EDelYn, EInoutType, ETicketType } from '@/constants/list';
+import { EDelYn, EInoutType, EResultType, ETicketType } from '@/constants/list';
 import { IDiscountClassObj } from '@models/discountClass';
 import { ICorpTicketClassObj } from '@models/corpTicketClass';
 import { ICorpObj } from '@models/corp';
@@ -37,6 +37,14 @@ export interface IInoutSelectReq {
   vehicleNo?: string;
   parkcartype?: ETicketType;
   outSn: number | string;
+}
+
+export interface IInoutPaymentSelectReq {
+  startDate: string;
+  endDate: string;
+  createTm: number[];
+  vehicleNo?: string;
+  resultType?: EResultType | string;
 }
 
 export interface IInoutDiscountApplyObj {

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
-import { IInoutObj, IInoutSelectReq } from '@models/inout';
+import { IInoutObj, IInoutPaymentSelectReq, IInoutSelectReq } from '@models/inout';
 import moment from 'moment';
 import { delYnOpt, EInoutType, ETicketType, paymentTypeOpt, resultTypeOpt } from '@/constants/list';
 import { getInoutPayments } from '@api/Inout';
@@ -25,7 +25,7 @@ import { generateCsv } from '@utils/downloadUtil';
 
 interface IState {
   loading: boolean;
-  searchParam?: IInoutSelectReq;
+  searchParam?: IInoutPaymentSelectReq;
   list: IInoutPaymentObj[];
   current: number;
   pageSize: number;
@@ -48,13 +48,12 @@ class InoutPayment extends PureComponent<any, IState> {
 
   componentDidMount() {
     const createTm = [moment(new Date()).subtract(3, 'days'), moment(new Date())];
-    const searchParam: IInoutSelectReq = {
+    const searchParam: IInoutPaymentSelectReq = {
       startDate: createTm[0].format('YYYY-MM-DD'),
       endDate: createTm[1].format('YYYY-MM-DD'),
       createTm: [createTm[0].unix(), createTm[1].unix()],
-      dateType: EInoutType.IN,
       vehicleNo: '',
-      outSn: ''
+      resultType: ''
     };
 
     this.setState(
@@ -87,15 +86,14 @@ class InoutPayment extends PureComponent<any, IState> {
       });
   }
 
-  getSearchData = (info: IInoutSelectReq) => {
+  getSearchData = (info: IInoutPaymentSelectReq) => {
     // console.log('getSearchData', info);
-    const searchParam: IInoutSelectReq = {
-      outSn: '',
-      dateType: info.dateType,
+    const searchParam: IInoutPaymentSelectReq = {
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),
       endDate: conversionDate(info.createTm[1]), //info.createTm[1].format('YYYY-MM-DD'),
       createTm: info.createTm,
-      vehicleNo: info.vehicleNo === undefined ? '' : info.vehicleNo
+      vehicleNo: info.vehicleNo === undefined ? '' : info.vehicleNo,
+      resultType: info.resultType
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };
