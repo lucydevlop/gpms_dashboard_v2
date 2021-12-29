@@ -158,7 +158,7 @@ export function ticketClassFields(
         children: null
       },
       fieldOption: {
-        // format: "HH:mm",
+        rules: [{ type: 'array', required: true, whitespace: true, message: '필수 입력 값입니다' }],
         initialValue: ticketClass
           ? [moment(ticketClass.startTime, 'HH:mm'), moment(ticketClass.endTime, 'HH:mm')]
           : ''
@@ -170,7 +170,8 @@ export function ticketClassFields(
             localeObj['label.startTime'] || '시작시간',
             localeObj['label.endTime'] || '종료시간'
           ],
-          allowClear: true
+          allowClear: true,
+          order: false
         }
       }
     },

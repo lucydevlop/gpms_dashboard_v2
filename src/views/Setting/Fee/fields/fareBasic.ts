@@ -43,7 +43,7 @@ export function getFareBasicFields(
       }
     },
     {
-      id: 'regTime',
+      id: 'legTime',
       label: '레그타임',
       colProps: {
         span: 24
@@ -58,7 +58,7 @@ export function getFareBasicFields(
         children: null
       },
       fieldOption: {
-        initialValue: fareBasic ? fareBasic.regTime : ''
+        initialValue: fareBasic ? fareBasic.legTime : ''
       },
       component: {
         type: FormType.Input,

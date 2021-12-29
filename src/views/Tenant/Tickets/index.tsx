@@ -13,13 +13,19 @@ import {
 import { ColumnProps } from 'antd/lib/table';
 import PageWrapper from '@components/PageWrapper';
 import StandardTable from '@components/StandardTable';
-import { MonitorOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Divider, TablePaginationConfig } from 'antd';
+import {
+  DownloadOutlined,
+  MonitorOutlined,
+  PlusCircleOutlined,
+  PlusOutlined
+} from '@ant-design/icons';
+import { Button, Col, Divider, Row, TablePaginationConfig } from 'antd';
 import { localeStore } from '@store/localeStore';
 import DraggableModal from '@components/DraggableModal';
 import CorpTicketCreateModal from '@views/Tenant/Tickets/modals/CorpTicketCreateModal';
 import zdsTips from '@utils/tips';
 import { EDelYn } from '@/constants/list';
+import CorpTicketAllCreateModal from '@views/Tenant/Tickets/modals/CorpTicketAllCreateModal';
 
 interface IState {
   loading: boolean;
@@ -31,6 +37,7 @@ interface IState {
   current: number;
   pageSize: number;
   total: number;
+  createAllModal: boolean;
 }
 
 class TenantTicket extends PureComponent<any, IState> {
@@ -44,7 +51,8 @@ class TenantTicket extends PureComponent<any, IState> {
       createModal: false,
       total: 0,
       current: 1,
-      pageSize: 20
+      pageSize: 20,
+      createAllModal: false
     };
   }
 
@@ -189,6 +197,20 @@ class TenantTicket extends PureComponent<any, IState> {
 
     return (
       <PageWrapper>
+        <Row>
+          <Col xs={7}>
+            <Button
+              style={{ marginLeft: '1rem' }}
+              type="primary"
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.setState({ createAllModal: true });
+              }}
+            >
+              + {localeObj['label.create'] || '신규 등록'}
+            </Button>
+          </Col>
+        </Row>
         <StandardTable
           scroll={{ x: 'max-content' }}
           columns={columns}
@@ -228,6 +250,22 @@ class TenantTicket extends PureComponent<any, IState> {
               corpTicketSummary={this.state.selected}
               onSubmit={this.handleAddCorpTickets}
             />
+          </DraggableModal>
+        ) : null}
+        {this.state.createAllModal ? (
+          <DraggableModal
+            visible={this.state.createAllModal}
+            title={localeObj['label.tenant.discount'] || '입주사 할인'}
+            onOk={(): void => {
+              this.setState({ createAllModal: false });
+            }}
+            onCancel={(): void => {
+              this.setState({ createAllModal: false });
+            }}
+            width={1000}
+            footer={[]}
+          >
+            <CorpTicketAllCreateModal />
           </DraggableModal>
         ) : null}
       </PageWrapper>

@@ -14,4 +14,5 @@ export interface IInoutPaymentObj {
   result: string;
   failureMessage: string;
   delYn: EDelYn;
+  receiptImage: string;
 }

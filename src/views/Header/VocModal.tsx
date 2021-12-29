@@ -66,6 +66,7 @@ import { ITicketClassObj } from '@models/ticketClass';
 import { getTicketClasses } from '@api/ticketClass';
 import TicketsModal from '@views/Header/TicketsModal';
 import { IInoutPaymentObj } from '@models/inoutPayment';
+import ReceiptModal from '@views/Header/ReceiptModal';
 
 const { Option } = Select;
 
@@ -96,6 +97,8 @@ interface IState {
   corpTicketClasses: ICorpTicketClassObj[];
   ticketClasses: ITicketClassObj[];
   inoutPayment: IInoutPaymentObj[];
+  selectedPayment?: IInoutPaymentObj;
+  receiptModal: boolean;
 }
 
 @inject('parkinglotStore', 'localeStore')
@@ -123,7 +126,8 @@ class VocModal extends PureComponent<IProps, IState> {
       parkinglot: null,
       corpTicketClasses: [],
       ticketClasses: [],
-      inoutPayment: []
+      inoutPayment: [],
+      receiptModal: false
     };
   }
   componentDidMount() {
@@ -898,13 +902,13 @@ class VocModal extends PureComponent<IProps, IState> {
         align: 'center',
         render: (text: string, record: IInoutPaymentObj) => record.amount
       },
-      {
-        title: '결제방법',
-        key: 'payType',
-        width: 110,
-        align: 'center',
-        render: (text: string, record: IInoutPaymentObj) => record.payType
-      },
+      // {
+      //   title: '결제방법',
+      //   key: 'payType',
+      //   width: 110,
+      //   align: 'center',
+      //   render: (text: string, record: IInoutPaymentObj) => record.payType
+      // },
       {
         title: '결제여부',
         key: 'result',
@@ -915,6 +919,20 @@ class VocModal extends PureComponent<IProps, IState> {
           return record.result === 'ERROR' || result === 'FAILURE'
             ? `${result}(${record.failureMessage})`
             : result;
+        }
+      },
+      {
+        title: '영수증',
+        width: 110,
+        align: 'center',
+        render: (text: string, record: IInoutPaymentObj) => {
+          return (
+            <Button
+              onClick={(event) => this.setState({ selectedPayment: record, receiptModal: true })}
+            >
+              영수증
+            </Button>
+          );
         }
       }
     ];
@@ -1167,6 +1185,19 @@ class VocModal extends PureComponent<IProps, IState> {
               corpTiketClasses={this.state.corpTicketClasses}
               loading={this.state.loading}
             />
+          </DraggableModal>
+        ) : null}
+        {this.state.receiptModal && this.state.selectedPayment ? (
+          <DraggableModal
+            title={'영수증 정보'}
+            visible={this.state.receiptModal}
+            width={500}
+            onOk={() => this.setState({ receiptModal: false })}
+            onCancel={(): void => {
+              this.setState({ receiptModal: false });
+            }}
+          >
+            <ReceiptModal payment={this.state.selectedPayment} />
           </DraggableModal>
         ) : null}
       </>

@@ -23,7 +23,7 @@ export interface IFareInfoObj {
 export interface IFareBasicObj {
   sn?: number;
   serviceTime: number;
-  regTime: number;
+  legTime: number;
   ticketTime: number;
   dayMaxAmt: number;
   effectDate: Date;

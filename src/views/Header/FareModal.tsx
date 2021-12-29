@@ -109,7 +109,7 @@ class FareModal extends PureComponent<IProps, IState> {
             {this.props.fare?.fareBasic.serviceTime}
           </Descriptions.Item>
           <Descriptions.Item span={8} label={'레그타임'} style={{ padding: '10px 16px' }}>
-            {this.props.fare?.fareBasic.regTime}
+            {this.props.fare?.fareBasic.legTime}
           </Descriptions.Item>
           <Descriptions.Item span={8} label={'일최대요금'} style={{ padding: '10px 16px' }}>
             {this.props.fare?.fareBasic.dayMaxAmt}

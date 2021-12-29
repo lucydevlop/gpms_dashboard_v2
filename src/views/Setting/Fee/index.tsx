@@ -252,7 +252,7 @@ class FeeSetting extends PureComponent<any, IState> {
       },
       {
         name: '레그타임(분)',
-        value: this.state.fareBasic ? this.state.fareBasic.regTime : ''
+        value: this.state.fareBasic ? this.state.fareBasic.legTime : ''
       },
       {
         name: '할인권타임(분)',
