@@ -37,6 +37,7 @@ class CorpTicketAllCreateModal extends PureComponent<IProps, IState> {
   };
 
   handleChange = (targetKeys: any) => {
+    console.log('handleChange', targetKeys);
     this.setState({ taskSelectChosen: targetKeys });
   };
 
@@ -59,8 +60,8 @@ class CorpTicketAllCreateModal extends PureComponent<IProps, IState> {
             <div>
               {/*<TransferHintText>Please add the targeted {columnName} to the column on the right side.</TransferHintText>*/}
               <TransferColumns>
-                <TransferColumn>Excluded </TransferColumn>
-                <TransferColumn>Selected </TransferColumn>
+                <TransferColumn>제외</TransferColumn>
+                <TransferColumn>선택</TransferColumn>
               </TransferColumns>
               <Transfer
                 dataSource={this.state.corpList}

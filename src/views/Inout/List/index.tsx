@@ -73,23 +73,8 @@ class Inout extends PureComponent<any, IState> {
   }
 
   componentDidMount() {
-    parkinglotStore.initGateList().then(() => {
-      const inUnique: { value: string; label: string }[] = [];
-      parkinglotStore.gateList
-        .filter((g) => g.delYn === EDelYn.N && g.gateType.includes('IN'))
-        .forEach((gate) => {
-          inUnique.push({ value: gate.gateId, label: gate.gateName });
-        });
-      this.setState({ inGates: inUnique });
-
-      const outUnique: { value: string; label: string }[] = [];
-      parkinglotStore.gateList
-        .filter((g) => g.delYn === EDelYn.N && g.gateType.includes('OUT'))
-        .forEach((gate) => {
-          outUnique.push({ value: gate.gateId, label: gate.gateName });
-        });
-      this.setState({ outGates: outUnique });
-    });
+    this.setState({ inGates: parkinglotStore.getInGates });
+    this.setState({ outGates: parkinglotStore.getOutGates });
 
     getDiscountClasses()
       .then((res: any) => {
@@ -130,7 +115,7 @@ class Inout extends PureComponent<any, IState> {
     });
   };
 
-  tranfer = (info: IInoutObj) => {
+  transfer = (info: IInoutObj) => {
     // this.setState({ detailModal: false });
     transferParkinglotInout(info).then((res: any) => {
       const { msg, data } = res;
@@ -649,7 +634,7 @@ class Inout extends PureComponent<any, IState> {
               outGates={this.state.outGates}
               discountClasses={this.state.discountClasses}
               onCalc={(value) => this.calc(value)}
-              onTransfer={(value) => this.tranfer(value)}
+              onTransfer={(value) => this.transfer(value)}
             />
           </DraggableModal>
         ) : null}

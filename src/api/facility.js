@@ -68,13 +68,13 @@ export function getDisplayMessages() {
 }
 
 export function createFacility(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/facility/create`, {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities`, {
     data: data
   });
 }
 
 export function updateFacility(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/facility/all/update`, {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities`, {
     data: data
   });
 }

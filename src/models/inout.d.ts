@@ -45,6 +45,7 @@ export interface IInoutPaymentSelectReq {
   createTm: number[];
   vehicleNo?: string;
   resultType?: EResultType | string;
+  limit: number;
 }
 
 export interface IInoutDiscountApplyObj {

@@ -112,13 +112,11 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
         }
       };
       if (!err) {
-        updateParkinglot(sendData).then((res: any) => {
-          const { msg, data } = res;
-          if (msg === 'success') {
-            runInAction(() => {
-              zdsTips.success('주차 정보 변경 완료'), () => this.setState({ parkinglot: data });
-            });
-          }
+        parkinglotStore.update(sendData).then((res: any) => {
+          runInAction(() => {
+            zdsTips.success('주차 정보 변경 완료'),
+              () => this.setState({ parkinglot: parkinglotStore.parkinglot });
+          });
         });
       }
     });

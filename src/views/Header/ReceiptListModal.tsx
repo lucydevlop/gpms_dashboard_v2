@@ -1,37 +1,32 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
-import { IInoutObj, IInoutPaymentSelectReq, IInoutSelectReq } from '@models/inout';
+import InoutPayment from '@views/Inout/Payment';
+import { IInoutPaymentSelectReq } from '@models/inout';
+import { IInoutPaymentObj } from '@models/inoutPayment';
 import moment from 'moment';
-import { delYnOpt, EInoutType, ETicketType, paymentTypeOpt, resultTypeOpt } from '@/constants/list';
 import { getInoutPayments } from '@api/Inout';
 import { runInAction } from 'mobx';
-import { IInoutPaymentObj } from '@models/inoutPayment';
-import Table, { ColumnProps } from 'antd/lib/table';
 import {
   conversionDate,
   conversionEnumValue,
   convertNumberWithCommas,
   convertStringToDateTime
 } from '@utils/conversion';
-import { searchInoutPaymentFields } from '@views/Inout/List/FormFields/FormFields';
+import { TablePaginationConfig } from 'antd/es/table';
+import Table, { ColumnProps } from 'antd/lib/table';
+import { paymentTypeOpt, resultTypeOpt } from '@/constants/list';
+import { Button } from 'antd';
 import PageWrapper from '@components/PageWrapper';
 import SearchForm from '@components/StandardTable/SearchForm';
 import StandardTable from '@components/StandardTable';
-import { TablePaginationConfig } from 'antd/es/table';
-import { localeStore } from '@store/localeStore';
-import { Button, Col, Row } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
-import { generateCsv } from '@utils/downloadUtil';
 import DraggableModal from '@components/DraggableModal';
 import ReceiptModal from '@views/Header/ReceiptModal';
-import { IFacilityObj } from '@models/facility';
-import { parkinglotStore } from '@store/parkinglotStore';
+import { disabledDateAfterToday, IFormFieldConfig } from '@utils/form';
+import { localeStore } from '@store/localeStore';
+import { FormType } from '@/constants/form';
+import { datePickerFormat } from '@/constants';
 
-interface IProps {
-  isModal?: boolean;
-  pageSize?: number;
-}
-
+interface IProps {}
 interface IState {
   loading: boolean;
   searchParam?: IInoutPaymentSelectReq;
@@ -45,7 +40,7 @@ interface IState {
 
 @inject('parkinglotStore', 'localeStore')
 @observer
-class InoutPayment extends PureComponent<IProps, IState> {
+class ReceiptListModal extends PureComponent<IProps, IState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -53,7 +48,7 @@ class InoutPayment extends PureComponent<IProps, IState> {
       list: [],
       total: 0,
       current: 1,
-      pageSize: this.props.pageSize ? this.props.pageSize : 20,
+      pageSize: 10,
       receiptModal: false
     };
   }
@@ -65,7 +60,7 @@ class InoutPayment extends PureComponent<IProps, IState> {
       endDate: createTm[1].format('YYYY-MM-DD'),
       createTm: [createTm[0].unix(), createTm[1].unix()],
       vehicleNo: '',
-      resultType: '',
+      resultType: 'SUCCESS',
       limit: 0
     };
 
@@ -100,13 +95,12 @@ class InoutPayment extends PureComponent<IProps, IState> {
   }
 
   getSearchData = (info: IInoutPaymentSelectReq) => {
-    // console.log('getSearchData', info);
     const searchParam: IInoutPaymentSelectReq = {
       startDate: conversionDate(info.createTm[0]), //info.createTm[0].format('YYYY-MM-DD'),
       endDate: conversionDate(info.createTm[1]), //info.createTm[1].format('YYYY-MM-DD'),
       createTm: info.createTm,
       vehicleNo: info.vehicleNo === undefined ? '' : info.vehicleNo,
-      resultType: info.resultType,
+      resultType: 'SUCCESS',
       limit: 0
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
@@ -114,74 +108,6 @@ class InoutPayment extends PureComponent<IProps, IState> {
 
   paginationChange = (pagination: TablePaginationConfig) => {
     this.setState({ current: pagination.current || 1 });
-  };
-
-  addProdRender = () => {
-    const { localeObj } = localeStore;
-    const { isModal } = this.props;
-
-    return isModal ? null : (
-      <Row>
-        <Col xs={7}>
-          <Button
-            style={{ marginLeft: '1rem' }}
-            type="primary"
-            onClick={(e: any) => {
-              e.stopPropagation();
-              this.handleDownloadClick();
-            }}
-          >
-            <DownloadOutlined /> {localeObj['label.download'] || '다운로드'}
-          </Button>
-        </Col>
-      </Row>
-    );
-  };
-
-  async handleDownloadClick() {
-    const headers = [
-      '차량번호',
-      '정산타입',
-      '결제일자',
-      '결제금액',
-      '결제방법',
-      '카드',
-      '카드번호',
-      '승인번호',
-      '결제여부'
-    ].join(',');
-
-    const downLoadData = this.state.list.map((record) => {
-      const data: any = {};
-      data.vehicleNo = record.vehicleNo;
-      data.type = conversionEnumValue(record.type, paymentTypeOpt).label;
-      data.approveDateTime = convertStringToDateTime(record.approveDateTime) || '--';
-      data.amount = record.amount;
-      data.payType = record.payType;
-      data.cardCorp = record.cardCorp;
-      data.cardNumber = record.cardNumber;
-      data.transactionId = record.transactionId;
-      data.result = record.result === 'SUCCESS' ? '성공' : `실패(${record.failureMessage})`;
-      return data;
-    });
-    downLoadData.push({
-      vehicleNo: '',
-      type: '',
-      approveDateTime: '',
-      amount: this.sum(this.state.list, 'amount'),
-      payType: '',
-      cardCorp: '',
-      cardNumber: '',
-      transactionId: '',
-      result: ''
-    });
-    await generateCsv(downLoadData, headers, '입출차결제현황');
-  }
-
-  sum = (array: any[], key: string) => {
-    return array.reduce((sum, item) => {
-      return (sum += item[key]);
-    }, 0);
   };
 
   render() {
@@ -218,13 +144,6 @@ class InoutPayment extends PureComponent<IProps, IState> {
         render: (text: string, record: IInoutPaymentObj) => convertNumberWithCommas(record.amount)
       },
       {
-        title: '결제방법',
-        key: 'payType',
-        width: 110,
-        align: 'center',
-        render: (text: string, record: IInoutPaymentObj) => record.payType
-      },
-      {
         title: '카드',
         key: 'cardCorp',
         width: 110,
@@ -237,27 +156,6 @@ class InoutPayment extends PureComponent<IProps, IState> {
         width: 110,
         align: 'center',
         render: (text: string, record: IInoutPaymentObj) => record.cardNumber
-      },
-      {
-        title: '승인번호',
-        key: 'transactionId',
-        width: 110,
-        align: 'center',
-        render: (text: string, record: IInoutPaymentObj) => record.transactionId
-      },
-      {
-        title: '결제여부',
-        key: 'result',
-        width: 110,
-        align: 'center',
-        filters: resultTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
-        onFilter: (value, record) => record.result.indexOf(value as string) === 0,
-        render: (text: string, record: IInoutPaymentObj) => {
-          const result = conversionEnumValue(record.result, resultTypeOpt).label;
-          return record.result === 'ERROR' || result === 'FAILURE'
-            ? `${result}(${record.failureMessage})`
-            : result;
-        }
       },
       {
         title: '영수증',
@@ -275,12 +173,8 @@ class InoutPayment extends PureComponent<IProps, IState> {
     const { list, total, current, pageSize } = this.state;
     const searchFields = searchInoutPaymentFields();
     return (
-      <PageWrapper>
-        <SearchForm
-          submit={(value) => this.getSearchData(value)}
-          fieldConfig={searchFields}
-          footerRender={() => this.addProdRender()}
-        />
+      <>
+        <SearchForm submit={(value) => this.getSearchData(value)} fieldConfig={searchFields} />
         <StandardTable
           scroll={{ x: 'max-content', y: 800 }}
           columns={columns}
@@ -300,22 +194,6 @@ class InoutPayment extends PureComponent<IProps, IState> {
               }
             }
           }}
-          summary={() => (
-            <Table.Summary fixed>
-              <Table.Summary.Row>
-                <Table.Summary.Cell index={0}>
-                  <span style={{ fontSize: '15px', fontWeight: 600 }}>Total: {total}</span>
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={1} />
-                <Table.Summary.Cell index={2} />
-                <Table.Summary.Cell index={3}>
-                  <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'amount'))}
-                  </span>
-                </Table.Summary.Cell>
-              </Table.Summary.Row>
-            </Table.Summary>
-          )}
           onChange={this.paginationChange}
           // isSelected
         />
@@ -332,9 +210,89 @@ class InoutPayment extends PureComponent<IProps, IState> {
             <ReceiptModal payment={this.state.selected} />
           </DraggableModal>
         ) : null}
-      </PageWrapper>
+      </>
     );
   }
 }
 
-export default InoutPayment;
+export default ReceiptListModal;
+
+const regisDateRangeConfig = {
+  rules: [
+    {
+      type: 'array',
+      required: false,
+      message: localeStore.localeObj['alert.select.time'] || '시간을 선택하세요'
+    }
+  ],
+  format: datePickerFormat,
+  initialValue: [moment(new Date()).subtract(3, 'days'), moment(new Date())]
+};
+
+function searchInoutPaymentFields(): IFormFieldConfig<keyof IInoutPaymentSelectReq>[] {
+  const { localeObj } = localeStore;
+  return [
+    {
+      id: 'createTm',
+      label: '조회기간',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5,
+          xl: 5,
+          md: 5,
+          xs: 5
+        },
+        wrapperCol: {
+          span: 19,
+          xs: 19,
+          md: 19,
+          xl: 19
+        }
+      },
+      component: {
+        type: FormType.RangePicker,
+        option: {
+          placeholder: [
+            localeObj['label.startDate'] || '시작일',
+            localeObj['label.endDate'] || '종료일'
+          ],
+          allowClear: true,
+          disabledDate: disabledDateAfterToday
+        }
+      },
+      fieldOption: regisDateRangeConfig
+    },
+    {
+      id: 'vehicleNo',
+      label: '차량번호',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 8
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 5,
+          xs: 5
+        },
+        wrapperCol: {
+          xl: 10,
+          xs: 10
+        }
+      },
+      component: {
+        type: FormType.Input,
+        option: {
+          placeholder: '입력하세요'
+        }
+      }
+    }
+  ];
+}

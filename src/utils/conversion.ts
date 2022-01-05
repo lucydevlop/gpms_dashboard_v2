@@ -134,6 +134,19 @@ export const convertWeekDay = (x: string[]) => {
   });
   return data;
 };
+
+export const toHHMM = (x: number | undefined) => {
+  if (x) {
+    let hours = Math.floor(x / 60);
+    let minutes = Math.floor(x - hours * 60);
+
+    let hoursStr = hours > 0 ? hours + '시 ' : '';
+    return hoursStr + minutes + '분';
+  }
+  return '';
+  //const myNum = parseInt(this, 10);
+};
+
 //
 // /**
 //  * @method conversionNumberToMoment

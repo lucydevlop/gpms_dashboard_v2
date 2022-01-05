@@ -20,11 +20,17 @@ import {
   createParkinglotInout,
   getInoutDetail,
   getInoutPayment,
+  getInoutPayments,
   getInouts,
   transferParkinglotInout
 } from '@api/Inout';
 import { runInAction } from 'mobx';
-import { IInoutDiscountApplyObj, IInoutObj, IInoutSelectReq } from '@models/inout';
+import {
+  IInoutDiscountApplyObj,
+  IInoutObj,
+  IInoutPaymentSelectReq,
+  IInoutSelectReq
+} from '@models/inout';
 import { IFacilityObj } from '@models/facility';
 import moment from 'moment';
 import {
@@ -46,7 +52,8 @@ import {
   conversionDateTime,
   conversionEnumValue,
   convertNumberWithCommas,
-  convertStringToDateTime
+  convertStringToDateTime,
+  toHHMM
 } from '@utils/conversion';
 import DraggableModal from '@components/DraggableModal';
 import FacilityModal from './FacilityModal';
@@ -67,6 +74,8 @@ import { getTicketClasses } from '@api/ticketClass';
 import TicketsModal from '@views/Header/TicketsModal';
 import { IInoutPaymentObj } from '@models/inoutPayment';
 import ReceiptModal from '@views/Header/ReceiptModal';
+import InoutPayment from '@views/Inout/Payment';
+import ReceiptListModal from '@views/Header/ReceiptListModal';
 
 const { Option } = Select;
 
@@ -99,6 +108,7 @@ interface IState {
   inoutPayment: IInoutPaymentObj[];
   selectedPayment?: IInoutPaymentObj;
   receiptModal: boolean;
+  receiptListModal: boolean;
 }
 
 @inject('parkinglotStore', 'localeStore')
@@ -127,39 +137,19 @@ class VocModal extends PureComponent<IProps, IState> {
       corpTicketClasses: [],
       ticketClasses: [],
       inoutPayment: [],
-      receiptModal: false
+      receiptModal: false,
+      receiptListModal: false
     };
   }
   componentDidMount() {
-    this.setState({ loading: true, parkinglot: parkinglotStore.getParkinglot() });
-
-    // 주차장 시설 정보 fetch
-    getFacilities().then((res: any) => {
-      const { msg, data } = res;
-      if (msg === 'success') {
-        runInAction(() => {
-          this.setState({ facilities: data });
-        });
-      }
+    this.setState({
+      loading: true,
+      parkinglot: parkinglotStore.getParkinglot(),
+      facilities: parkinglotStore.getFacilities()
     });
 
-    parkinglotStore.initGateList().then(() => {
-      const inUnique: { value: string; label: string }[] = [];
-      parkinglotStore.gateList
-        .filter((g) => g.delYn === EDelYn.N && g.gateType.includes('IN'))
-        .forEach((gate) => {
-          inUnique.push({ value: gate.gateId, label: gate.gateName });
-        });
-      this.setState({ inGates: inUnique });
-
-      const outUnique: { value: string; label: string }[] = [];
-      parkinglotStore.gateList
-        .filter((g) => g.delYn === EDelYn.N && g.gateType.includes('OUT'))
-        .forEach((gate) => {
-          outUnique.push({ value: gate.gateId, label: gate.gateName });
-        });
-      this.setState({ outGates: outUnique });
-    });
+    this.setState({ inGates: parkinglotStore.getInGates });
+    this.setState({ outGates: parkinglotStore.getOutGates });
 
     // 주차장 할인권 fetch
     getDiscountClasses().then((res: any) => {
@@ -203,14 +193,14 @@ class VocModal extends PureComponent<IProps, IState> {
   }
   handleCarSearch = (value: any) => {
     if (value === null || value === '') return;
-    const createTm = [moment(new Date()).subtract(7, 'days'), moment(new Date())];
+    const createTm = [moment(new Date()).subtract(21, 'days'), moment(new Date())];
     const searchParam: IInoutSelectReq = {
       startDate: createTm[0].format('YYYY-MM-DD'),
       endDate: createTm[1].format('YYYY-MM-DD'),
       createTm: [createTm[0].unix(), createTm[1].unix()],
       dateType: EInoutType.IN,
       parkcartype: ETicketType.ALL,
-      outSn: -1
+      outSn: ''
     };
 
     const data: any = {};
@@ -220,13 +210,15 @@ class VocModal extends PureComponent<IProps, IState> {
     data.vehicleNo = value;
     data.parkcartype = '';
     data.gateId = '';
-    data.outSn = -1;
+    data.outSn = '';
 
     getInouts(data)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
-          const inouts = data.filter((item: IInoutObj) => item.type === 'IN');
+          const inouts = data.filter(
+            (item: IInoutObj) => item.type === 'IN' && item.parkoutSn !== -1
+          );
           runInAction(() => {
             this.setState({ list: inouts });
             if (inouts.length <= 0) {
@@ -278,17 +270,27 @@ class VocModal extends PureComponent<IProps, IState> {
               });
             });
             this.setState({ discounts: discounts });
-          });
-        }
-      })
-      .catch();
 
-    getInoutPayment(sn)
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ inoutPayment: data });
+            const createTm = [moment(new Date()).subtract(3, 'months'), moment(new Date())];
+            const searchPayment: IInoutPaymentSelectReq = {
+              startDate: createTm[0].format('YYYY-MM-DD'),
+              endDate: createTm[1].format('YYYY-MM-DD'),
+              createTm: [createTm[0].unix(), createTm[1].unix()],
+              vehicleNo: this.state.selected?.vehicleNo,
+              resultType: 'SUCCESS',
+              limit: 5
+            };
+
+            getInoutPayments(searchPayment)
+              .then((res: any) => {
+                const { msg, data } = res;
+                if (msg === 'success') {
+                  runInAction(() => {
+                    this.setState({ inoutPayment: data.filter((l: any) => l.amount > 0) });
+                  });
+                }
+              })
+              .catch();
           });
         }
       })
@@ -570,7 +572,7 @@ class VocModal extends PureComponent<IProps, IState> {
               label={'주차시간'}
               style={{ paddingLeft: '16px', paddingRight: '16px' }}
             >
-              <span>{this.state.selected ? this.state.selected.parktime : ''}</span>
+              <span>{this.state.selected ? toHHMM(this.state.selected.parktime) : ''}</span>
             </Descriptions.Item>
             <Descriptions.Item
               span={12}
@@ -996,7 +998,18 @@ class VocModal extends PureComponent<IProps, IState> {
             </Button>
           </Col>
           <Col span={3} />
-          <Col span={3} />
+          <Col span={3} style={{ textAlign: 'center' }}>
+            <Button
+              type={'primary'}
+              style={{ padding: '0 15px', width: '120px' }}
+              onClick={(e: any) => {
+                e.stopPropagation();
+                this.setState({ receiptListModal: true });
+              }}
+            >
+              <span style={{ fontWeight: 800 }}>입출차결제</span>
+            </Button>
+          </Col>
           <Col span={3} style={{ textAlign: 'center' }}>
             <Button
               type={'primary'}
@@ -1189,7 +1202,7 @@ class VocModal extends PureComponent<IProps, IState> {
         ) : null}
         {this.state.receiptModal && this.state.selectedPayment ? (
           <DraggableModal
-            title={'영수증 정보'}
+            title={'입출차 결제내역'}
             visible={this.state.receiptModal}
             width={500}
             onOk={() => this.setState({ receiptModal: false })}
@@ -1198,6 +1211,19 @@ class VocModal extends PureComponent<IProps, IState> {
             }}
           >
             <ReceiptModal payment={this.state.selectedPayment} />
+          </DraggableModal>
+        ) : null}
+        {this.state.receiptListModal ? (
+          <DraggableModal
+            title={'결제 정보'}
+            visible={this.state.receiptListModal}
+            width={1000}
+            onOk={() => this.setState({ receiptListModal: false })}
+            onCancel={(): void => {
+              this.setState({ receiptListModal: false });
+            }}
+          >
+            <ReceiptListModal />
           </DraggableModal>
         ) : null}
       </>

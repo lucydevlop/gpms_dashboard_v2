@@ -1,16 +1,6 @@
 import React, { PureComponent } from 'react';
 import PageWrapper from '@components/PageWrapper';
-import {
-  createDisplay,
-  createFacility,
-  createGate,
-  getDisplayMessages,
-  getFacilities,
-  getGates,
-  updateDisplay,
-  updateFacility,
-  updateGate
-} from '@api/facility';
+import { createDisplay, getDisplayMessages, updateDisplay } from '@api/facility';
 import { IGateObj } from '@models/gate';
 import { runInAction } from 'mobx';
 import { Tabs } from 'antd';
@@ -20,6 +10,8 @@ import DisplayTab from '@views/Setting/Facility/tabs/DisplayTab';
 import { IDisplayMsgObj } from '@models/display';
 import GateTab from '@views/Setting/Facility/tabs/GateTab';
 import { mac } from 'address';
+import { inject, observer } from 'mobx-react';
+import { parkinglotStore } from '@store/parkinglotStore';
 
 interface IState {
   loading: boolean;
@@ -27,6 +19,8 @@ interface IState {
   facilities: IFacilityObj[];
   displayMessages: IDisplayMsgObj[];
 }
+@inject('localeStore', 'parkinglotStore')
+@observer
 class FacilitySetting extends PureComponent<any, IState> {
   constructor(props: any) {
     super(props);
@@ -45,25 +39,22 @@ class FacilitySetting extends PureComponent<any, IState> {
   pollData = async () => {
     this.setState({ loading: true });
 
-    getGates()
+    //this.setState({ gates: parkinglotStore.gateList });
+    parkinglotStore
+      .fetchGates()
       .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ gates: data });
-          });
-        }
+        runInAction(() => {
+          this.setState({ gates: parkinglotStore.gateList });
+        });
       })
       .catch(() => {});
 
-    getFacilities()
+    parkinglotStore
+      .fetchFacilities()
       .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ facilities: data });
-          });
-        }
+        runInAction(() => {
+          this.setState({ facilities: parkinglotStore.facilities });
+        });
       })
       .catch(() => {});
 
@@ -82,79 +73,29 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   handleGateUpdate = async (record: IGateObj) => {
-    updateGate(record)
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.pollData();
-            // const update = data;
-            // const gates = this.state.gates.map((e) => {
-            //   if (e.sn === update.sn) {
-            //     return { ...update };
-            //   }
-            //   return { ...e };
-            // });
-            // this.setState({ gates: gates });
-          });
-        }
-      })
-      .catch(() => {});
+    parkinglotStore.updateGate(record).then((res: IGateObj[]) => {
+      this.setState({ gates: res });
+    });
   };
 
   handleGateCreate = async (record: IGateObj) => {
-    createGate(record)
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            const gates = [...this.state.gates, data];
-            this.setState({ gates: gates });
-          });
-        }
-      })
-      .catch(() => {});
+    parkinglotStore.createGate(record).then((res: any) => {
+      runInAction(() => {
+        this.setState({ gates: res });
+      });
+    });
   };
 
   handleFacilityUpdate = async (record: IFacilityObj) => {
-    const wrapper: Array<IFacilityObj> = [];
-    wrapper.push(record);
-    const requsetData = { facilities: wrapper };
-    updateFacility(requsetData)
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            const recive = data;
-            const changeData = recive.filter((x: IFacilityObj) => {
-              return x.sn === record.sn;
-            })[0];
-            const facilities = this.state.facilities.map((e) => {
-              if (e.sn === changeData.sn) {
-                return { ...changeData };
-              }
-              return { ...e };
-            });
-            this.setState({ facilities: facilities });
-          });
-        }
-      })
-      .catch(() => {});
+    parkinglotStore.updateFacilities(record).then((res: IFacilityObj[]) => {
+      this.setState({ facilities: res });
+    });
   };
 
   handleFacilityCreate = async (record: IFacilityObj) => {
-    createFacility(record)
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            const add = data;
-            const facilities = [...this.state.facilities, add];
-            this.setState({ facilities: facilities });
-          });
-        }
-      })
-      .catch(() => {});
+    parkinglotStore.createFacilities(record).then((res: IFacilityObj[]) => {
+      this.setState({ facilities: res });
+    });
   };
 
   handleDisplayCreate = async (record: IDisplayMsgObj) => {

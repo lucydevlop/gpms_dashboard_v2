@@ -75,7 +75,8 @@ export function getInoutPayments(data) {
       fromDate: data.startDate,
       toDate: data.endDate,
       vehicleNo: data.vehicleNo,
-      resultType: data.resultType
+      resultType: data.resultType,
+      limit: data.limit
     }
   });
 }
@@ -86,4 +87,10 @@ export function getInoutPayment(data) {
       sn: data
     }
   });
+}
+
+export function printReceiptInoutPayment(sn, facilityId) {
+  return io.get(
+    `${process.env.REACT_APP_API_DOMAIN_URL}/inouts/payment/receipt/${sn}/print/${facilityId}`
+  );
 }
