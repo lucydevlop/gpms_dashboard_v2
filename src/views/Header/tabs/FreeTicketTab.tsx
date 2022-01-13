@@ -91,7 +91,8 @@ class FreeTicketTab extends PureComponent<IProps, IState> {
       ticketType: ETicketType.FREETICKET,
       searchLabel: '',
       searchText: '',
-      delYn: EDelYn.N
+      delYn: EDelYn.N,
+      corpName: ''
     };
 
     this.setState(
@@ -113,7 +114,8 @@ class FreeTicketTab extends PureComponent<IProps, IState> {
       delYn: info.delYn,
       ticketType: ETicketType.FREETICKET,
       searchLabel: info.searchLabel,
-      searchText: info.searchText === undefined ? '' : info.searchText
+      searchText: info.searchText === undefined ? '' : info.searchText,
+      corpName: info.corpName
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };

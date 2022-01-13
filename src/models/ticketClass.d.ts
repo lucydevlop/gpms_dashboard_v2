@@ -22,6 +22,7 @@ export interface ITicketClassObj {
   delYn: EDelYn;
   period?: Period | null;
   extendYn: EDelYn;
+  week: string[];
   //none entity
   timeRange: number[];
   periodType: string;

@@ -278,7 +278,7 @@ export const getFormFields = (
             label={labelStyle}
             // labelAlign={'right'}
             {...formItemProps}
-            style={{ marginBottom: 10 }}
+            style={{ marginBottom: 10, alignItems: 'center' }}
           >
             <InputGroup compact style={{ width: '100%', flex: 1, display: 'flex' }}>
               {formField.component.option.col !== 0 ? (

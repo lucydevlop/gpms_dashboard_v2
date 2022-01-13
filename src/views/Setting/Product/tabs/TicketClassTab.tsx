@@ -12,7 +12,7 @@ import {
   useYnOpt,
   vehicleTypeOpt
 } from '@/constants/list';
-import { conversionEnumValue } from '@utils/conversion';
+import { conversionEnumValue, convertWeekDay } from '@utils/conversion';
 import { Button, Divider, Row } from 'antd';
 import StandardTable from '@components/StandardTable';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -94,10 +94,10 @@ class TicketClassTab extends PureComponent<IProps, IState> {
         key: 'rangeType',
         width: 110,
         align: 'center',
-        filters: dayRangeTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
-        onFilter: (value, record) => record.rangeType.indexOf(value as string) === 0,
+        //filters: dayRangeTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
+        //onFilter: (value, record) => record.rangeType.indexOf(value as string) === 0,
         render: (text: string, record: ITicketClassObj) =>
-          conversionEnumValue(record.rangeType, dayRangeTypeOpt).label
+          record.week ? `${convertWeekDay(record.week)}` : ''
       },
       {
         title: '적용타입',

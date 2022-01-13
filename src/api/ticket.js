@@ -83,7 +83,8 @@ export function getParkinglotTickets(data) {
       searchDateLabel: data.searchDateLabel,
       ticketType: data.ticketType,
       searchLabel: data.searchLabel,
-      searchText: data.searchText
+      searchText: data.searchText,
+      corpName: data.corpName
     }
   });
 }

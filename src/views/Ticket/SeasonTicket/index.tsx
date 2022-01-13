@@ -94,7 +94,8 @@ class Ticket extends PureComponent<any, IState> {
       ticketType: ETicketType.SEASONTICKET,
       searchLabel: '',
       searchText: '',
-      delYn: EDelYn.N
+      delYn: EDelYn.N,
+      corpName: ''
     };
     this.getTicketClasses();
     this.setState(
@@ -123,6 +124,7 @@ class Ticket extends PureComponent<any, IState> {
   };
 
   getSearchData = (info: ITicketSelectReq) => {
+    console.log('season ticket', info);
     const searchParam: ITicketSelectReq = {
       searchDateLabel: info.searchDateLabel,
       startDate: conversionDate(info.createTm[0]),
@@ -133,7 +135,8 @@ class Ticket extends PureComponent<any, IState> {
       delYn: info.delYn,
       ticketType: ETicketType.SEASONTICKET,
       searchLabel: info.searchLabel,
-      searchText: info.searchText === undefined ? '' : info.searchText
+      searchText: info.searchText === undefined ? '' : info.searchText,
+      corpName: info.corpName
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };

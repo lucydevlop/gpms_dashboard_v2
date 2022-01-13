@@ -92,7 +92,8 @@ class VisitorTicketTab extends PureComponent<IProps, IState> {
       ticketType: ETicketType.VISITTICKET,
       searchLabel: '',
       searchText: '',
-      delYn: EDelYn.N
+      delYn: EDelYn.N,
+      corpName: ''
     };
 
     this.setState(
@@ -114,7 +115,8 @@ class VisitorTicketTab extends PureComponent<IProps, IState> {
       delYn: info.delYn,
       ticketType: ETicketType.VISITTICKET,
       searchLabel: info.searchLabel,
-      searchText: info.searchText === undefined ? '' : info.searchText
+      searchText: info.searchText === undefined ? '' : info.searchText,
+      corpName: info.corpName
     };
     this.setState({ searchParam: searchParam, current: 1 }, () => this.pollData());
   };

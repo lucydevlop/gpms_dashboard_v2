@@ -1,9 +1,8 @@
 import { ITicketClassObj } from '@models/ticketClass';
 import { IFormFieldConfig } from '@utils/form';
 import {
-  dayRangeTypeOpt,
+  dayTYpeOpt,
   delYnOpt,
-  EDayRangeType,
   EDelYn,
   EPeriodType,
   ETicketAplyType,
@@ -85,31 +84,57 @@ export function ticketClassFields(
         }
       }
     },
+    // {
+    //   id: 'rangeType',
+    //   label: '적용일',
+    //   colProps: {
+    //     xl: 12,
+    //     xs: 24
+    //   },
+    //   formItemProps: {
+    //     labelCol: {
+    //       xl: 9,
+    //       xs: 9
+    //     },
+    //     wrapperCol: {
+    //       xl: 15,
+    //       xs: 15
+    //     },
+    //     children: null
+    //   },
+    //   fieldOption: {
+    //     initialValue: ticketClass ? ticketClass.rangeType : EDayRangeType.ALL,
+    //     rules: [{ required: true, message: '필수 입력값 입니다' }]
+    //   },
+    //   component: {
+    //     type: FormType.Select,
+    //     selectOptions: dayRangeTypeOpt
+    //   }
+    // },
     {
-      id: 'rangeType',
+      id: 'week',
       label: '적용일',
       colProps: {
-        xl: 12,
+        xl: 24,
         xs: 24
       },
       formItemProps: {
         labelCol: {
-          xl: 9,
-          xs: 9
+          xl: 4,
+          xs: 4
         },
         wrapperCol: {
-          xl: 15,
-          xs: 15
+          xl: 16,
+          xs: 16
         },
         children: null
       },
       fieldOption: {
-        initialValue: ticketClass ? ticketClass.rangeType : EDayRangeType.ALL,
-        rules: [{ required: true, message: '필수 입력값 입니다' }]
+        initialValue: ticketClass ? ticketClass.week : ''
       },
       component: {
-        type: FormType.Select,
-        selectOptions: dayRangeTypeOpt
+        type: FormType.CheckGroup,
+        selectOptions: dayTYpeOpt
       }
     },
     {

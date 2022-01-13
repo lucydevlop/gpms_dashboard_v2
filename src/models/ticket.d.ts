@@ -39,4 +39,5 @@ export interface ITicketSelectReq {
   searchLabel?: string;
   fromDate?: string;
   toDate?: string;
+  corpName: string;
 }

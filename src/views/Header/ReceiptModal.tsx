@@ -6,6 +6,7 @@ import { IFacilityObj } from '@models/facility';
 import { parkinglotStore } from '@store/parkinglotStore';
 import { printReceiptInoutPayment } from '@api/Inout';
 import zdsTips from '@utils/tips';
+import { EDelYn } from '@/constants/list';
 
 interface IProps {
   payment: IInoutPaymentObj;
@@ -44,9 +45,11 @@ class ReceiptModal extends PureComponent<IProps, IState> {
         style={{ width: '150px' }}
         onChange={(value: any) => this.setState({ facilityId: value })}
       >
-        {this.state.payStations.map((p) => (
-          <Option value={p.dtFacilitiesId}>{p.fname}</Option>
-        ))}
+        {this.state.payStations
+          .filter((p) => p.delYn === EDelYn.N)
+          .map((p) => (
+            <Option value={p.dtFacilitiesId}>{p.fname}</Option>
+          ))}
       </Select>
     );
   };

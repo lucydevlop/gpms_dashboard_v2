@@ -1,11 +1,9 @@
 import React, { BaseSyntheticEvent, ReactNode } from 'react';
 import { FormComponentProps } from '@ant-design/compatible/lib/form';
 import { Form } from '@ant-design/compatible';
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { Row, Button } from 'antd';
 import { IFormProps } from './fieldsConfig';
 import './search.less';
-import { IParkinglotListReq } from '@models/parkinglot';
 import { getQueryRangeDate } from '@/utils';
 import { getFormFields, IFormFieldConfig } from '@utils/form';
 import { localeStore } from '@store/localeStore';
@@ -53,6 +51,14 @@ class BaseSearch extends React.Component<ISearchFormProps, ISearchFormState> {
     });
   };
 
+  handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>): void => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.handlerSubmit();
+    }
+  };
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const newFieldsConfig = this.props.fieldConfig;
@@ -64,6 +70,7 @@ class BaseSearch extends React.Component<ISearchFormProps, ISearchFormState> {
             e.preventDefault();
             this.handlerSubmit();
           }}
+          onKeyPress={(e) => this.handleKeyDown(e)}
         >
           <Row gutter={24} className={'RCS-formContainer'}>
             {getFormFields(getFieldDecorator, newFieldsConfig, this.state.putAway, 7)}

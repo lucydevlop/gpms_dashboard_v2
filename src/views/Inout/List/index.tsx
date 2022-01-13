@@ -312,6 +312,10 @@ class Inout extends PureComponent<any, IState> {
     }, 0);
   };
 
+  handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') this.getSearchData(e.target.value);
+  };
+
   render() {
     const { localeObj } = localeStore;
     const columns: ColumnProps<IInoutObj>[] = [

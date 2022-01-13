@@ -76,6 +76,7 @@ import { IInoutPaymentObj } from '@models/inoutPayment';
 import ReceiptModal from '@views/Header/ReceiptModal';
 import InoutPayment from '@views/Inout/Payment';
 import ReceiptListModal from '@views/Header/ReceiptListModal';
+import { timePickerFormat } from '@/constants';
 
 const { Option } = Select;
 
@@ -109,6 +110,7 @@ interface IState {
   selectedPayment?: IInoutPaymentObj;
   receiptModal: boolean;
   receiptListModal: boolean;
+  searchText: string;
 }
 
 @inject('parkinglotStore', 'localeStore')
@@ -138,7 +140,8 @@ class VocModal extends PureComponent<IProps, IState> {
       ticketClasses: [],
       inoutPayment: [],
       receiptModal: false,
-      receiptListModal: false
+      receiptListModal: false,
+      searchText: ''
     };
   }
   componentDidMount() {
@@ -191,6 +194,11 @@ class VocModal extends PureComponent<IProps, IState> {
       }
     });
   }
+
+  handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') this.handleCarSearch(e.target.value);
+  };
+
   handleCarSearch = (value: any) => {
     if (value === null || value === '') return;
     const createTm = [moment(new Date()).subtract(21, 'days'), moment(new Date())];
@@ -839,23 +847,32 @@ class VocModal extends PureComponent<IProps, IState> {
     ];
 
     return (
-      <Card key="discount" bordered={false} bodyStyle={{ maxHeight: 350, overflow: 'auto' }}>
+      <Card
+        key="discount"
+        bordered={false}
+        bodyStyle={{ maxHeight: 350, overflow: 'scroll', whiteSpace: 'nowrap' }}
+      >
         <h3>할인 내역</h3>
         <Row gutter={24}>
-          {this.state.discountClasses.map((discountClass) => (
-            <Col span={4.9} style={{ textAlign: 'center', padding: '3px' }}>
-              <Button
-                type={'primary'}
-                style={{ width: '100px' }}
-                onClick={(e: any) => {
-                  e.stopPropagation();
-                  this.handleAddDiscountClass(discountClass);
-                }}
-              >
-                <span style={{ fontWeight: 800 }}>{discountClass.discountNm}</span>
-              </Button>
-            </Col>
-          ))}
+          {this.state.discountClasses
+            .sort((v1: IDiscountClassObj, v2: IDiscountClassObj) =>
+              v2.orderNo < v1.orderNo ? 1 : -1
+            )
+            .filter((d) => d.rcsUse)
+            .map((discountClass) => (
+              <Col span={4.9} style={{ textAlign: 'center', padding: '3px' }}>
+                <Button
+                  type={'primary'}
+                  style={{ width: '100px' }}
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    this.handleAddDiscountClass(discountClass);
+                  }}
+                >
+                  <span style={{ fontWeight: 800 }}>{discountClass.discountNm}</span>
+                </Button>
+              </Col>
+            ))}
         </Row>
         <StandardTable
           // @ts-ignore
@@ -1055,7 +1072,17 @@ class VocModal extends PureComponent<IProps, IState> {
                 allowClear
                 style={{ width: '120%' }}
                 placeholder={'차량번호를 입력하세요'}
-                onSearch={(value) => this.handleCarSearch(value)}
+                onChange={(e) => this.setState({ searchText: e.target.value })}
+                onSearch={(value) => {
+                  if (this.state.searchText.length < 4)
+                    zdsTips.alert('차량번호 4자리이상 입력하세요');
+                  else this.handleCarSearch(this.state.searchText);
+                }}
+                // onKeyDown={(e) => {
+                //   e.stopPropagation();
+                //   this.handleKeyDown(e);
+                // }}
+                enterButton
               />
             </Space>
           </Col>
@@ -1115,7 +1142,7 @@ class VocModal extends PureComponent<IProps, IState> {
           <DraggableModal
             title={localeObj['label.ticket.info'] || '주차장 정기권 현황'}
             visible={this.state.ticketModal}
-            width={1100}
+            width={1200}
             onOk={() => this.setState({ ticketModal: false })}
             onCancel={(): void => {
               this.setState({ ticketModal: false });

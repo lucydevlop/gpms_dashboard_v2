@@ -103,7 +103,7 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
       formItemProps: {
         labelCol: {
           span: 5,
-          xl: 5,
+          xl: 6,
           md: 5,
           xs: 5
         },
@@ -111,7 +111,7 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
           span: 15,
           xs: 19,
           md: 15,
-          xl: 15
+          xl: 14
         }
       },
       fieldOption: {
@@ -129,6 +129,12 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
     {
       id: 'searchDateLabel',
       label: '조회기준',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 9
+      },
       formItemProps: {
         labelCol: {
           span: 5,
@@ -175,6 +181,12 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
     {
       id: 'searchLabel',
       label: '차량번호',
+      colProps: {
+        span: 8,
+        xs: 24,
+        md: 24,
+        xl: 7
+      },
       formItemProps: {
         labelCol: {
           span: 5,
@@ -209,6 +221,36 @@ export function searchTicketFields(): IFormFieldConfig<keyof ITicketSelectReq>[]
             placeholder: '입력하세요.'
           }
         }
+      }
+    },
+    {
+      id: 'corpName',
+      label: '입주사',
+      colProps: {
+        span: 4,
+        xs: 24,
+        md: 24,
+        xl: 4
+      },
+      formItemProps: {
+        labelCol: {
+          span: 5,
+          xl: 7,
+          md: 5,
+          xs: 5
+        },
+        wrapperCol: {
+          span: 15,
+          xs: 19,
+          md: 15,
+          xl: 14
+        }
+      },
+      fieldOption: {
+        initialValue: ''
+      },
+      component: {
+        type: FormType.Input
       }
     }
   ];
