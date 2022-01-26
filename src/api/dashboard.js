@@ -1,15 +1,13 @@
 import io from '@utils/io';
 
 export function getDashboardGateStatus() {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/main/gate');
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/home');
 }
 
 export function actionReset(gateId, category) {
-  return io.get(
-    `${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/gate/reset/${gateId}/${category}`
-  );
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/home/reset/${gateId}/${category}`);
 }
 
 export function actionGate(gateId, action) {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/gate/${action}/${gateId}`);
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/home/breaker/${gateId}/${action}`);
 }

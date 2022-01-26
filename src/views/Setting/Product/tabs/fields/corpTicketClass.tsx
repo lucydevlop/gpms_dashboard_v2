@@ -2,9 +2,8 @@ import { ICorpTicketClassObj } from '@models/corpTicketClass';
 import { IFormFieldConfig, ISelectOptions } from '@utils/form';
 import { FormType } from '@/constants/form';
 import {
-  dayRangeTypeOpt,
+  dayTYpeOpt,
   delYnOpt,
-  EDayRangeType,
   EDelYn,
   EOnOff,
   EPayType,
@@ -178,30 +177,29 @@ export const corpDiscountFields = (
     }
   },
   {
-    id: 'applyType',
+    id: 'week',
     label: '적용일',
     colProps: {
-      xl: 12,
+      xl: 24,
       xs: 24
     },
     formItemProps: {
       labelCol: {
-        xl: 9,
-        xs: 9
+        xl: 4,
+        xs: 4
       },
       wrapperCol: {
-        xl: 15,
-        xs: 15
+        xl: 16,
+        xs: 16
       },
       children: null
     },
     fieldOption: {
-      initialValue: discount ? discount.applyType : EDayRangeType.ALL,
-      rules: [{ required: true, message: '필수 입력값 입니다' }]
+      initialValue: discount ? discount.week : ''
     },
     component: {
-      type: FormType.Select,
-      selectOptions: dayRangeTypeOpt
+      type: FormType.CheckGroup,
+      selectOptions: dayTYpeOpt
     }
   },
   {

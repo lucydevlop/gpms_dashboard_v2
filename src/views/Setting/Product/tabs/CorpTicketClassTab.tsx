@@ -3,14 +3,13 @@ import { localeStore } from '@store/localeStore';
 import { ICorpTicketClassObj } from '@models/corpTicketClass';
 import { ColumnProps } from 'antd/lib/table';
 import {
-  dayRangeTypeOpt,
   delYnOpt,
   discountApplyTypeOpt,
   EDelYn,
   onOffSelectOpt,
   payTypeOpt
 } from '@/constants/list';
-import { conversionEnumValue } from '@utils/conversion';
+import { conversionEnumValue, convertWeekDay } from '@utils/conversion';
 import { Button, Divider, Row } from 'antd';
 import StandardTable from '@components/StandardTable';
 import DraggableModal from '@components/DraggableModal';
@@ -111,11 +110,11 @@ class CorpTicketClassTab extends PureComponent<IProps, IState> {
       },
       {
         title: '적용일',
-        key: 'applyType',
+        key: 'week',
         width: 110,
         align: 'center',
         render: (text: string, record: ICorpTicketClassObj) =>
-          conversionEnumValue(record.applyType!!, dayRangeTypeOpt).label
+          record.week ? `${convertWeekDay(record.week)}` : ''
       },
       {
         title: '판매타입',

@@ -113,9 +113,11 @@ class Ticket extends PureComponent<any, IState> {
         if (msg === 'success') {
           runInAction(() => {
             const unique: ISelectOptions[] = [];
-            data.forEach((e: ITicketClassObj) => {
-              unique.push({ value: e.sn, label: e.ticketName });
-            });
+            data
+              .filter((t: ITicketClassObj) => t.delYn === EDelYn.N)
+              .forEach((e: ITicketClassObj) => {
+                unique.push({ value: e.sn, label: e.ticketName });
+              });
             this.setState({ ticketClassesSelect: unique, ticketClasses: data });
           });
         }

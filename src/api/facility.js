@@ -48,13 +48,13 @@ export function getGates() {
 }
 
 export function updateGate(data) {
-  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/gates`, {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/gates/${data.sn}`, {
     data: data
   });
 }
 
 export function createGate(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/gate`, {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/gates`, {
     data: data
   });
 }

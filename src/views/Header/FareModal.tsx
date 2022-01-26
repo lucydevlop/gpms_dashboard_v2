@@ -105,14 +105,17 @@ class FareModal extends PureComponent<IProps, IState> {
     return (
       <>
         <Descriptions bordered column={24}>
-          <Descriptions.Item span={8} label={'서비스타임'} style={{ padding: '10px 16px' }}>
-            {this.props.fare?.fareBasic.serviceTime}
+          <Descriptions.Item span={6} label={'서비스타임'} style={{ padding: '10px 16px' }}>
+            {this.props.fare?.fareBasic.serviceTime} 분
           </Descriptions.Item>
-          <Descriptions.Item span={8} label={'레그타임'} style={{ padding: '10px 16px' }}>
-            {this.props.fare?.fareBasic.legTime}
+          <Descriptions.Item span={6} label={'레그타임'} style={{ padding: '10px 16px' }}>
+            {this.props.fare?.fareBasic.legTime} 분
           </Descriptions.Item>
-          <Descriptions.Item span={8} label={'일최대요금'} style={{ padding: '10px 16px' }}>
-            {this.props.fare?.fareBasic.dayMaxAmt}
+          <Descriptions.Item span={6} label={'일최대요금'} style={{ padding: '10px 16px' }}>
+            {this.props.fare?.fareBasic.dayMaxAmt} 원
+          </Descriptions.Item>
+          <Descriptions.Item span={6} label={'할인권타임'} style={{ padding: '10px 16px' }}>
+            {this.props.fare?.fareBasic.ticketTime} 분
           </Descriptions.Item>
         </Descriptions>
         <Card

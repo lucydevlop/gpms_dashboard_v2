@@ -25,6 +25,7 @@ export interface ICorpTicketClassObj {
   ticketClassSn?: number;
   applyTarget?: ETicketApplyTargetTyoe;
   applyType?: EDayRangeType;
+  week: string[];
 }
 
 export interface ICorpTicketSummaryObj {

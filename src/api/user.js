@@ -35,7 +35,7 @@ Mock.mock('/get/userInfo', userInfo);
 
 export function adminLogin(userName, password) {
   // console.log('login', process.env.REACT_APP_API_DOMAIN_URL + '/login');
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/admin/login', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/login/admin', {
     data: {
       id: userName,
       password: password
@@ -45,7 +45,7 @@ export function adminLogin(userName, password) {
 
 export function userLogin(userName, password) {
   // console.log('login', process.env.REACT_APP_API_DOMAIN_URL + '/login');
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/user/login', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/login/corp', {
     data: {
       id: userName,
       password: password

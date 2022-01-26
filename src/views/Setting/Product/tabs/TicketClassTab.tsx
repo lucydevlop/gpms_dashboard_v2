@@ -91,7 +91,7 @@ class TicketClassTab extends PureComponent<IProps, IState> {
       },
       {
         title: '적용일',
-        key: 'rangeType',
+        key: 'week',
         width: 110,
         align: 'center',
         //filters: dayRangeTypeOpt.map((r) => ({ text: r.label, value: r.value!! })),
