@@ -138,7 +138,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "start:dev": "dotenv -e .env.dev node scripts/start.js",
-    "build:dev": "env-cmd -f .env.dev node scripts/build.js",
+    "build:dev": "env-cmd -f .env node scripts/build.js",
     "build:staging": "env-cmd -f .env.staging node scripts/build.js",
     "translate": "node scripts/translate.js",
     "add-locale": "node scripts/addLocale.js",

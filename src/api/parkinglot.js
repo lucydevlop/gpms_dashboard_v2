@@ -183,28 +183,21 @@ export function completeCs(data) {
   return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/cs/call/' + data + '/complete');
 }
 
-export function getParkinglotDashboard() {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots/dashboard');
+export function getGateGroups() {
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/gate_groups');
 }
 
-// export function getDashboard() {
-//   return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard');
-// }
-
+// new version 수정
 export function getParkinglot() {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots');
-}
-
-export function getGateList() {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/gates');
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/parking-lots');
 }
 
 export function updateParkinglot(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/parkinglots', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/parking-lots', {
     data
   });
 }
 
-export function getGateGroups() {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/gate_groups');
+export function getGateList() {
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/gates');
 }

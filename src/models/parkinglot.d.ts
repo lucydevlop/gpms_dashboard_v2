@@ -18,10 +18,10 @@ export interface IParkinglotObj {
   siteId: string;
   siteName: string;
   limitqty: number;
-  saupno?: string;
+  saupNo?: string;
   tel?: string;
-  ceoname?: string;
-  postcode?: string;
+  ceoName?: string;
+  postCode?: string;
   address?: string;
   firsttime?: number;
   firstfee?: number;
@@ -51,7 +51,7 @@ export interface IParkinglotObj {
   updateBy?: string;
   updateDate?: Date;
   enterNoti?: EnterNoti;
-  discApply?: DiscountApply;
+  discCriteria?: DiscountApply;
   //non entity
   criteria?: EDiscountApplyCriteriaType;
   baseFeeInclude?: EDelYn;

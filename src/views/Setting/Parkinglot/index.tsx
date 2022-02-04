@@ -68,7 +68,7 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
         this.setState({ visitorExternalKey: this.state.parkinglot?.visitorExternalKey });
         this.setState({ enterNoti: this.state.parkinglot?.enterNoti });
         this.setState({
-          feeInclude: this.state.parkinglot?.discApply?.baseFeeInclude === EDelYn.Y
+          feeInclude: this.state.parkinglot?.discCriteria?.baseFeeInclude === EDelYn.Y
         });
       });
     });
@@ -89,12 +89,12 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
         parkId: fieldsValue.parkId,
         siteId: fieldsValue.siteId,
         siteName: fieldsValue.siteName,
-        ceoname: fieldsValue.ceoname,
+        ceoName: fieldsValue.ceoName,
         city: fieldsValue.city,
         address: fieldsValue.address,
         saleType: fieldsValue.saleType,
         vehicleDayOption: fieldsValue.vehicleDayOption,
-        saupno: fieldsValue.saupno,
+        saupNo: fieldsValue.saupNo,
         tel: fieldsValue.tel,
         externalSvr: fieldsValue.externalSvr,
         ip: fieldsValue.ip,
@@ -106,7 +106,7 @@ class ParkinglotSetting extends PureComponent<IProps, IState> {
         operatingDays: fieldsValue.operatingDays,
         visitorRegister: fieldsValue.visitorRegister,
         enterNoti: fieldsValue.enterNoti === 'Off' ? { use: 'OFF' } : this.state.enterNoti,
-        discApply: {
+        discCriteria: {
           criteria: fieldsValue.criteria,
           baseFeeInclude: fieldsValue.baseFeeInclude ? 'Y' : 'N'
         }

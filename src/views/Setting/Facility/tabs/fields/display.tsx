@@ -1,5 +1,5 @@
 import { IFormFieldConfig } from '@utils/form';
-import { IDisplayMsgObj } from '@models/display';
+import { IDisplayInfoObj, IDisplayMsgObj } from '@models/display';
 import { FormType } from '@/constants/form';
 import {
   colorTypeOpt,
@@ -263,9 +263,8 @@ export function displayFields(display?: IDisplayMsgObj): IFormFieldConfig<keyof 
 }
 
 export function flowSettingFields(
-  line1Status?: ELineStatus,
-  line2Status?: ELineStatus
-): IFormFieldConfig<keyof IDisplayMsgObj>[] {
+  displayInfo?: IDisplayInfoObj
+): IFormFieldConfig<keyof IDisplayInfoObj>[] {
   return [
     {
       id: 'line1Status',
@@ -286,7 +285,7 @@ export function flowSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: line1Status ? line1Status : ELineStatus.FIX
+        initialValue: displayInfo ? displayInfo.line1Status : ELineStatus.FIX
       },
       component: {
         type: FormType.Select,
@@ -312,11 +311,36 @@ export function flowSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: line2Status ? line2Status : ELineStatus.FIX
+        initialValue: displayInfo ? displayInfo.line2Status : ELineStatus.FIX
       },
       component: {
         type: FormType.Select,
         selectOptions: elineStatusOpt
+      }
+    },
+    {
+      id: 'sn',
+      label: 'sn',
+      colProps: {
+        xl: 12,
+        xs: 24
+      },
+      formItemProps: {
+        labelCol: {
+          xl: 9,
+          xs: 9
+        },
+        wrapperCol: {
+          xl: 15,
+          xs: 15
+        },
+        children: null
+      },
+      fieldOption: {
+        initialValue: displayInfo ? displayInfo.sn : null
+      },
+      component: {
+        type: FormType.Input
       }
     }
   ];

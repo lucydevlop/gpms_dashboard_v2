@@ -1,4 +1,10 @@
-import { EColorType, EDelYn, EMessageClassType, EMessageTypeType } from '@/constants/list';
+import {
+  EColorType,
+  EDelYn,
+  ELineStatus,
+  EMessageClassType,
+  EMessageTypeType
+} from '@/constants/list';
 
 export interface IDisplayMsgObj {
   sn?: number;
@@ -10,11 +16,22 @@ export interface IDisplayMsgObj {
   colorCode: EColorType;
   messageDesc: string;
   delYn: EDelYn;
-  createBy?: string;
-  createDate?: Date;
-  updateBy?: string;
-  updateDate?: Date;
-  update?: boolean;
-  line1Status?: string;
-  line2Status?: string;
+}
+
+export interface IDisplayInfoObj {
+  sn?: number;
+  line1Status: ELineStatus;
+  line2Status: ELineStatus;
+}
+
+export interface IDisplayColorObj {
+  sn?: number;
+  colorCode: string;
+  colorDesc?: string;
+}
+
+export interface IDisplayObj {
+  messages: IDisplayMsgObj[];
+  info?: IDisplayInfoObj;
+  colors: IDisplayColorObj[];
 }

@@ -25,6 +25,7 @@ interface IProps {
   loading: boolean;
   onUpdate: (info: IFacilityObj) => void;
   onCreate: (info: IFacilityObj) => void;
+  onDelete: (sn: number) => void;
 }
 
 interface IState {
@@ -65,8 +66,7 @@ class FacilityTab extends PureComponent<IProps, IState> {
     //console.log('handleBtnClick', info);
     if (key === 'delete') {
       zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
-        info.delYn = EDelYn.Y;
-        this.props.onUpdate(info);
+        info.sn ? this.props.onDelete(info.sn) : null;
       });
     } else {
       this.gateListInit();
@@ -130,7 +130,7 @@ class FacilityTab extends PureComponent<IProps, IState> {
         key: 'modelid',
         width: 110,
         align: 'center',
-        render: (text: string, record: IFacilityObj) => record.modelid
+        render: (text: string, record: IFacilityObj) => record.modelId
       },
       {
         title: 'IP',

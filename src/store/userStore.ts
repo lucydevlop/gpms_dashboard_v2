@@ -7,6 +7,7 @@ type IdentifyStatus = 'identifying' | 'identifyPass' | 'unauthorized';
 configure({ enforceActions: 'observed' });
 class UserStore {
   @observable userInfo: any = {};
+  @observable corpInfo: any = {};
   @observable authority: string[] = [];
   @observable authorization: string;
   @observable identifyStatus: IdentifyStatus = 'identifying';
@@ -70,6 +71,7 @@ class UserStore {
         const { msg, data } = res;
         if (msg === 'success') {
           this.setUserInfo(data.userInfo);
+          this.setCorpInfo(data.corpInfo);
           this.setAuthority(data.userInfo.role);
           this.setAuthorization(data.token);
           runInAction(() => {
@@ -92,6 +94,10 @@ class UserStore {
   @action setUserInfo(userInfo: object): void {
     this.userInfo = userInfo;
     window.localStorage.setItem('RCS-user', JSON.stringify(userInfo));
+  }
+
+  @action setCorpInfo(corpInfo: object): void {
+    this.corpInfo = corpInfo;
   }
 
   // 用户登出，重置信息

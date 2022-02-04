@@ -474,7 +474,7 @@ class VocModal extends PureComponent<IProps, IState> {
             <span>{this.state.parkinglot?.siteName}</span>
           </Descriptions.Item>
           <Descriptions.Item span={24} label={'대표자명'}>
-            <span>{this.state.parkinglot?.ceoname}</span>
+            <span>{this.state.parkinglot?.ceoName}</span>
           </Descriptions.Item>
           <Descriptions.Item span={24} label={'주소'}>
             <span>{this.state.parkinglot?.address}</span>

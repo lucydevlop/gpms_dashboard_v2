@@ -17,6 +17,7 @@ interface IProps {
   loading: boolean;
   onUpdate: (info: IGateObj) => void;
   onCreate: (info: IGateObj) => void;
+  onDelete: (sn: number) => void;
 }
 
 interface IState {
@@ -41,11 +42,10 @@ class GateTab extends PureComponent<IProps, IState> {
   }
   handleBtnClick = (info: IGateObj, key: string) => {
     const { localeObj } = localeStore;
-    //console.log('handleBtnClick', info);
     if (key === 'delete') {
+      console.log('handleBtnClick', info);
       zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
-        info.delYn = EDelYn.Y;
-        this.props.onUpdate(info);
+        info.sn ? this.props.onDelete(info.sn) : null;
       });
     } else {
       this.setState({ detailModal: true, createModal: false, selected: info });
@@ -79,7 +79,7 @@ class GateTab extends PureComponent<IProps, IState> {
         key: 'udpGateid',
         width: 110,
         align: 'center',
-        render: (text: string, record: IGateObj) => record.udpGateid
+        render: (text: string, record: IGateObj) => record.udpGateId
       },
       {
         title: '게이트이름',

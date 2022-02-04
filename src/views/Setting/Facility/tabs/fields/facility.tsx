@@ -249,7 +249,7 @@ export function facilityFields(
       }
     },
     {
-      id: 'modelid',
+      id: 'modelId',
       label: '모델ID',
       colProps: {
         xl: 12,
@@ -267,7 +267,7 @@ export function facilityFields(
         children: null
       },
       fieldOption: {
-        initialValue: facility ? facility.modelid : null,
+        initialValue: facility ? facility.modelId : null,
         rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {

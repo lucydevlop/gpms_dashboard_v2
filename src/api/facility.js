@@ -59,12 +59,16 @@ export function createGate(data) {
   });
 }
 
+export function deleteGate(data) {
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/gates/${data}`, { data });
+}
+
 export function getFacilities() {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities`);
 }
 
-export function getDisplayMessages() {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/facility/display/message`);
+export function getDisplay() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/displays`);
 }
 
 export function createFacility(data) {
@@ -74,19 +78,37 @@ export function createFacility(data) {
 }
 
 export function updateFacility(data) {
-  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities`, {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities/${data.sn}`, {
+    data: data
+  });
+}
+
+export function deleteFacility(data) {
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/facilities/${data}`, {
     data: data
   });
 }
 
 export function updateDisplay(data) {
-  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/display/message`, {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/displays/message/${data.sn}`, {
+    data: data
+  });
+}
+
+export function deleteDisplayMessage(data) {
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/displays/message/${data.sn}`, {
+    data: data
+  });
+}
+
+export function updateDisplayInfo(data) {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/displays/info/${data.sn}`, {
     data: data
   });
 }
 
 export function createDisplay(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/display/message`, {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/displays/message`, {
     data: data
   });
 }

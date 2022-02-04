@@ -64,7 +64,7 @@ export function getAdminList(data) {
 }
 
 export function createUser(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/auth/admin/register', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/admin/users', {
     data
   });
 }

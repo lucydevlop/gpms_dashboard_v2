@@ -5,8 +5,8 @@ import {
   cityOpt,
   discountApplyCriteriaTypeOpt,
   EDayRangeType,
-  EDelYn,
   EDiscountApplyCriteriaType,
+  EExternalSvrType,
   EOnOff,
   EStatus,
   externalSvrTypeOpt,
@@ -101,7 +101,7 @@ export function ParkinglotSettingFields(
       }
     },
     {
-      id: 'ceoname',
+      id: 'ceoName',
       label: '대표자명',
       colProps: {
         span: 24,
@@ -123,7 +123,7 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot ? parkinglot.ceoname : '',
+        initialValue: parkinglot ? parkinglot.ceoName : '',
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       component: {
@@ -269,7 +269,7 @@ export function ParkinglotSettingFields(
       }
     },
     {
-      id: 'saupno',
+      id: 'saupNo',
       label: '사업자번호',
       colProps: {
         span: 24,
@@ -290,7 +290,7 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot ? parkinglot.saupno : ''
+        initialValue: parkinglot ? parkinglot.saupNo : ''
       },
       component: {
         type: FormType.Input,
@@ -352,7 +352,7 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot ? parkinglot.externalSvr : ''
+        initialValue: parkinglot ? parkinglot.externalSvr : EExternalSvrType.NONE
       },
       component: {
         type: FormType.Select,
@@ -656,8 +656,8 @@ export function ParkinglotSettingFields(
         children: null
       },
       fieldOption: {
-        initialValue: parkinglot?.discApply
-          ? parkinglot?.discApply.criteria
+        initialValue: parkinglot?.discCriteria
+          ? parkinglot?.discCriteria.criteria
           : EDiscountApplyCriteriaType.FRONT
       },
       component: {

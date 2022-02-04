@@ -8,7 +8,7 @@ export interface IGateObj {
   takeAction: EGateActionType;
   openAction: EGateOpenActionType;
   flagUse: number;
-  udpGateid?: string;
+  udpGateId?: string;
   uploadCt: number;
   relaySvr: string;
   relaySvrKey?: string;

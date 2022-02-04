@@ -70,7 +70,7 @@ class Header extends React.Component<LayoutProps, IState> {
   };
 
   VerticalMenuHeaderBody = () => {
-    const { isStore } = userStore;
+    const { isStore, corpInfo } = userStore;
     const {
       isInlineLayout,
       layoutStatus: { showSiderBar, isMobile }
@@ -84,7 +84,7 @@ class Header extends React.Component<LayoutProps, IState> {
         {!isStore && !isMobile ? (
           <>
             <div
-              style={{ marginLeft: '2rem', fontSize: '1.1rem', color: 'darkgray', fontWeight: 600 }}
+              style={{ marginLeft: '3rem', fontSize: '1.1rem', color: 'darkgray', fontWeight: 600 }}
             >
               {parkinglotName}
             </div>
@@ -96,6 +96,14 @@ class Header extends React.Component<LayoutProps, IState> {
             >
               차량 검색
             </Button>
+          </>
+        ) : isStore ? (
+          <>
+            <div
+              style={{ marginLeft: '2rem', fontSize: '1.1rem', color: 'darkgray', fontWeight: 600 }}
+            >
+              {corpInfo.corpName}
+            </div>
           </>
         ) : null}
         <div className="RCS-header-rightPlace">

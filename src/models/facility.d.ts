@@ -3,12 +3,11 @@ import { ECategory, EGateType } from '@/constants/list';
 export interface IFacilityObj {
   sn?: number;
   category: CategoryTypes;
-  modelid: string;
+  modelId: string;
   dtFacilitiesId: string;
   facilitiesId?: string;
   delYn: string;
   gateId: string;
-  udpGateid?: string;
   ip?: string;
   port?: string;
   sortCount?: number;

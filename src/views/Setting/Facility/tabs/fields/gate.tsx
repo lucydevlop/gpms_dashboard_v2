@@ -47,7 +47,7 @@ export function gateFields(
       }
     },
     {
-      id: 'udpGateid',
+      id: 'udpGateId',
       label: 'UDP게이트ID',
       colProps: {
         xl: 12,
@@ -65,7 +65,7 @@ export function gateFields(
         children: null
       },
       fieldOption: {
-        initialValue: gate ? gate.udpGateid : '',
+        initialValue: gate ? gate.udpGateId : '',
         rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {

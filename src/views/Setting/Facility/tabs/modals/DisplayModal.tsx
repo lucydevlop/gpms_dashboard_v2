@@ -10,15 +10,15 @@ import { gateFields } from '@views/Setting/Facility/tabs/fields/gate';
 import { IFacilityObj } from '@models/facility';
 import { facilityFields } from '@views/Setting/Facility/tabs/fields/facility';
 import { displayFields, flowSettingFields } from '@views/Setting/Facility/tabs/fields/display';
-import { IDisplayMsgObj } from '@models/display';
+import { IDisplayInfoObj, IDisplayMsgObj } from '@models/display';
 import { ELineStatus } from '@/constants/list';
 
 interface IProps extends FormComponentProps {
-  onSubmit: (display: IDisplayMsgObj) => void;
+  onSubmit?: (display: IDisplayMsgObj) => void;
+  onDisplayInfoSubmit?: (info: IDisplayInfoObj) => void;
   display?: IDisplayMsgObj;
+  displayInfo?: IDisplayInfoObj;
   flowSettingModal?: boolean;
-  line1Status?: ELineStatus;
-  line2Status?: ELineStatus;
 }
 
 interface IState {}
@@ -30,9 +30,14 @@ class DisplayModal extends PureComponent<IProps, IState> {
 
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
-      // console.log('handlerSubmit', fieldsValue);
       if (!err) {
-        this.props.onSubmit(fieldsValue);
+        this.props.flowSettingModal === true
+          ? this.props.onDisplayInfoSubmit
+            ? this.props.onDisplayInfoSubmit(fieldsValue)
+            : null
+          : this.props.onSubmit
+          ? this.props.onSubmit(fieldsValue)
+          : null;
       }
     });
   }
@@ -42,8 +47,9 @@ class DisplayModal extends PureComponent<IProps, IState> {
     const { getFieldDecorator } = this.props.form;
     const gateFieldsConfig =
       this.props.flowSettingModal === true
-        ? flowSettingFields(this.props.line1Status, this.props.line2Status)
+        ? flowSettingFields(this.props.displayInfo)
         : displayFields(this.props.display);
+    const num = this.props.flowSettingModal === true ? 2 : 7;
     const submitFormLayout = {
       wrapperCol: {
         xs: {
@@ -63,7 +69,7 @@ class DisplayModal extends PureComponent<IProps, IState> {
           this.handlerSubmit();
         }}
       >
-        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, 7)}</Row>
+        <Row>{getFormFields(getFieldDecorator, gateFieldsConfig, true, num)}</Row>
         <Form.Item
           {...submitFormLayout}
           style={{

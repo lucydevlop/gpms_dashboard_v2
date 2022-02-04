@@ -26,7 +26,9 @@ import {
   getFacilities,
   getGates,
   updateFacility,
-  updateGate
+  updateGate,
+  deleteGate,
+  deleteFacility
 } from '@api/facility';
 import { ECategory, EDelYn, EGateType } from '@/constants/list';
 import zdsTips from '@utils/tips';
@@ -167,6 +169,31 @@ class ParkinglotStore {
     return this.gateList;
   }
 
+  @action async deleteGate(sn: any): Promise<IGateObj[]> {
+    await deleteGate(sn)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          zdsTips.success('게이트 정보 변경 완료');
+          runInAction(() => {
+            this.gateList = this.gateList.map((e) => {
+              if (e.sn === data.sn) {
+                return { ...data };
+              }
+              return { ...e };
+            });
+            return this.gateList;
+          });
+        }
+      })
+      .catch((err: any) => {
+        zdsTips.error('게이트 정보 변경 실패');
+      })
+      .finally(() => {});
+
+    return this.gateList;
+  }
+
   @actionAsync async createGate(gate: any): Promise<IGateObj[]> {
     await createGate(gate)
       .then((res: any) => {
@@ -263,6 +290,31 @@ class ParkinglotStore {
         }
       })
       .catch((err) => {
+        zdsTips.error('시설 정보 변경 실패');
+      })
+      .finally(() => {});
+
+    return this.facilities;
+  }
+
+  @action async deleteFacilities(sn: number): Promise<IFacilityObj[]> {
+    await deleteFacility(sn)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          zdsTips.success('시설 정보 변경 완료');
+          runInAction(() => {
+            this.facilities = this.facilities.map((e) => {
+              if (e.sn === data.sn) {
+                return { ...data };
+              }
+              return { ...e };
+            });
+            return this.facilities;
+          });
+        }
+      })
+      .catch((err: any) => {
         zdsTips.error('시설 정보 변경 실패');
       })
       .finally(() => {});

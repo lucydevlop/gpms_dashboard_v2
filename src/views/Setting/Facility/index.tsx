@@ -1,15 +1,20 @@
 import React, { PureComponent } from 'react';
 import PageWrapper from '@components/PageWrapper';
-import { createDisplay, getDisplayMessages, updateDisplay } from '@api/facility';
+import {
+  createDisplay,
+  deleteDisplayMessage,
+  getDisplay,
+  updateDisplay,
+  updateDisplayInfo
+} from '@api/facility';
 import { IGateObj } from '@models/gate';
 import { runInAction } from 'mobx';
 import { Tabs } from 'antd';
 import { IFacilityObj } from '@models/facility';
 import FacilityTab from '@views/Setting/Facility/tabs/FacilityTab';
 import DisplayTab from '@views/Setting/Facility/tabs/DisplayTab';
-import { IDisplayMsgObj } from '@models/display';
+import { IDisplayColorObj, IDisplayInfoObj, IDisplayMsgObj } from '@models/display';
 import GateTab from '@views/Setting/Facility/tabs/GateTab';
-import { mac } from 'address';
 import { inject, observer } from 'mobx-react';
 import { parkinglotStore } from '@store/parkinglotStore';
 
@@ -17,7 +22,9 @@ interface IState {
   loading: boolean;
   gates: IGateObj[];
   facilities: IFacilityObj[];
-  displayMessages: IDisplayMsgObj[];
+  displayInfo?: IDisplayInfoObj | null;
+  displayMessage: IDisplayMsgObj[];
+  displayColor: IDisplayColorObj[];
 }
 @inject('localeStore', 'parkinglotStore')
 @observer
@@ -28,7 +35,8 @@ class FacilitySetting extends PureComponent<any, IState> {
       loading: true,
       gates: [],
       facilities: [],
-      displayMessages: []
+      displayMessage: [],
+      displayColor: []
     };
   }
 
@@ -58,12 +66,16 @@ class FacilitySetting extends PureComponent<any, IState> {
       })
       .catch(() => {});
 
-    getDisplayMessages()
+    getDisplay()
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            this.setState({ displayMessages: data });
+            this.setState({
+              displayColor: data.colors,
+              displayMessage: data.messages,
+              displayInfo: data.info
+            });
           });
         }
       })
@@ -74,7 +86,13 @@ class FacilitySetting extends PureComponent<any, IState> {
 
   handleGateUpdate = async (record: IGateObj) => {
     parkinglotStore.updateGate(record).then((res: IGateObj[]) => {
-      this.setState({ gates: res });
+      this.setState({ gates: res }, () => this.pollData());
+    });
+  };
+
+  handleGateDelete = async (sn: number) => {
+    parkinglotStore.deleteGate(sn).then((res: IGateObj[]) => {
+      this.setState({ gates: res }, () => this.pollData());
     });
   };
 
@@ -92,6 +110,12 @@ class FacilitySetting extends PureComponent<any, IState> {
     });
   };
 
+  handleFacilityDelete = async (sn: number) => {
+    parkinglotStore.deleteFacilities(sn).then((res: IFacilityObj[]) => {
+      this.setState({ facilities: res });
+    });
+  };
+
   handleFacilityCreate = async (record: IFacilityObj) => {
     parkinglotStore.createFacilities(record).then((res: IFacilityObj[]) => {
       this.setState({ facilities: res });
@@ -104,8 +128,8 @@ class FacilitySetting extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            const displayMessages = [...this.state.displayMessages, data];
-            this.setState({ displayMessages: displayMessages });
+            const displayMessages = [...this.state.displayMessage, data];
+            this.setState({ displayMessage: displayMessages });
           });
         }
       })
@@ -118,14 +142,47 @@ class FacilitySetting extends PureComponent<any, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            const displayMessages = this.state.displayMessages.map((e) => {
+            const displayMessages = this.state.displayMessage.map((e) => {
               if (e.sn === data.sn) {
                 return { ...data };
               } else {
                 return { ...e };
               }
             });
-            this.setState({ displayMessages: displayMessages });
+            this.setState({ displayMessage: displayMessages });
+          });
+        }
+      })
+      .catch(() => {});
+  };
+
+  handleDisplayDelete = async (record: IDisplayMsgObj) => {
+    deleteDisplayMessage(record)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            const displayMessages = this.state.displayMessage.map((e) => {
+              if (e.sn === data.sn) {
+                return { ...data };
+              } else {
+                return { ...e };
+              }
+            });
+            this.setState({ displayMessage: displayMessages });
+          });
+        }
+      })
+      .catch(() => {});
+  };
+
+  handleDisplayInfo = async (record: IDisplayInfoObj) => {
+    updateDisplayInfo(record)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ displayInfo: data });
           });
         }
       })
@@ -133,7 +190,7 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   render() {
-    const { gates, facilities, displayMessages } = this.state;
+    const { gates, facilities, displayMessage, displayInfo } = this.state;
     const { TabPane } = Tabs;
 
     return (
@@ -145,6 +202,7 @@ class FacilitySetting extends PureComponent<any, IState> {
               loading={this.state.loading}
               onUpdate={this.handleGateUpdate}
               onCreate={this.handleGateCreate}
+              onDelete={this.handleGateDelete}
             />
           </TabPane>
           <TabPane tab="시설" key="2">
@@ -154,14 +212,18 @@ class FacilitySetting extends PureComponent<any, IState> {
               loading={this.state.loading}
               onUpdate={this.handleFacilityUpdate}
               onCreate={this.handleFacilityCreate}
+              onDelete={this.handleFacilityDelete}
             />
           </TabPane>
           <TabPane tab="전광판" key="3">
             <DisplayTab
-              displayMsgs={displayMessages}
+              displayMsgs={displayMessage}
+              displayInfo={displayInfo ? displayInfo : null}
               loading={this.state.loading}
               onUpdate={this.handleDisplayUpdate}
               onCreate={this.handleDisplayCreate}
+              onDelete={this.handleDisplayDelete}
+              onDisplayInfo={this.handleDisplayInfo}
             />
           </TabPane>
         </Tabs>

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { IDisplayMsgObj } from '@models/display';
+import { IDisplayInfoObj, IDisplayMsgObj, IDisplayObj } from '@models/display';
 import { Button, Divider, Row } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
@@ -24,14 +24,16 @@ import zdsTips from '@utils/tips';
 import StandardTable from '@components/StandardTable';
 import DraggableModal from '@components/DraggableModal';
 import DisplayModal from '@views/Setting/Facility/tabs/modals/DisplayModal';
-import { displayflowSetting, getDisplayFlowSetting } from '@api/facility';
 import { runInAction } from 'mobx';
 
 interface IProps {
   displayMsgs: IDisplayMsgObj[];
+  displayInfo: IDisplayInfoObj | null;
   loading: boolean;
   onCreate: (info: IDisplayMsgObj) => void;
   onUpdate: (info: IDisplayMsgObj) => void;
+  onDelete: (info: IDisplayMsgObj) => void;
+  onDisplayInfo: (info: IDisplayInfoObj) => void;
 }
 
 interface IState {
@@ -55,12 +57,7 @@ class DisplayTab extends PureComponent<IProps, IState> {
     };
   }
 
-  componentDidMount() {
-    getDisplayFlowSetting().then((res: any) => {
-      const { msg, data } = res;
-      this.setState({ line1Status: data.line1Status, line2Status: data.line2Status });
-    });
-  }
+  componentDidMount() {}
 
   handleUpdateFlowSettingClick = () => {
     this.setState({ flowSettingModal: true });
@@ -74,24 +71,11 @@ class DisplayTab extends PureComponent<IProps, IState> {
     const { localeObj } = localeStore;
     if (key === 'delete') {
       zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
-        info.delYn = EDelYn.Y;
-        this.props.onUpdate(info);
+        this.props.onDelete(info);
       });
     } else {
       this.setState({ detailModal: true, createModal: false, selected: info });
     }
-  };
-
-  updateFlowSetting = (req: any) => {
-    displayflowSetting(req).then((res: any) => {
-      const { msg, data } = res;
-      if (msg === 'success') {
-        runInAction(() => {
-          this.setState({ line1Status: data.line1Status });
-          this.setState({ line2Status: data.line2Status });
-        });
-      }
-    });
   };
 
   /*
@@ -308,7 +292,7 @@ class DisplayTab extends PureComponent<IProps, IState> {
             />
           </DraggableModal>
         ) : null}
-        {this.state.flowSettingModal ? (
+        {this.state.flowSettingModal && this.props.displayInfo ? (
           <DraggableModal
             visible={this.state.flowSettingModal}
             title={localeObj['label.display.flowSetting' || '전광판 흐름설정']}
@@ -324,12 +308,12 @@ class DisplayTab extends PureComponent<IProps, IState> {
             <DisplayModal
               onSubmit={(value) => {
                 this.setState({ flowSettingModal: false });
-                this.updateFlowSetting(value);
+                //this.updateFlowSetting(value);
               }}
               flowSettingModal={true}
-              line1Status={this.state.line1Status}
-              line2Status={this.state.line2Status}
-            ></DisplayModal>
+              displayInfo={this.props.displayInfo}
+              onDisplayInfoSubmit={this.props.onDisplayInfo}
+            />
           </DraggableModal>
         ) : null}
       </>
