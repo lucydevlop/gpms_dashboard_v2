@@ -1,7 +1,7 @@
 import io from '@utils/io';
 
 export function getTicketClasses() {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/ticket/classes`);
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/season-ticket-classes`);
 }
 
 export function createTicketClasses(data) {

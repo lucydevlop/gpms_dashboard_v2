@@ -13,6 +13,7 @@ import {
 import {
   createSeasonTicket,
   createSeasonTickets,
+  deleteSeasonTicket,
   getParkinglotTickets,
   updateSeasonTicket
 } from '@api/ticket';
@@ -226,7 +227,7 @@ class Ticket extends PureComponent<any, IState> {
     this.state.deleteList.forEach((data: ITicketObj) => {
       data.delYn = EDelYn.Y;
       data.extendYn = EDelYn.N;
-      updateSeasonTicket(data).then((res: any) => {
+      deleteSeasonTicket(data).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
@@ -355,16 +356,14 @@ class Ticket extends PureComponent<any, IState> {
       const data: any = {};
       data.vehicleNo = ticket.vehicleNo;
       data.ticketType = conversionEnumValue(ticket.ticketType, ticketTypeOpt).label;
-      data.ticketName = this.state.ticketClasses.filter(
-        (c) => c.sn === ticket.ticketSn
-      )[0].ticketName;
+      data.ticketName = ticket.ticketName;
       data.name = ticket.name;
       data.tel = ticket.tel;
       data.effectDate = conversionDate(ticket.effectDate as Date, '{y}-{m}-{d}');
       data.expireDate = conversionDate(ticket.expireDate as Date, '{y}-{m}-{d}');
       data.vehicleType = conversionEnumValue(ticket.vehicleType, vehicleTypeOpt).label;
-      data.vehiclekind = ticket.vehiclekind;
-      data.corpName = ticket.corp?.corpName;
+      data.vehiclekind = ticket.vehicleKind;
+      data.corpName = ticket.corpName;
       data.etc = ticket.etc;
       data.etc1 = ticket.etc1;
       data.payMethod = ticket.payMethod
@@ -438,7 +437,7 @@ class Ticket extends PureComponent<any, IState> {
       },
       {
         title: '차량번호',
-        key: 'vehiclNo',
+        key: 'vehicleNo',
         width: 110,
         align: 'center',
         render: (text: string, record: ITicketObj) => record.vehicleNo
@@ -478,21 +477,10 @@ class Ticket extends PureComponent<any, IState> {
       },
       {
         title: '정기권정보',
-        key: 'ticketSn',
+        key: 'ticketName',
         width: 110,
         align: 'center',
-        render: (test: string, record: ITicketObj) => {
-          // @ts-ignore
-          const type = conversionEnumValue(record.ticketSn, this.state.ticketClassesSelect);
-          return {
-            props: {
-              style: {
-                color: type.color
-              }
-            },
-            children: <div>{type.label}</div>
-          };
-        }
+        render: (test: string, record: ITicketObj) => record.ticketName
       },
       {
         title: '차량타입',
@@ -513,22 +501,17 @@ class Ticket extends PureComponent<any, IState> {
       },
       {
         title: '차량정보',
-        key: 'carInfo',
+        key: 'vehicleKind',
         width: 110,
         align: 'center',
-        render: (test: string, record: ITicketObj) => record.vehiclekind
+        render: (test: string, record: ITicketObj) => record.vehicleKind
       },
       {
         title: '입주사명',
-        key: 'corp',
+        key: 'corpName',
         width: 110,
         align: 'center',
-        render: (test: string, record: ITicketObj) =>
-          record.corp === undefined || record.corp === null
-            ? record.corpName
-              ? record.corpName
-              : null
-            : record.corp.corpName
+        render: (test: string, record: ITicketObj) => record.corpName
       },
       {
         title: '정보1',

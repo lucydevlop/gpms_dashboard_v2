@@ -14,21 +14,22 @@ export function getParkinglotTickets(data) {
   );
 }
 */
-export function createParkinglotTicket(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/product/ticket/add', {
-    data
-  });
-}
 
 export function updateSeasonTicket(data) {
-  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/season', {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/season-tickets/${data.sn}`, {
     data
   });
 }
 
 export function createSeasonTicket(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/season', {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/season-tickets/`, {
     data
+  });
+}
+
+export function deleteSeasonTicket(data) {
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/season-tickets/${data.sn}`, {
+    data: data
   });
 }
 
@@ -57,13 +58,13 @@ export function createFreeTickets(data) {
 }
 
 export function updateVisitTicket(data) {
-  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/visit', {
+  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/season-tickets', {
     data
   });
 }
 
 export function createVisitTicket(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/visit', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/season-tickets', {
     data
   });
 }
@@ -75,7 +76,7 @@ export function createVisitTickets(data) {
 }
 
 export function getParkinglotTickets(data) {
-  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/tickets', {
+  return io.get(process.env.REACT_APP_API_DOMAIN_URL + '/season-tickets', {
     params: {
       fromDate: data.fromDate,
       toDate: data.toDate,

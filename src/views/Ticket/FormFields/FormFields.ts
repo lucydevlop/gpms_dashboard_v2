@@ -490,7 +490,7 @@ export function NewTicketFields(
       }
     },
     {
-      id: 'vehiclekind',
+      id: 'vehicleKind',
       label: '차량정보',
       colProps: {
         span: 8,
@@ -508,7 +508,7 @@ export function NewTicketFields(
         children: null
       },
       fieldOption: {
-        initialValue: ticket ? ticket.vehiclekind : null
+        initialValue: ticket ? ticket.vehicleKind : null
       },
       component: {
         type: FormType.Input

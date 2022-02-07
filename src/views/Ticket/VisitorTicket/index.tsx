@@ -324,8 +324,8 @@ class Ticket extends PureComponent<any, IState> {
       data.effectDate = conversionDate(ticket.effectDate as Date, '{y}-{m}-{d}');
       data.expireDate = conversionDate(ticket.expireDate as Date, '{y}-{m}-{d}');
       data.vehicleType = conversionEnumValue(ticket.vehicleType, vehicleTypeOpt).label;
-      data.vehiclekind = ticket.vehiclekind;
-      data.corpName = ticket.corp?.corpName;
+      data.vehiclekind = ticket.vehicleKind;
+      data.corpName = ticket.corpName;
       data.etc = ticket.etc;
       data.etc1 = ticket.etc1;
       data.lastInDate =
@@ -469,19 +469,14 @@ class Ticket extends PureComponent<any, IState> {
         key: 'carInfo',
         width: 110,
         align: 'center',
-        render: (test: string, record: ITicketObj) => record.vehiclekind
+        render: (test: string, record: ITicketObj) => record.vehicleKind
       },
       {
         title: '입주사명',
-        key: 'corp',
+        key: 'corpName',
         width: 110,
         align: 'center',
-        render: (test: string, record: ITicketObj) =>
-          record.corp === undefined || record.corp === null
-            ? record.corpName
-              ? record.corpName
-              : null
-            : record.corp.corpName
+        render: (test: string, record: ITicketObj) => record.corpName
       },
       {
         title: '정보1',

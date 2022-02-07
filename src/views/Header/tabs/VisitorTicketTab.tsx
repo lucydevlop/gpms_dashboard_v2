@@ -321,19 +321,14 @@ class VisitorTicketTab extends PureComponent<IProps, IState> {
         key: 'carInfo',
         width: 110,
         align: 'center',
-        render: (test: string, record: ITicketObj) => record.vehiclekind
+        render: (test: string, record: ITicketObj) => record.vehicleKind
       },
       {
         title: '입주사명',
-        key: 'corp',
+        key: 'corpName',
         width: 110,
         align: 'center',
-        render: (test: string, record: ITicketObj) =>
-          record.corp === undefined || record.corp === null
-            ? record.corpName
-              ? record.corpName
-              : null
-            : record.corp.corpName
+        render: (test: string, record: ITicketObj) => record.corpName
       },
       {
         title: '정보1',
