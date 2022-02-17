@@ -9,10 +9,7 @@ import {
   createFareBasic,
   createFareInfo,
   createFarePolicy,
-  getFareBasic,
-  getFareInfo,
-  getFarePolicies,
-  updateFareBasic,
+  getFareReference,
   updateFareInfo,
   updateFarePolicy
 } from '@/api/fare';
@@ -59,39 +56,43 @@ class FeeSetting extends PureComponent<any, IState> {
 
   componentDidMount() {
     this.setState({ loading: true });
-    getFareInfo()
+    getFareReference()
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            this.setState({ fareInfos: data });
+            this.setState({
+              fareInfos: data.fareInfos,
+              farePolicies: data.farePolicies,
+              fareBasic: data.fareBasic
+            });
           });
         }
       })
       .catch(() => {});
 
-    getFareBasic()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ fareBasic: data });
-          });
-        }
-      })
-      .catch(() => {});
-
-    getFarePolicies()
-      .then((res: any) => {
-        const { msg, data } = res;
-        if (msg === 'success') {
-          runInAction(() => {
-            this.setState({ farePolicies: data });
-            console.log(this.state.farePolicies);
-          });
-        }
-      })
-      .catch(() => {});
+    // getFareBasic()
+    //   .then((res: any) => {
+    //     const { msg, data } = res;
+    //     if (msg === 'success') {
+    //       runInAction(() => {
+    //         this.setState({ fareBasic: data });
+    //       });
+    //     }
+    //   })
+    //   .catch(() => {});
+    //
+    // getFarePolicies()
+    //   .then((res: any) => {
+    //     const { msg, data } = res;
+    //     if (msg === 'success') {
+    //       runInAction(() => {
+    //         this.setState({ farePolicies: data });
+    //         console.log(this.state.farePolicies);
+    //       });
+    //     }
+    //   })
+    //   .catch(() => {});
 
     this.setState({ loading: false });
   }
@@ -103,29 +104,16 @@ class FeeSetting extends PureComponent<any, IState> {
   handleFareBasicSubmit = (info: IFareBasicObj) => {
     // console.log('handleFareBasicSubmit', info);
     this.setState({ fareBasicModal: false });
-    if (info.sn === null || info.sn === undefined) {
-      createFareBasic(info)
-        .then((res: any) => {
-          const { msg, data } = res;
-          if (msg === 'success') {
-            runInAction(() => {
-              this.setState({ fareBasic: data });
-            });
-          }
-        })
-        .catch(() => {});
-    } else {
-      updateFareBasic(info)
-        .then((res: any) => {
-          const { msg, data } = res;
-          if (msg === 'success') {
-            runInAction(() => {
-              this.setState({ fareBasic: data });
-            });
-          }
-        })
-        .catch(() => {});
-    }
+    createFareBasic(info)
+      .then((res: any) => {
+        const { msg, data } = res;
+        if (msg === 'success') {
+          runInAction(() => {
+            this.setState({ fareBasic: data });
+          });
+        }
+      })
+      .catch(() => {});
   };
 
   handleFarePolicyClick(key: string, info?: IFarePolicyObj) {

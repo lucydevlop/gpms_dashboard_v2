@@ -2,11 +2,7 @@ import io from '@utils/io';
 import moment from 'moment';
 
 export function getInoutDetail(data) {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inout`, {
-    params: {
-      sn: data
-    }
-  });
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/${data}`);
 }
 
 export function getInouts(data) {
@@ -24,7 +20,7 @@ export function getInouts(data) {
 }
 
 export function createParkinglotInout(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/dashboard/admin/inout/create', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/inouts', {
     data
   });
 }
@@ -66,7 +62,7 @@ export function getParkinglotRcsCorpInfo(parkinglotId) {
 }
 
 export function deleteParkinglotInout(id) {
-  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/forced/exit/${id}`, id);
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/${id}`, id);
 }
 
 export function getInoutPayments(data) {

@@ -161,7 +161,7 @@ export function newInoutFields(gates: any[]): IFormFieldConfig<keyof IInoutObj>[
   const { localeObj } = localeStore;
   return [
     {
-      id: 'parkinSn',
+      id: 'inSn',
       label: '입차 SEQ',
       hidden: true,
       colProps: {
@@ -190,7 +190,7 @@ export function newInoutFields(gates: any[]): IFormFieldConfig<keyof IInoutObj>[
       }
     },
     {
-      id: 'parkcartype',
+      id: 'parkCarType',
       label: '차량타입',
       colProps: {
         xl: 12,
@@ -348,7 +348,7 @@ export function newInoutDetailFileds(
   const { localeObj } = localeStore;
   return [
     {
-      id: 'parkinSn',
+      id: 'inSn',
       label: '입차 SEQ',
       colProps: {
         xl: 12,
@@ -366,7 +366,7 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout ? inout.parkinSn : null
+        initialValue: inout ? inout.inSn : null
       },
       hidden: true,
       component: {
@@ -374,7 +374,7 @@ export function newInoutDetailFileds(
       }
     },
     {
-      id: 'parkcartype',
+      id: 'parkCarType',
       label: '차량타입',
       colProps: {
         xl: 12,
@@ -392,7 +392,7 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout ? inout.parkcartype : ETicketType.NORMAL
+        initialValue: inout ? inout.parkCarType : ETicketType.NORMAL
       },
       component: {
         type: FormType.Select,
@@ -562,7 +562,7 @@ export function newInoutDetailFileds(
       }
     },
     {
-      id: 'parktime',
+      id: 'parkTime',
       label: '주차시간',
       colProps: {
         span: 6
@@ -576,7 +576,7 @@ export function newInoutDetailFileds(
         }
       },
       fieldOption: {
-        initialValue: inout ? inout.parktime : ''
+        initialValue: inout ? inout.parkTime : ''
       },
       component: {
         type: FormType.Input,
@@ -587,7 +587,7 @@ export function newInoutDetailFileds(
       }
     },
     {
-      id: 'parkfee',
+      id: 'parkFee',
       label: '주차요금',
       colProps: {
         span: 6
@@ -601,7 +601,7 @@ export function newInoutDetailFileds(
         }
       },
       fieldOption: {
-        initialValue: inout ? inout.parkfee : '0'
+        initialValue: inout ? inout.parkFee : '0'
       },
       component: {
         type: FormType.Input,
@@ -611,7 +611,7 @@ export function newInoutDetailFileds(
       }
     },
     {
-      id: 'discountfee',
+      id: 'discountFee',
       label: '할인요금',
       colProps: {
         span: 6
@@ -625,7 +625,7 @@ export function newInoutDetailFileds(
         }
       },
       fieldOption: {
-        initialValue: inout ? sum(inout.dayDiscountfee, inout.discountfee) : '0'
+        initialValue: inout ? inout.discountFee : '0'
       },
       component: {
         type: FormType.Input,
@@ -636,7 +636,7 @@ export function newInoutDetailFileds(
       }
     },
     {
-      id: 'payfee',
+      id: 'payFee',
       label: '결제요금',
       colProps: {
         span: 6
@@ -650,7 +650,7 @@ export function newInoutDetailFileds(
         }
       },
       fieldOption: {
-        initialValue: inout ? inout.payfee : ''
+        initialValue: inout ? inout.payFee : ''
       },
       component: {
         type: FormType.Input,
@@ -669,7 +669,7 @@ export function newInoutDetailFileds(
       }
     },
     {
-      id: 'parkinSn',
+      id: 'inSn',
       label: '입차 SEQ',
       colProps: {
         xl: 12,
@@ -687,7 +687,7 @@ export function newInoutDetailFileds(
         children: null
       },
       fieldOption: {
-        initialValue: inout ? inout.parkinSn : null
+        initialValue: inout ? inout.inSn : null
       },
       component: {
         type: FormType.Input,

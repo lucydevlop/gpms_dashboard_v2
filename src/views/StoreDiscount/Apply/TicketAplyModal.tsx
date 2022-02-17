@@ -59,7 +59,7 @@ class TicketAplyModal extends PureComponent<IProps, IState> {
     });
     this.setState({
       ableTickets: tickets,
-      total: this.state.total + info.corpTicketClass.discountClass.unitTime * -1
+      total: this.state.total + info.corpTicketClass.discountClass.unit * -1
     });
   };
 
@@ -74,7 +74,7 @@ class TicketAplyModal extends PureComponent<IProps, IState> {
     });
     this.setState({
       ableTickets: tickets,
-      total: this.state.total + info.corpTicketClass.discountClass.unitTime
+      total: this.state.total + info.corpTicketClass.discountClass.unit
     });
   };
 

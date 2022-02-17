@@ -45,26 +45,14 @@ export function updateFreeTicket(data) {
   });
 }
 
-export function createFreeTicket(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/free', {
-    data
-  });
-}
+// export function createFreeTicket(data) {
+//   return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/season-tickets', {
+//     data
+//   });
+// }
 
 export function createFreeTickets(data) {
   return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/tickets/frees', {
-    data
-  });
-}
-
-export function updateVisitTicket(data) {
-  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/season-tickets', {
-    data
-  });
-}
-
-export function createVisitTicket(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/season-tickets', {
     data
   });
 }

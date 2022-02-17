@@ -1,7 +1,7 @@
 import io from '@utils/io';
 
-export function getFareInfo() {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/fare/info`);
+export function getFareReference() {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/charge/references`);
 }
 
 export function createFareInfo(data) {
@@ -20,14 +20,14 @@ export function getFareBasic() {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/dashboard/admin/fare/basic`);
 }
 
-export function updateFareBasic(data) {
-  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/fare/basic`, {
-    data: data
-  });
-}
+// export function updateFareBasic(data) {
+//   return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/fare/basic`, {
+//     data: data
+//   });
+// }
 
 export function createFareBasic(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/fare/basic`, {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/charge/basic`, {
     data: data
   });
 }

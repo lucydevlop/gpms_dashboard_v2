@@ -1,7 +1,7 @@
 import io from '../utils/io';
 
 export function corpRegister(data) {
-  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/auth/user/register`, {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/corp/users`, {
     data
   });
 }

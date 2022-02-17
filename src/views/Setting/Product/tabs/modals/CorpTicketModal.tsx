@@ -26,8 +26,11 @@ class CorpTicketModal extends PureComponent<ICorpTicketModalProps, ICorpTicketMo
       const discountClass: IDiscountClassObj = this.props.discountClasses.filter((e) => {
         return e.sn === Number(fieldsValue.discountClassSn);
       })[0];
-      fieldsValue.effectDate = conversionDateTime(discountClass.effectDate, '{y}-{m}-{d} 00:00:00');
-      fieldsValue.expireDate = conversionDateTime(discountClass.expireDate, '{y}-{m}-{d} 23:59:59');
+      fieldsValue.effectDate = conversionDateTime(new Date(), '{y}-{m}-{d} 00:00:00');
+      fieldsValue.expireDate = conversionDateTime(
+        new Date(9999, 11, 31, 23, 59, 59),
+        '{y}-{m}-{d} 23:59:59'
+      );
       fieldsValue.onceMax = fieldsValue.onceMax === '무제한' ? 999999999 : fieldsValue.onceMax;
       fieldsValue.dayMax = fieldsValue.dayMax === '무제한' ? 999999999 : fieldsValue.dayMax;
       fieldsValue.monthMax = fieldsValue.monthMax === '무제한' ? 999999999 : fieldsValue.monthMax;

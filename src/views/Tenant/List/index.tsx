@@ -5,7 +5,7 @@ import { ICorpObj, ICorpSearchReq } from '@models/corp';
 import { corpStore } from '@store/corpStore';
 import { runInAction } from 'mobx';
 import { localeStore } from '@store/localeStore';
-import { conversionDate, conversionDateTime, conversionEnumValue } from '@utils/conversion';
+import { conversionDateTime, conversionEnumValue } from '@utils/conversion';
 import { delYnOpt, EDelYn } from '@/constants/list';
 import { Button, Col, Divider, Row, TablePaginationConfig } from 'antd';
 import { DeleteOutlined, DownloadOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons';
@@ -16,13 +16,12 @@ import { searchCorpFields } from '@views/Tenant/fields/tenant';
 import DraggableModal from '@components/DraggableModal';
 import TenantListModal from '@views/Tenant/modals/TenantListModal';
 import zdsTips from '@utils/tips';
-import { corpDelete, corpRegister, createTenantByFile } from '@api/tenant';
+import { corpRegister, createTenantByFile } from '@api/tenant';
 import { generateCsv } from '@utils/downloadUtil';
 import { string2mobile } from '@utils/tools';
 import UploadModal from '@components/UploadModal';
 import { readCorpObj } from '@utils/readFromCsv';
-import { getCorps, updateCorp } from '@api/corp';
-import moment from 'moment';
+import { deleteCorp, getCorps, updateCorp } from '@api/corp';
 
 interface IState {
   detailModal: boolean;
@@ -54,7 +53,7 @@ class TenantList extends PureComponent<any, IState> {
       searchParam: {
         searchLabel: undefined,
         searchText: '',
-        useStatus: undefined
+        useStatus: EDelYn.ALL
       },
       uploadModal: false
     };
@@ -117,7 +116,7 @@ class TenantList extends PureComponent<any, IState> {
       searchLabel: info.searchLabel,
       useStatus:
         // @ts-ignore
-        info.useStatus === undefined || info.useStatus === 'ALL' ? undefined : info.useStatus
+        info.useStatus === undefined || info.useStatus === EDelYn.ALL ? undefined : info.useStatus
     };
     this.setState({ searchParam: searchParam }, () => this.getTenantCorpList());
   };
@@ -126,8 +125,9 @@ class TenantList extends PureComponent<any, IState> {
     const { localeObj } = localeStore;
     if (key === 'delete') {
       zdsTips.confirm(localeObj['alert.delete'] || '선택 항목을 삭제(비활성) 하시겠습니까?', () => {
-        item.delYn = EDelYn.Y;
-        this.handleUpdateTenant(item);
+        const deleteList = [item];
+        this.setState({ deleteList: deleteList });
+        this.delete().then();
       });
     } else {
       this.setState({ detailModal: true, createModal: false, selected: item });
@@ -242,8 +242,7 @@ class TenantList extends PureComponent<any, IState> {
   async delete() {
     let count = 0;
     this.state.deleteList.forEach((data: any) => {
-      data.delYn = EDelYn.Y;
-      updateCorp(data).then((res: any) => {
+      deleteCorp(data).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {

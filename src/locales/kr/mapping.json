@@ -32,6 +32,7 @@
   "menu.setting.user": "사용자정보",
   "menu.setting.barcode": "바코드할인기본정보",
   "menu.setting.holiday": "특근일정보",
+  "menu.setting.setting": "기타설정",
 
   "menu.visitor.register": "방문권등록",
   "menu.visitor.list": "방문권현황",

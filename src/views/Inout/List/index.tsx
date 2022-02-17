@@ -252,10 +252,9 @@ class Inout extends PureComponent<any, IState> {
 
     const downLoadData = this.state.list.map((inout) => {
       const data: any = {};
-      data.parkType =
-        inout.parkoutSn === -1 ? '이중입차' : inout.parkoutSn !== 0 ? '차량출차' : '차량입차';
-      data.ticketType = conversionEnumValue(inout.parkcartype, ticketTypeOpt).label;
-      data.corpName = inout.ticketCorpName;
+      data.parkType = inout.outSn === -1 ? '이중입차' : inout.outSn !== 0 ? '차량출차' : '차량입차';
+      data.ticketType = conversionEnumValue(inout.parkCarType, ticketTypeOpt).label;
+      data.corpName = inout.corpName;
       data.vehicleNo = inout.vehicleNo;
       data.inGate = inout.inGateId;
       data.inDate = conversionDateTime(inout.inDate, '{y}-{m}-{d} {h}:{i}') || '--';
@@ -263,9 +262,9 @@ class Inout extends PureComponent<any, IState> {
       data.outDate = inout.outDate
         ? conversionDateTime(inout.outDate, '{y}-{m}-{d} {h}:{i}') || '--'
         : null;
-      data.parkfee = inout.parkfee;
-      data.discountfee = inout.discountfee!! + inout.dayDiscountfee!!;
-      data.payfee = inout.payfee;
+      data.parkfee = inout.parkFee;
+      data.discountfee = inout.discountFee!! + inout.dayDiscountfee!!;
+      data.payfee = inout.payFee;
       data.paymentAmount = inout.paymentAmount;
       data.nonPayment = inout.nonPayment;
       data.memo = inout.memo;
@@ -278,7 +277,7 @@ class Inout extends PureComponent<any, IState> {
   handleBtnClick = (info: IInoutObj, key: string) => {
     if (key === 'DELETE') {
       zdsTips.confirm('강제출차 하시겠습니까?', () => {
-        deleteParkinglotInout(info.parkinSn).then((res: any) => {
+        deleteParkinglotInout(info.inSn).then((res: any) => {
           const { msg, data } = res;
           if (msg === 'success') {
             runInAction(() => {
@@ -288,7 +287,7 @@ class Inout extends PureComponent<any, IState> {
         });
       });
     } else {
-      getInoutDetail(info.parkinSn)
+      getInoutDetail(info.inSn)
         .then((res: any) => {
           const { msg, data } = res;
           if (msg === 'success') {
@@ -335,9 +334,9 @@ class Inout extends PureComponent<any, IState> {
         align: 'center',
         render: (text: string, record: IInoutObj) => {
           const status =
-            record.parkoutSn === -1
+            record.outSn === -1
               ? '이중입차'
-              : record.parkoutSn !== 0 && record.parkoutSn !== null
+              : record.outSn !== 0 && record.outSn !== null
               ? '차량출차'
               : '차량입차';
           return {
@@ -356,7 +355,7 @@ class Inout extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (text: string, record: IInoutObj) => {
-          const type = conversionEnumValue(record.parkcartype, ticketTypeOpt);
+          const type = conversionEnumValue(record.parkCarType, ticketTypeOpt);
           return {
             props: {
               style: {
@@ -372,7 +371,7 @@ class Inout extends PureComponent<any, IState> {
         key: 'ticketCorpName',
         width: 110,
         align: 'center',
-        render: (text: string, record: IInoutObj) => record.ticketCorpName
+        render: (text: string, record: IInoutObj) => record.corpName
       },
       {
         title: '입차Gate',
@@ -415,22 +414,23 @@ class Inout extends PureComponent<any, IState> {
         key: 'parktime',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) => record.parktime
+        render: (text: string, record: IInoutObj) => record.parkTime
       },
       {
         title: '기본요금',
         key: 'parkfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) => convertNumberWithCommas(record.parkfee)
+        render: (text: string, record: IInoutObj) =>
+          record.parkFee ? convertNumberWithCommas(record.parkFee) : ''
       },
       {
         title: '할인요금',
-        key: 'discountfee',
+        key: 'discountFee',
         width: 100,
         align: 'center',
         render: (text: string, record: IInoutObj) => (
-          <span>{convertNumberWithCommas(record.discountfee!! + record.dayDiscountfee!!)}</span>
+          <span>{convertNumberWithCommas(record.discountFee)}</span>
         )
       },
       {
@@ -438,18 +438,16 @@ class Inout extends PureComponent<any, IState> {
         key: 'payfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) => (
-          <span>{convertNumberWithCommas(record.payfee)}</span>
-        )
+        render: (text: string, record: IInoutObj) =>
+          record.payFee ? <span>{convertNumberWithCommas(record.payFee)}</span> : ''
       },
       {
         title: '결제요금',
         key: 'payfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) => (
-          <span>{convertNumberWithCommas(record.paymentAmount)}</span>
-        )
+        render: (text: string, record: IInoutObj) =>
+          record.paymentAmount ? <span>{convertNumberWithCommas(record.paymentAmount)}</span> : ''
       },
       {
         title: '미납요금',
@@ -543,29 +541,29 @@ class Inout extends PureComponent<any, IState> {
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={1}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    일반차량: {list.filter((l) => l.parkcartype === ETicketType.NORMAL).length}
+                    일반차량: {list.filter((l) => l.parkCarType === ETicketType.NORMAL).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={2}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     유료정기권:{' '}
-                    {list.filter((l) => l.parkcartype === ETicketType.SEASONTICKET).length}
+                    {list.filter((l) => l.parkCarType === ETicketType.SEASONTICKET).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={3}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    방문권: {list.filter((l) => l.parkcartype === ETicketType.VISITTICKET).length}
+                    방문권: {list.filter((l) => l.parkCarType === ETicketType.VISITTICKET).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={4}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
                     무료정기권:{' '}
-                    {list.filter((l) => l.parkcartype === ETicketType.FREETICKET).length}
+                    {list.filter((l) => l.parkCarType === ETicketType.FREETICKET).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={5}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    미인식: {list.filter((l) => l.parkcartype === ETicketType.UNRECOGNIZED).length}
+                    미인식: {list.filter((l) => l.parkCarType === ETicketType.UNRECOGNIZED).length}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={6} />
@@ -573,19 +571,17 @@ class Inout extends PureComponent<any, IState> {
                 <Table.Summary.Cell index={8} />
                 <Table.Summary.Cell index={9}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'parkfee'))}
+                    {convertNumberWithCommas(this.sum(list, 'parkFee'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={10}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(
-                      this.sum(list, 'discountfee') + this.sum(list, 'dayDiscountfee')
-                    )}
+                    {convertNumberWithCommas(this.sum(list, 'discountFee'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={11}>
                   <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                    {convertNumberWithCommas(this.sum(list, 'payfee'))}
+                    {convertNumberWithCommas(this.sum(list, 'payFee'))}
                   </span>
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={12}>

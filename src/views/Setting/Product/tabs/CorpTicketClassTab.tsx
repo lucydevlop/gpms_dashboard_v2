@@ -104,7 +104,7 @@ class CorpTicketClassTab extends PureComponent<IProps, IState> {
             key: 'unitTime',
             align: 'center',
             width: 80,
-            render: (text: string, record: ICorpTicketClassObj) => record.discountClass.unitTime
+            render: (text: string, record: ICorpTicketClassObj) => record.discountClass.unit
           }
         ]
       },

@@ -17,7 +17,13 @@ export function getCorps(data) {
 }
 
 export function updateCorp(data) {
-  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/corps`, {
+  return io.put(`${process.env.REACT_APP_API_DOMAIN_URL}/corp/users/${data.sn}`, {
+    data
+  });
+}
+
+export function deleteCorp(data) {
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/corp/users/${data.sn}`, {
     data
   });
 }

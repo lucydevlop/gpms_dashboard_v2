@@ -255,6 +255,12 @@ export const asyncRouteConfig: RouteChild[] = [
         path: '/setting/holiday',
         component: ['/views/Setting/Holiday'],
         localeKey: 'menu.setting.holiday'
+      },
+      {
+        name: 'SettingSetting',
+        path: '/setting/setting',
+        component: ['/views/Setting/Setting'],
+        localeKey: 'menu.setting.setting'
       }
     ]
   },

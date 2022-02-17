@@ -20,7 +20,7 @@ class CorpStore {
 
   async initCorp(): Promise<any> {
     const corpRequestData = {
-      sn: '',
+      delYn: EDelYn.N,
       corpName: '',
       corpId: '',
       tel: ''

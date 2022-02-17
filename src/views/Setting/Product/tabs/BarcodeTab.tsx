@@ -126,7 +126,7 @@ class BarcodeTab extends PureComponent<IProps, IState> {
             align: 'center',
             width: 80,
             render: (text: string, record: IBarcodeClassObj) =>
-              record.discountClass ? record.discountClass.unitTime : ''
+              record.discountClass ? record.discountClass.unit : ''
           }
         ]
       },

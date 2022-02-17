@@ -26,8 +26,11 @@ class BarcodeClassModal extends PureComponent<IProps, IState> {
       const discountClass: IDiscountClassObj = this.props.discountClasses.filter((e) => {
         return e.sn === Number(fieldsValue.discountClassSn);
       })[0];
-      fieldsValue.effectDate = conversionDateTime(discountClass.effectDate, '{y}-{m}-{d} 00:00:00');
-      fieldsValue.expireDate = conversionDateTime(discountClass.expireDate, '{y}-{m}-{d} 23:59:59');
+      fieldsValue.effectDate = conversionDateTime(new Date(), '{y}-{m}-{d} 00:00:00');
+      fieldsValue.expireDate = conversionDateTime(
+        new Date(9999, 11, 31, 23, 59, 59),
+        '{y}-{m}-{d} 23:59:59'
+      );
       if (!err) {
         console.log('handlerSubmit', fieldsValue);
         this.props.onSubmit(fieldsValue);

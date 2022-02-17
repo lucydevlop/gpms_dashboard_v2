@@ -185,7 +185,8 @@ export const ticketSearchDateTypeOpt: ISelectOptions[] = [
 
 export enum EInoutType {
   IN = 'IN',
-  OUT = 'OUT'
+  OUT = 'OUT',
+  DOUBLE = 'DOUBLE'
 }
 
 export const inoutSearchDateTypeOpt: ISelectOptions[] = [

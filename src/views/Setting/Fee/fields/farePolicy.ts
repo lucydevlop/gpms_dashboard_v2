@@ -96,7 +96,7 @@ export function getFarePolicyFields(
       },
       fieldOption: {
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }],
-        initialValue: farePolicy ? farePolicy.basicFareSn.toString() : ''
+        initialValue: farePolicy?.basicFare ? farePolicy.basicFare.sn?.toString() : ''
       },
       component: {
         type: FormType.Select,
@@ -122,7 +122,7 @@ export function getFarePolicyFields(
         children: null
       },
       fieldOption: {
-        initialValue: farePolicy ? farePolicy.addFareSn.toString() : ''
+        initialValue: farePolicy?.addFare ? farePolicy.addFare.sn?.toString() : ''
       },
       component: {
         type: FormType.Select,

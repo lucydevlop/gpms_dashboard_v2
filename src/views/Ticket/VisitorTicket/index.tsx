@@ -9,10 +9,11 @@ import {
   vehicleTypeOpt
 } from '@/constants/list';
 import {
-  createVisitTicket,
+  createSeasonTicket,
   createVisitTickets,
+  deleteSeasonTicket,
   getParkinglotTickets,
-  updateVisitTicket
+  updateSeasonTicket
 } from '@api/ticket';
 import { ITicketObj, ITicketSelectReq } from '@models/ticket';
 import { localeStore } from '@store/localeStore';
@@ -147,7 +148,7 @@ class Ticket extends PureComponent<any, IState> {
       info.corpSn = 0;
     }
     this.setState({ createModal: false });
-    createVisitTicket(info)
+    createSeasonTicket(info)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -171,7 +172,7 @@ class Ticket extends PureComponent<any, IState> {
       info.corpSn = 0;
     }
     this.setState({ detailModal: false });
-    updateVisitTicket(info)
+    updateSeasonTicket(info)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -197,7 +198,7 @@ class Ticket extends PureComponent<any, IState> {
     let count = 0;
     this.state.deleteList.forEach((data: ITicketObj) => {
       data.delYn = EDelYn.Y;
-      updateVisitTicket(data).then((res: any) => {
+      deleteSeasonTicket(data).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {

@@ -224,9 +224,7 @@ class VocModal extends PureComponent<IProps, IState> {
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
-          const inouts = data.filter(
-            (item: IInoutObj) => item.type === 'IN' && item.parkoutSn !== -1
-          );
+          const inouts = data.filter((item: IInoutObj) => item.type === 'IN' && item.outSn !== -1);
           runInAction(() => {
             this.setState({ list: inouts });
             if (inouts.length <= 0) {
@@ -271,7 +269,7 @@ class VocModal extends PureComponent<IProps, IState> {
                 sn: item.discountClass.sn,
                 discountNm: item.discountClass.discountNm,
                 discountApplyType: item.discountClass.discountApplyType,
-                unitTime: item.discountClass.unitTime,
+                unitTime: item.discountClass.unit,
                 corpName: item.corp?.corpName,
                 quantity: item.quantity,
                 disabled: true
@@ -327,7 +325,7 @@ class VocModal extends PureComponent<IProps, IState> {
           sn: info.sn,
           discountNm: info.discountNm,
           discountApplyType: info.discountApplyType,
-          unitTime: info.unitTime,
+          unitTime: info.unit,
           corpName: '',
           quantity: 1,
           disabled: false
@@ -373,7 +371,7 @@ class VocModal extends PureComponent<IProps, IState> {
         const { msg, data } = res;
         if (msg === 'success') {
           zdsTips.success('주차요금 전송 완료했습니다');
-          this.setState({ selected: data, isCalc: false }, () => this.fetchInout(inout.parkinSn!!));
+          this.setState({ selected: data, isCalc: false }, () => this.fetchInout(inout.inSn!!));
         }
       })
       .catch(() => {
@@ -416,9 +414,9 @@ class VocModal extends PureComponent<IProps, IState> {
       }
       fieldsValue.inDate = conversionDateTime(fieldsValue.inDate);
       fieldsValue.outDate = conversionDateTime(fieldsValue.outDate);
-      fieldsValue.parkinSn = this.state.selected!!.parkinSn;
+      fieldsValue.parkinSn = this.state.selected!!.inSn;
       fieldsValue.type = this.state.selected!!.type;
-      fieldsValue.parkoutSn = this.state.selected!!.parkoutSn;
+      fieldsValue.parkoutSn = this.state.selected!!.outSn;
       // fieldsValue.parkoutSn = this.state.selected
       //   ? this.state.selected.parkoutSn === 0
       //     ? null
@@ -447,11 +445,11 @@ class VocModal extends PureComponent<IProps, IState> {
           if (!this.state.isCalc) {
             zdsTips.error('주차요금계산을 먼저 실행해주세요');
           } else {
-            fieldsValue.parktime = this.state.selected!!.parktime;
-            fieldsValue.payfee = this.state.selected!!.payfee;
-            fieldsValue.parkfee = this.state.selected!!.parkfee;
+            fieldsValue.parktime = this.state.selected!!.parkTime;
+            fieldsValue.payfee = this.state.selected!!.payFee;
+            fieldsValue.parkfee = this.state.selected!!.parkFee;
             fieldsValue.dayDiscountfee = this.state.selected!!.dayDiscountfee;
-            fieldsValue.discountfee = this.state.selected!!.discountfee;
+            fieldsValue.discountfee = this.state.selected!!.discountFee;
             this.handleTransfer(fieldsValue);
           }
           break;
@@ -511,7 +509,7 @@ class VocModal extends PureComponent<IProps, IState> {
             </Descriptions.Item>
             <Descriptions.Item span={12} label={'유형'} style={{ padding: '10px 16px' }}>
               {getFieldDecorator('parkcartype', {
-                initialValue: this.state.selected ? this.state.selected.parkcartype : ''
+                initialValue: this.state.selected ? this.state.selected.parkCarType : ''
               })(
                 <Select style={{ width: '120px' }} size="middle">
                   {ticketTypeOpt
@@ -580,7 +578,7 @@ class VocModal extends PureComponent<IProps, IState> {
               label={'주차시간'}
               style={{ paddingLeft: '16px', paddingRight: '16px' }}
             >
-              <span>{this.state.selected ? toHHMM(this.state.selected.parktime) : ''}</span>
+              <span>{this.state.selected ? toHHMM(this.state.selected.parkTime) : ''}</span>
             </Descriptions.Item>
             <Descriptions.Item
               span={12}
@@ -750,7 +748,7 @@ class VocModal extends PureComponent<IProps, IState> {
             <Input
               disabled
               value={
-                this.state.selected ? convertNumberWithCommas(this.state.selected.parkfee) : ''
+                this.state.selected ? convertNumberWithCommas(this.state.selected.parkFee) : ''
               }
             />
           </Col>
@@ -761,7 +759,7 @@ class VocModal extends PureComponent<IProps, IState> {
               value={
                 this.state.selected
                   ? convertNumberWithCommas(
-                      this.sum(this.state.selected.discountfee, this.state.selected.dayDiscountfee)
+                      this.sum(this.state.selected.discountFee, this.state.selected.dayDiscountfee)
                     )
                   : ''
               }
@@ -771,7 +769,7 @@ class VocModal extends PureComponent<IProps, IState> {
             <span>정산요금</span>
             <Input
               disabled
-              value={this.state.selected ? convertNumberWithCommas(this.state.selected.payfee) : ''}
+              value={this.state.selected ? convertNumberWithCommas(this.state.selected.payFee) : ''}
             />
           </Col>
         </Row>
@@ -1192,7 +1190,7 @@ class VocModal extends PureComponent<IProps, IState> {
               inouts={this.state.list}
               onSelect={(value) => {
                 this.setState({ inoutSelectModal: false });
-                this.fetchInout(value.parkinSn ? value.parkinSn : -1);
+                this.fetchInout(value.inSn ? value.inSn : -1);
               }}
             />
           </DraggableModal>

@@ -320,7 +320,7 @@ export function CorpUpdateFields(corp: ICorpObj): IFormFieldConfig<keyof ICorpOb
         children: null
       },
       fieldOption: {
-        initialValue: corp.ceoName ? corp.corpName : null,
+        initialValue: corp.ceoName ? corp.ceoName : null,
         rules: [{ required: true, message: '필수 입력값 입니다' }]
       },
       component: {

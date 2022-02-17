@@ -9,10 +9,11 @@ import {
   vehicleTypeOpt
 } from '@/constants/list';
 import {
-  createFreeTicket,
   createFreeTickets,
-  getParkinglotTickets,
-  updateFreeTicket
+  createSeasonTicket,
+  updateSeasonTicket,
+  deleteSeasonTicket,
+  getParkinglotTickets
 } from '@api/ticket';
 import { ITicketObj, ITicketSelectReq } from '@models/ticket';
 import { localeStore } from '@store/localeStore';
@@ -30,9 +31,7 @@ import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { generateCsv } from '@utils/downloadUtil';
 import UploadModal from '@components/UploadModal';
 import { readTicketObj } from '@utils/readFromCsv';
-import { getTicketClasses } from '@api/ticketClass';
 import { ISelectOptions } from '@utils/form';
-import { ITicketClassObj } from '@models/ticketClass';
 import { string2mobile } from '@utils/tools';
 import { inject, observer } from 'mobx-react';
 import { corpStore } from '@store/corpStore';
@@ -146,7 +145,7 @@ class Ticket extends PureComponent<any, IState> {
       info.corpSn = 0;
     }
     this.setState({ createModal: false });
-    createFreeTicket(info)
+    createSeasonTicket(info)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -171,7 +170,7 @@ class Ticket extends PureComponent<any, IState> {
     }
 
     this.setState({ detailModal: false });
-    updateFreeTicket(info)
+    updateSeasonTicket(info)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -196,8 +195,7 @@ class Ticket extends PureComponent<any, IState> {
   async delete() {
     let count = 0;
     this.state.deleteList.forEach((data: ITicketObj) => {
-      data.delYn = EDelYn.Y;
-      updateFreeTicket(data).then((res: any) => {
+      deleteSeasonTicket(data).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {

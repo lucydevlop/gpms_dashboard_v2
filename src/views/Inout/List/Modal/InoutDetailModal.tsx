@@ -77,14 +77,14 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
           this.props.form.validateFields((err, fieldsValue) => {
             fieldsValue.inDate = conversionDateTime(fieldsValue.inDate);
             fieldsValue.outDate = conversionDateTime(fieldsValue.outDate);
-            fieldsValue.parkinSn = this.props.inout.parkinSn;
-            fieldsValue.parkoutSn = this.props.inout.parkoutSn;
+            fieldsValue.parkinSn = this.props.inout.inSn;
+            fieldsValue.parkoutSn = this.props.inout.outSn;
             fieldsValue.type = this.props.inout.type;
-            fieldsValue.parktime = this.props.inout.parktime;
-            fieldsValue.payfee = this.props.inout.payfee;
-            fieldsValue.parkfee = this.props.inout.parkfee;
+            fieldsValue.parktime = this.props.inout.parkTime;
+            fieldsValue.payfee = this.props.inout.payFee;
+            fieldsValue.parkfee = this.props.inout.parkFee;
             fieldsValue.dayDiscountfee = this.props.inout.dayDiscountfee;
-            fieldsValue.discountfee = this.props.inout.discountfee;
+            fieldsValue.discountfee = this.props.inout.discountFee;
             fieldsValue.addDiscountClasses = this.state.selectedDiscountClass
               .filter((d) => !d.disable)
               .map((item) => {
@@ -136,7 +136,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
             fieldsValue.outDate = fieldsValue.outDate
               ? conversionDateTime(fieldsValue.outDate)
               : '';
-            fieldsValue.parkoutSn = this.props.inout.parkoutSn;
+            fieldsValue.parkoutSn = this.props.inout.outSn;
             this.props.onSubmit(fieldsValue);
           });
         }
@@ -218,7 +218,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
           const value = conversionEnumValue(record.discountApplyType, discountApplyTypeOpt);
           return (
             <div>
-              {record.unitTime}
+              {record.unit}
               {value.label === '시간' ? '분' : value.label}
             </div>
           );
@@ -265,7 +265,7 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
           const label = value ? value.label : record.discountApplyType;
           return (
             <div>
-              {record.unitTime}
+              {record.unit}
               {label === '시간' ? '분' : label}
             </div>
           );

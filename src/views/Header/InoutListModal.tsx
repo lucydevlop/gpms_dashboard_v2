@@ -81,7 +81,7 @@ class InoutListModal extends PureComponent<IProps, IState> {
         <Table
           columns={columns}
           dataSource={this.props.inouts}
-          rowKey={(record) => (record.parkinSn ? record.parkinSn.toString() : '-1')}
+          rowKey={(record) => (record.inSn ? record.inSn.toString() : '-1')}
           pagination={false}
           // rowSelection={{
           //   type: 'radio',

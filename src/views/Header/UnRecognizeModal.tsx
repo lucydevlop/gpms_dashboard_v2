@@ -48,7 +48,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
       width: 90,
       align: 'center',
       render: (text: string, record: IInoutObj) => {
-        const type = conversionEnumValue(record.parkcartype, ticketTypeOpt);
+        const type = conversionEnumValue(record.parkCarType, ticketTypeOpt);
         return {
           props: {
             style: {
@@ -97,7 +97,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
               {(form) => (
                 <a
                   href="javascript:;"
-                  onClick={() => this.handleSave(form, record.parkinSn ? record.parkinSn : -1)}
+                  onClick={() => this.handleSave(form, record.inSn ? record.inSn : -1)}
                   style={{ marginRight: 8 }}
                 >
                   저장
@@ -112,14 +112,14 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
           <span>
             <a
               aria-disabled={editingKey !== ''}
-              onClick={() => this.handleEdit(record.parkinSn ? record.parkinSn.toString() : '')}
+              onClick={() => this.handleEdit(record.inSn ? record.inSn.toString() : '')}
             >
               수정
             </a>
             <Divider type="vertical" />
             <a
               aria-disabled={editingKey !== ''}
-              onClick={() => this.handleDelete(record.parkinSn ? record.parkinSn.toString() : '')}
+              onClick={() => this.handleDelete(record.inSn ? record.inSn.toString() : '')}
             >
               강제출차
             </a>
@@ -188,7 +188,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
   };
 
   isEditing = (record: IInoutObj) =>
-    record.parkinSn ? record.parkinSn.toString() === this.state.editingKey : false;
+    record.inSn ? record.inSn.toString() === this.state.editingKey : false;
 
   handleSave = (form: any, key: number) => {
     this.props.form.validateFields((error: any, row: any) => {
@@ -215,7 +215,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
 
   handleDelete = (key: string) => {
     // console.log('handleDelete', key);
-    const newData = this.state.list.filter((item) => item.parkinSn !== Number(key));
+    const newData = this.state.list.filter((item) => item.inSn !== Number(key));
     if (newData == null) return;
     deleteParkinglotInout(key)
       .then((res: any) => {
@@ -267,7 +267,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
             pageSize: 5,
             onChange: this.handleCancel
           }}
-          rowKey={(record: IInoutObj) => String(record.parkinSn)}
+          rowKey={(record: IInoutObj) => String(record.inSn)}
         />
       </>
     );

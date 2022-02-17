@@ -131,10 +131,10 @@ class DiscountTab extends PureComponent<IProps, IState> {
       },
       {
         title: '할인적용값',
-        key: 'unitTime',
+        key: 'unit',
         width: 110,
         align: 'center',
-        render: (text: string, record: IDiscountClassObj) => record.unitTime
+        render: (text: string, record: IDiscountClassObj) => record.unit
       },
       {
         title: 'RCS사용',

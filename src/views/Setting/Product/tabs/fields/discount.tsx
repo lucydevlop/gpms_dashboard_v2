@@ -149,7 +149,7 @@ export function DiscountFields(
       }
     },
     {
-      id: 'unitTime',
+      id: 'unit',
       label: '할인적용값',
       colProps: {
         xl: 12,
@@ -167,7 +167,7 @@ export function DiscountFields(
         children: null
       },
       fieldOption: {
-        initialValue: discount ? discount.unitTime : null
+        initialValue: discount ? discount.unit : null
       },
       component: {
         type: FormType.Input,
