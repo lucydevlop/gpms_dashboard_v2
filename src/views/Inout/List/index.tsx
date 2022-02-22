@@ -147,13 +147,15 @@ class Inout extends PureComponent<any, IState> {
 
   async pollData() {
     this.setState({ loading: true });
-    getInouts(this.state.searchParam)
+    const { current, pageSize } = this.state;
+
+    getInouts(this.state.searchParam, current, pageSize)
       .then((res: any) => {
-        const { msg, data } = res;
+        const { msg, data, total } = res;
         if (msg === 'success') {
           runInAction(() => {
             // console.log(data);
-            this.setState({ list: data, total: data.length });
+            this.setState({ list: data, total: total });
           });
         }
       })
@@ -198,7 +200,7 @@ class Inout extends PureComponent<any, IState> {
   };
 
   paginationChange = (pagination: TablePaginationConfig) => {
-    this.setState({ current: pagination.current || 1 });
+    this.setState({ current: pagination.current || 1 }, () => this.pollData());
   };
 
   addProdRender = () => {
