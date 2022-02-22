@@ -69,7 +69,7 @@ class ProductSetting extends PureComponent<IProps, IState> {
                 return e.delYn != EDelYn.Y;
               })
               .forEach((e) => {
-                unique.push({ value: String(e.sn), label: e.discountNm });
+                unique.push({ value: String(e.sn), label: e.discountName });
               });
             this.setState({ discountSelectClasses: unique });
           });
@@ -137,7 +137,7 @@ class ProductSetting extends PureComponent<IProps, IState> {
                 return e.delYn != EDelYn.Y;
               })
               .forEach((e) => {
-                unique.push({ value: String(e.sn), label: e.discountNm });
+                unique.push({ value: String(e.sn), label: e.discountName });
               });
             this.setState({ discountSelectClasses: unique }, () =>
               console.log(this.state.discountSelectClasses)

@@ -18,7 +18,7 @@ export function DiscountFields(
 ): IFormFieldConfig<keyof IDiscountClassObj>[] {
   return [
     {
-      id: 'discountNm',
+      id: 'discountName',
       label: '할인명',
       colProps: {
         xl: 12,
@@ -36,7 +36,7 @@ export function DiscountFields(
         children: null
       },
       fieldOption: {
-        initialValue: discount ? discount.discountNm : null,
+        initialValue: discount ? discount.discountName : null,
         rules: [{ required: true, whitespace: true, message: '필수 입력 값입니다' }]
       },
       component: {

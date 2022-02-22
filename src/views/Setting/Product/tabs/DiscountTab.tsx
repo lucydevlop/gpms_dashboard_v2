@@ -74,10 +74,10 @@ class DiscountTab extends PureComponent<IProps, IState> {
       },
       {
         title: '할인명',
-        key: 'discountNm',
+        key: 'discountName',
         width: 110,
         align: 'center',
-        render: (text: string, record: IDiscountClassObj) => record.discountNm
+        render: (text: string, record: IDiscountClassObj) => record.discountName
       },
       // {
       //   title: '적용시점',

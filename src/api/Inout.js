@@ -5,7 +5,7 @@ export function getInoutDetail(data) {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/${data}`);
 }
 
-export function getInouts(data) {
+export function getInouts(data, page, pageSize) {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts`, {
     params: {
       searchDateLabel: data.dateType,
@@ -14,13 +14,15 @@ export function getInouts(data) {
       searchLabel: 'CARNUM',
       vehicleNo: data.vehicleNo,
       parkCarType: data.parkcartype === 'ALL' ? '' : data.parkcartype,
-      outSn: data.outSn
+      outSn: data.outSn,
+      page: page - 1,
+      size: pageSize
     }
   });
 }
 
-export function createParkinglotInout(data) {
-  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/inouts', {
+export function createInout(data) {
+  return io.post(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts`, {
     data
   });
 }
@@ -62,7 +64,7 @@ export function getParkinglotRcsCorpInfo(parkinglotId) {
 }
 
 export function deleteParkinglotInout(id) {
-  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/${id}`, id);
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/forced/exit/${id}`, id);
 }
 
 export function getInoutPayments(data) {

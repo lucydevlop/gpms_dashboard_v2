@@ -88,7 +88,7 @@ class CorpTicketClassTab extends PureComponent<IProps, IState> {
             key: 'discountNm',
             align: 'center',
             width: 100,
-            render: (text: string, record: ICorpTicketClassObj) => record.discountClass.discountNm
+            render: (text: string, record: ICorpTicketClassObj) => record.discountClass.discountName
           },
           {
             title: '적용타입',

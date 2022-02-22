@@ -107,7 +107,7 @@ class BarcodeTab extends PureComponent<IProps, IState> {
             align: 'center',
             width: 100,
             render: (text: string, record: IBarcodeClassObj) =>
-              record.discountClass ? record.discountClass.discountNm : ''
+              record.discountClass ? record.discountClass.discountName : ''
           },
           {
             title: '적용타입',

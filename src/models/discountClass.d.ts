@@ -11,7 +11,7 @@ import { ICorpObj } from '@models/corp';
 export interface IDiscountClassObj {
   sn: number;
   discountType: EDiscountType;
-  discountNm: string;
+  discountName: string;
   discountApplyType: EDiscountApplyType;
   discountApplyRate: EDiscountApplyRate;
   dayRange: EDayRangeType;

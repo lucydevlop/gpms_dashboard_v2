@@ -133,7 +133,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
         //       okText="确认"
         //       cancelText="取消"
         //     >
-        //       <a id={`delete_${record.parkinSn}`} href={'##'} title="删除">
+        //       <a id={`delete_${record.inSn}`} href={'##'} title="删除">
         //         <Icon type="delete" />
         //       </a>
         //     </Popconfirm>
@@ -173,7 +173,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
     data.outSn = '';
     //console.log('pollData', data);
 
-    getInouts(data)
+    getInouts(data, this.state.current, this.state.pageSize)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {

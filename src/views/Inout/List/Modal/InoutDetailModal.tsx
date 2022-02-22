@@ -198,17 +198,17 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
         fixed: 'left',
         width: 100,
         align: 'center',
-        render: (text: string, record: IDiscountClassObj) => record.discountNm
+        render: (text: string, record: IDiscountClassObj) => record.discountName
       },
-      {
-        title: '적용요일',
-        key: 'dayRange',
-        fixed: 'left',
-        width: 90,
-        align: 'center',
-        render: (text: string, record: IDiscountClassObj) =>
-          conversionEnumValue(record.dayRange, dayRangeTypeOpt).label
-      },
+      // {
+      //   title: '적용요일',
+      //   key: 'dayRange',
+      //   fixed: 'left',
+      //   width: 90,
+      //   align: 'center',
+      //   render: (text: string, record: IDiscountClassObj) =>
+      //     conversionEnumValue(record.dayRange, dayRangeTypeOpt).label
+      // },
       {
         title: '할인률',
         fixed: 'left',
@@ -247,11 +247,11 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
     const aplyColumns: ColumnProps<IDiscountClassObj>[] = [
       {
         title: '할인명',
-        key: 'discountNm',
+        key: 'discountName',
         fixed: 'left',
         width: 100,
         align: 'center',
-        render: (text: string, record: IDiscountClassObj) => record.discountNm
+        render: (text: string, record: IDiscountClassObj) => record.discountName
       },
       {
         title: '할인률',

@@ -17,7 +17,7 @@ import { Form } from '@ant-design/compatible';
 import { parkinglotStore } from '@store/parkinglotStore';
 import {
   calcParkinglotInout,
-  createParkinglotInout,
+  createInout,
   getInoutDetail,
   getInoutPayment,
   getInoutPayments,
@@ -220,7 +220,7 @@ class VocModal extends PureComponent<IProps, IState> {
     data.gateId = '';
     data.outSn = '';
 
-    getInouts(data)
+    getInouts(data, 1, 20)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -231,7 +231,7 @@ class VocModal extends PureComponent<IProps, IState> {
               zdsTips.error('차량번호 검색 결과가 없습니다');
               this.setState({ selected: null });
             } else if (inouts.length === 1) {
-              this.fetchInout(inouts[0].parkinSn);
+              this.fetchInout(inouts[0].inSn);
             } else {
               zdsTips.alert('차량번호 선택하시오');
               this.setState({ inoutSelectModal: true, selected: null });
@@ -267,7 +267,7 @@ class VocModal extends PureComponent<IProps, IState> {
             this.state.selected?.aplyDiscountClasses?.map((item) => {
               discounts.push({
                 sn: item.discountClass.sn,
-                discountNm: item.discountClass.discountNm,
+                discountNm: item.discountClass.discountName,
                 discountApplyType: item.discountClass.discountApplyType,
                 unitTime: item.discountClass.unit,
                 corpName: item.corp?.corpName,
@@ -316,14 +316,14 @@ class VocModal extends PureComponent<IProps, IState> {
   handleAddDiscountClass = (info: IDiscountClassObj) => {
     // console.log('handleAddDiscountClass', info);
     const i = this.state.discounts.findIndex(
-      (x) => x.discountNm === info.discountNm && x.disabled === false
+      (x) => x.discountNm === info.discountName && x.disabled === false
     );
     if (i <= -1) {
       let discounts = [
         ...this.state.discounts,
         {
           sn: info.sn,
-          discountNm: info.discountNm,
+          discountNm: info.discountName,
           discountApplyType: info.discountApplyType,
           unitTime: info.unit,
           corpName: '',
@@ -359,7 +359,7 @@ class VocModal extends PureComponent<IProps, IState> {
   //   updateParkinglotInout(this.props.cs.parkinglot.parkinglotId, inout).then((res: any) => {
   //     const { msg, data } = res;
   //     if (msg === 'ok') {
-  //       this.setState({ selected: data, isCalc: false }, () => this.fetchInout(inout.parkinSn!!));
+  //       this.setState({ selected: data, isCalc: false }, () => this.fetchInout(inout.inSn!!));
   //     }
   //   });
   // };
@@ -385,7 +385,7 @@ class VocModal extends PureComponent<IProps, IState> {
   handleCreateInout = (info: IInoutObj) => {
     // console.log('create', info);
     this.setState({ createInoutModal: false });
-    createParkinglotInout(info)
+    createInout(info)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -414,7 +414,7 @@ class VocModal extends PureComponent<IProps, IState> {
       }
       fieldsValue.inDate = conversionDateTime(fieldsValue.inDate);
       fieldsValue.outDate = conversionDateTime(fieldsValue.outDate);
-      fieldsValue.parkinSn = this.state.selected!!.inSn;
+      fieldsValue.inSn = this.state.selected!!.inSn;
       fieldsValue.type = this.state.selected!!.type;
       fieldsValue.parkoutSn = this.state.selected!!.outSn;
       // fieldsValue.parkoutSn = this.state.selected
@@ -426,7 +426,7 @@ class VocModal extends PureComponent<IProps, IState> {
         .filter((t) => t.disabled === false)
         .map((item) => {
           const discount: IInoutDiscountApplyObj = {
-            inSn: fieldsValue.parkinSn,
+            inSn: fieldsValue.inSn,
             discountClassSn: item.sn,
             cnt: item.quantity ? item.quantity : 0
           };
@@ -867,7 +867,7 @@ class VocModal extends PureComponent<IProps, IState> {
                     this.handleAddDiscountClass(discountClass);
                   }}
                 >
-                  <span style={{ fontWeight: 800 }}>{discountClass.discountNm}</span>
+                  <span style={{ fontWeight: 800 }}>{discountClass.discountName}</span>
                 </Button>
               </Col>
             ))}

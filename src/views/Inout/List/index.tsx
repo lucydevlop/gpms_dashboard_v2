@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
 import {
   calcParkinglotInout,
-  createParkinglotInout,
+  createInout,
   deleteParkinglotInout,
   getInoutDetail,
   getInouts,
@@ -147,13 +147,14 @@ class Inout extends PureComponent<any, IState> {
 
   async pollData() {
     this.setState({ loading: true });
-    getInouts(this.state.searchParam)
+    const { current, pageSize } = this.state;
+    getInouts(this.state.searchParam, current, pageSize)
       .then((res: any) => {
-        const { msg, data } = res;
+        const { msg, data, total } = res;
         if (msg === 'success') {
           runInAction(() => {
             // console.log(data);
-            this.setState({ list: data, total: data.length });
+            this.setState({ list: data, total: total });
           });
         }
       })
@@ -179,7 +180,7 @@ class Inout extends PureComponent<any, IState> {
 
   create = (info: IInoutObj) => {
     this.setState({ createModal: false });
-    createParkinglotInout(info).then((res: any) => {
+    createInout(info).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'success') {
         this.pollData();
@@ -188,17 +189,29 @@ class Inout extends PureComponent<any, IState> {
   };
 
   calc = (info: IInoutObj) => {
-    // console.log('calc', info);
-    calcParkinglotInout(info).then((res: any) => {
+    const request: any = {};
+    request.inSn = info.inSn;
+    request.vehicleNo = info.vehicleNo;
+    request.inDate = info.inDate;
+    request.outDate = info.outDate;
+    request.addDiscountClasses = info.addDiscountClasses;
+    request.type = 'CALC';
+
+    calcParkinglotInout(request).then((res: any) => {
       const { msg, data } = res;
       if (msg === 'success') {
-        this.setState({ selected: data });
+        info.parkFee = data.parkFee;
+        info.parkTime = data.parkTime;
+        info.payFee = data.payFee;
+        info.discountFee = data.discountFee + data.dayDiscountFee;
+        // console.log('calc result', info);
+        this.setState({ selected: info });
       }
     });
   };
 
   paginationChange = (pagination: TablePaginationConfig) => {
-    this.setState({ current: pagination.current || 1 });
+    this.setState({ current: pagination.current || 1 }, () => this.pollData());
   };
 
   addProdRender = () => {
@@ -421,12 +434,11 @@ class Inout extends PureComponent<any, IState> {
         key: 'parkfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) =>
-          record.parkFee ? convertNumberWithCommas(record.parkFee) : ''
+        render: (text: string, record: IInoutObj) => convertNumberWithCommas(record.parkFee)
       },
       {
         title: '할인요금',
-        key: 'discountFee',
+        key: 'discountfee',
         width: 100,
         align: 'center',
         render: (text: string, record: IInoutObj) => (
@@ -438,16 +450,18 @@ class Inout extends PureComponent<any, IState> {
         key: 'payfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) =>
-          record.payFee ? <span>{convertNumberWithCommas(record.payFee)}</span> : ''
+        render: (text: string, record: IInoutObj) => (
+          <span>{convertNumberWithCommas(record.payFee)}</span>
+        )
       },
       {
         title: '결제요금',
         key: 'payfee',
         width: 100,
         align: 'center',
-        render: (text: string, record: IInoutObj) =>
-          record.paymentAmount ? <span>{convertNumberWithCommas(record.paymentAmount)}</span> : ''
+        render: (text: string, record: IInoutObj) => (
+          <span>{convertNumberWithCommas(record.paymentAmount)}</span>
+        )
       },
       {
         title: '미납요금',
@@ -516,7 +530,7 @@ class Inout extends PureComponent<any, IState> {
           columns={columns}
           loading={this.state.loading}
           // @ts-ignore
-          rowKey={(record: IInoutObj) => String(record.parkinSn)}
+          rowKey={(record: IInoutObj) => String(record.inSn)}
           data={{
             list,
             pagination: {
