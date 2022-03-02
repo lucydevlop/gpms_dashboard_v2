@@ -173,7 +173,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
     data.outSn = '';
     //console.log('pollData', data);
 
-    getInouts(data)
+    getInouts(data, this.state.current, this.state.pageSize)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {

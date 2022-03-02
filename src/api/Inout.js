@@ -9,7 +9,7 @@ export function getInoutDetail(data) {
   });
 }
 
-export function getInouts(data) {
+export function getInouts(data, page, size) {
   return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts`, {
     params: {
       searchDateLabel: data.dateType,
@@ -18,7 +18,9 @@ export function getInouts(data) {
       searchLabel: 'CARNUM',
       vehicleNo: data.vehicleNo,
       parkCarType: data.parkcartype === 'ALL' ? '' : data.parkcartype,
-      outSn: data.outSn
+      outSn: data.outSn,
+      page: page - 1,
+      size: size
     }
   });
 }

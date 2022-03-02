@@ -220,7 +220,7 @@ class VocModal extends PureComponent<IProps, IState> {
     data.gateId = '';
     data.outSn = '';
 
-    getInouts(data)
+    getInouts(data, 1, 20)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
