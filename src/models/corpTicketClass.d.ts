@@ -29,7 +29,9 @@ export interface ICorpTicketClassObj {
 }
 
 export interface ICorpTicketSummaryObj {
-  corp: ICorpObj;
+  corpSn: number;
+  corpName: string;
+  corpId: string;
   tickets: ICorpTicketSummayTicketObj[];
 }
 
@@ -38,6 +40,7 @@ export interface ICorpTicketSummayTicketObj {
   id: number;
   title: string;
   use: number;
+  remain: number;
 }
 
 export interface ICorpTicketAddObj {

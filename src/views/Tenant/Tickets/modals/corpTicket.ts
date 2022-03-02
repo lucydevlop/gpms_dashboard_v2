@@ -26,7 +26,7 @@ export function corpTicketAddFields(
         children: null
       },
       fieldOption: {
-        initialValue: corpTicketSummary ? corpTicketSummary.corp.corpName : null
+        initialValue: corpTicketSummary ? corpTicketSummary.corpName : null
       },
       component: {
         type: FormType.Input,
@@ -108,7 +108,7 @@ export function corpTicketAddFields(
         children: null
       },
       fieldOption: {
-        initialValue: corpTicketSummary ? corpTicketSummary.corp.sn : null
+        initialValue: corpTicketSummary ? corpTicketSummary.corpSn : null
       },
       component: {
         type: FormType.Input

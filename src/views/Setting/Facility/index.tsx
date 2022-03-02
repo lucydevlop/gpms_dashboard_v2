@@ -117,6 +117,7 @@ class FacilitySetting extends PureComponent<any, IState> {
   };
 
   handleFacilityCreate = async (record: IFacilityObj) => {
+    record.facilitiesId = record.dtFacilitiesId;
     parkinglotStore.createFacilities(record).then((res: IFacilityObj[]) => {
       this.setState({ facilities: res });
     });

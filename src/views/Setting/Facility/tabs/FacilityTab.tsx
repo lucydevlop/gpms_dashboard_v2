@@ -239,7 +239,7 @@ class FacilityTab extends PureComponent<IProps, IState> {
                 this.props.onCreate(value);
               }}
               gate={this.state.selectOptGates}
-            ></FacilityModal>
+            />
           </DraggableModal>
         ) : null}
         {this.state.detailModal ? (
@@ -262,7 +262,7 @@ class FacilityTab extends PureComponent<IProps, IState> {
               }}
               gate={this.state.selectOptGates}
               facility={this.state.selected}
-            ></FacilityModal>
+            />
           </DraggableModal>
         ) : null}
       </>

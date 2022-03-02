@@ -21,7 +21,7 @@ class CorpTicketCreateModal extends PureComponent<IProps, IState> {
 
   handlerSubmit() {
     this.props.form.validateFields((err, fieldsValue) => {
-      console.log('handlerSubmit', fieldsValue);
+      //console.log('handlerSubmit', fieldsValue);
       if (!err) this.props.onSubmit(fieldsValue);
     });
   }

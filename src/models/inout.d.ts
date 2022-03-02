@@ -25,7 +25,7 @@ export interface IInoutObj {
   nonPayment?: number;
   dayDiscountfee?: number;
   addDiscountClasses?: IInoutDiscountApplyObj[];
-  aplyDiscountClasses?: IInoutDiscountObj[];
+  applyDiscountClasses: IInoutDiscountObj[];
 }
 
 export interface IInoutSelectReq {
@@ -58,17 +58,17 @@ export interface IInoutDiscountObj {
   sn: number;
   discountType: ETicketType;
   corpSn?: number;
-  discountClassSn: number;
+  discountClassSn?: number;
   ticketHistSn?: number;
   inSn: number;
   quantity: number;
-  useQuantity: number;
+  useQuantity?: number;
   applyDate?: Date | null;
   delYn: EDelYn;
   calcYn: EDelYn;
   outSn?: number;
   discountClass: IDiscountClassObj;
-  ticketClass: ICorpTicketClassObj;
+  //ticketClass: ICorpTicketClassObj;
   //not metadata
   disabled: boolean;
   corp?: ICorpObj;

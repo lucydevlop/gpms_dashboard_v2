@@ -191,7 +191,8 @@ export enum EInoutType {
 
 export const inoutSearchDateTypeOpt: ISelectOptions[] = [
   { value: EInoutType.IN, label: '입차', color: 'black' },
-  { value: EInoutType.OUT, label: '출차', color: 'black' }
+  { value: EInoutType.OUT, label: '출차', color: 'black' },
+  { value: EInoutType.DOUBLE, label: '이중입차', color: 'red' }
 ];
 
 export enum EDiscountType {

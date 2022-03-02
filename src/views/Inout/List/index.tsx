@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import {
   calcParkinglotInout,
   createInout,
-  deleteParkinglotInout,
+  deleteInout,
   getInoutDetail,
   getInouts,
   transferParkinglotInout,
@@ -25,7 +25,13 @@ import {
   conversionEnumValue,
   convertNumberWithCommas
 } from '@utils/conversion';
-import { EDelYn, EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
+import {
+  EDelYn,
+  EInoutType,
+  ETicketType,
+  inoutSearchDateTypeOpt,
+  ticketTypeOpt
+} from '@/constants/list';
 import moment from 'moment';
 import DraggableModal from '@components/DraggableModal';
 import InoutCreateModalForm from '@views/Inout/List/Modal/InoutCreateModal';
@@ -129,7 +135,7 @@ class Inout extends PureComponent<any, IState> {
   async delete() {
     let count = 0;
     this.state.deleteList.forEach((data: any) => {
-      deleteParkinglotInout(data.parkinSn).then((res: any) => {
+      deleteInout(data.parkinSn).then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
@@ -150,11 +156,11 @@ class Inout extends PureComponent<any, IState> {
     const { current, pageSize } = this.state;
     getInouts(this.state.searchParam, current, pageSize)
       .then((res: any) => {
-        const { msg, data, total } = res;
+        const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
             // console.log(data);
-            this.setState({ list: data, total: total });
+            this.setState({ list: data, total: data.totalElements });
           });
         }
       })
@@ -290,7 +296,7 @@ class Inout extends PureComponent<any, IState> {
   handleBtnClick = (info: IInoutObj, key: string) => {
     if (key === 'DELETE') {
       zdsTips.confirm('강제출차 하시겠습니까?', () => {
-        deleteParkinglotInout(info.inSn).then((res: any) => {
+        deleteInout(info.inSn).then((res: any) => {
           const { msg, data } = res;
           if (msg === 'success') {
             runInAction(() => {
@@ -346,19 +352,14 @@ class Inout extends PureComponent<any, IState> {
         width: 110,
         align: 'center',
         render: (text: string, record: IInoutObj) => {
-          const status =
-            record.outSn === -1
-              ? '이중입차'
-              : record.outSn !== 0 && record.outSn !== null
-              ? '차량출차'
-              : '차량입차';
+          const type = conversionEnumValue(record.type, inoutSearchDateTypeOpt);
           return {
             props: {
               style: {
-                color: status === '이중입차' ? 'red' : status === '차량출차' ? 'blue' : 'black'
+                color: type.color
               }
             },
-            children: <div>{status}</div>
+            children: <div>{type.label}</div>
           };
         }
       },

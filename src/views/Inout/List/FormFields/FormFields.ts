@@ -72,7 +72,7 @@ export function searchInoutFields(): IFormFieldConfig<keyof IInoutSelectReq>[] {
           allowClear: true,
           col: 0
         },
-        selectOptions: inoutSearchDateTypeOpt
+        selectOptions: inoutSearchDateTypeOpt.filter((t) => t.value !== EInoutType.DOUBLE)
       },
       formSubItemProps: {
         id: 'createTm',

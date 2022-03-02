@@ -38,8 +38,8 @@ class InoutDetailModal extends PureComponent<IInoutDetailModalProps, IState> {
     this.state = {
       isCalc: false,
       applyInoutDiscount: [],
-      selectedDiscountClass: this.props.inout.aplyDiscountClasses
-        ? this.props.inout.aplyDiscountClasses?.map((item) => {
+      selectedDiscountClass: this.props.inout.applyDiscountClasses
+        ? this.props.inout.applyDiscountClasses?.map((item) => {
             return { ...item.discountClass, disable: true, aplyCnt: item.quantity };
           })
         : []

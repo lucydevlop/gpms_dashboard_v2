@@ -3,7 +3,7 @@ import { EDelYn, EPaymentType } from '@/constants/list';
 export interface IInoutPaymentObj {
   sn: number;
   type: EPaymentType;
-  inSn: number;
+  //inSn: number;
   vehicleNo: string;
   approveDateTime: string;
   payType: string;
@@ -13,6 +13,6 @@ export interface IInoutPaymentObj {
   transactionId: string;
   result: string;
   failureMessage: string;
-  delYn: EDelYn;
+  //delYn: EDelYn;
   receiptImage: string;
 }

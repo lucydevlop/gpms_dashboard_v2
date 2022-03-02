@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import { inject, observer } from 'mobx-react';
-import { IInoutObj, IInoutPaymentSelectReq, IInoutSelectReq } from '@models/inout';
+import { IInoutPaymentSelectReq } from '@models/inout';
 import moment from 'moment';
-import { delYnOpt, EInoutType, ETicketType, paymentTypeOpt, resultTypeOpt } from '@/constants/list';
+import { paymentTypeOpt, resultTypeOpt } from '@/constants/list';
 import { getInoutPayments } from '@api/Inout';
 import { runInAction } from 'mobx';
 import { IInoutPaymentObj } from '@models/inoutPayment';
@@ -78,8 +78,9 @@ class InoutPayment extends PureComponent<IProps, IState> {
   }
 
   async pollData() {
+    const { current, pageSize } = this.state;
     this.setState({ loading: true });
-    getInoutPayments(this.state.searchParam)
+    getInoutPayments(this.state.searchParam, current, pageSize)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
@@ -113,7 +114,7 @@ class InoutPayment extends PureComponent<IProps, IState> {
   };
 
   paginationChange = (pagination: TablePaginationConfig) => {
-    this.setState({ current: pagination.current || 1 });
+    this.setState({ current: pagination.current || 1 }, () => this.pollData());
   };
 
   addProdRender = () => {

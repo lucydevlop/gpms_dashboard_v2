@@ -13,12 +13,7 @@ import {
 import { ColumnProps } from 'antd/lib/table';
 import PageWrapper from '@components/PageWrapper';
 import StandardTable from '@components/StandardTable';
-import {
-  DownloadOutlined,
-  MonitorOutlined,
-  PlusCircleOutlined,
-  PlusOutlined
-} from '@ant-design/icons';
+import { MonitorOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Row, TablePaginationConfig } from 'antd';
 import { localeStore } from '@store/localeStore';
 import DraggableModal from '@components/DraggableModal';
@@ -76,12 +71,13 @@ class TenantTicket extends PureComponent<any, IState> {
   }
 
   pollAllCorpTicketSummary() {
-    getAllCorpTicketsSummary()
+    const { current, pageSize } = this.state;
+    getAllCorpTicketsSummary(current, pageSize)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
-            this.setState({ summaries: data });
+            this.setState({ summaries: data, total: data.totalElements });
           });
         }
       })
@@ -97,18 +93,19 @@ class TenantTicket extends PureComponent<any, IState> {
   };
 
   handleAddCorpTickets = (info: ICorpTicketAddObj) => {
-    console.log('handleAddCorpTickets', info);
+    //console.log('handleAddCorpTickets', info);
     addCorpTicket(info)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {
           runInAction(() => {
+            zdsTips.success('입주사 할인 등록 완료');
             this.setState(
               {
                 createModal: false
               },
               () => {
-                zdsTips.success('입주사 할인 등록 완료'), this.pollAllCorpTicketSummary();
+                this.pollAllCorpTicketSummary();
               }
             );
           });
@@ -118,7 +115,7 @@ class TenantTicket extends PureComponent<any, IState> {
   };
 
   paginationChange = (pagination: TablePaginationConfig) => {
-    this.setState({ current: pagination.current || 1 });
+    this.setState({ current: pagination.current || 1 }, () => this.pollAllCorpTicketSummary());
   };
 
   render() {
@@ -134,14 +131,14 @@ class TenantTicket extends PureComponent<any, IState> {
             key: 'corpId',
             width: 100,
             align: 'center',
-            render: (text: string, record: ICorpTicketSummaryObj) => record.corp.corpId
+            render: (text: string, record: ICorpTicketSummaryObj) => record.corpId
           },
           {
             title: '입주사명',
             key: 'corpName',
             width: 100,
             align: 'center',
-            render: (text: string, record: ICorpTicketSummaryObj) => record.corp.corpName
+            render: (text: string, record: ICorpTicketSummaryObj) => record.corpName
           }
         ]
       },
@@ -156,12 +153,16 @@ class TenantTicket extends PureComponent<any, IState> {
             key: 'key-' + e.id,
             align: 'center',
             width: 100,
-            render: (text: string, recode: ICorpTicketSummaryObj) => (
-              <span>
-                {recode.tickets[e.id].total - recode.tickets[e.id].use} /{' '}
-                {recode.tickets[e.id].total}
-              </span>
-            )
+            render: (text: string, recode: ICorpTicketSummaryObj) => {
+              const found = recode.tickets.find((t) => t.title == e.title);
+              return found === undefined ? (
+                '-'
+              ) : (
+                <span>
+                  {found.remain} / {found.total}
+                </span>
+              );
+            }
           };
         })
       },
@@ -216,7 +217,7 @@ class TenantTicket extends PureComponent<any, IState> {
           columns={columns}
           loading={this.state.loading}
           // @ts-ignore
-          rowKey={(record: ICorpTicketSummaryObj) => String(record.corp.corpId)}
+          rowKey={(record: ICorpTicketSummaryObj) => String(record.corpSn)}
           data={{
             list: this.state.summaries,
             pagination: {

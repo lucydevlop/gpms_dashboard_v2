@@ -46,7 +46,7 @@ export function updateParkinglotInout(data) {
 }
 
 export function transferParkinglotInout(data) {
-  return io.put(process.env.REACT_APP_API_DOMAIN_URL + '/inouts/transfer', {
+  return io.post(process.env.REACT_APP_API_DOMAIN_URL + '/inouts/transfer', {
     data
   });
 }
@@ -63,18 +63,19 @@ export function getParkinglotRcsCorpInfo(parkinglotId) {
   );
 }
 
-export function deleteParkinglotInout(id) {
-  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/forced/exit/${id}`, id);
+export function deleteInout(id) {
+  return io.delete(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/${id}`, id);
 }
 
-export function getInoutPayments(data) {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inouts/payments`, {
+export function getInoutPayments(data, page, size) {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/inout-payments`, {
     params: {
-      fromDate: data.startDate,
-      toDate: data.endDate,
+      startDate: data.startDate,
+      endDate: data.endDate,
       vehicleNo: data.vehicleNo,
       resultType: data.resultType,
-      limit: data.limit
+      page: page - 1,
+      size: size
     }
   });
 }

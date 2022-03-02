@@ -1,7 +1,7 @@
 import io from '../utils/io';
 
 export function getInoutByDay(data) {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/statistic/inout/count/day`, {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/statistics/inout/count/days`, {
     params: {
       startDate: data.startDate,
       endDate: data.endDate
@@ -10,7 +10,7 @@ export function getInoutByDay(data) {
 }
 
 export function getInoutByMonth(data) {
-  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/statistic/inout/count/month`, {
+  return io.get(`${process.env.REACT_APP_API_DOMAIN_URL}/statistics/inout/count/months`, {
     params: {
       startDate: data.startDate,
       endDate: data.endDate

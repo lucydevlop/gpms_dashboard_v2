@@ -6,7 +6,7 @@ import { Form, Icon } from '@ant-design/compatible';
 import moment from 'moment';
 import { IInoutObj, IInoutSelectReq } from '@models/inout';
 import { EInoutType, ETicketType, ticketTypeOpt } from '@/constants/list';
-import { deleteParkinglotInout, getInouts, updateParkinglotInout } from '@api/Inout';
+import { deleteInout, getInouts, updateParkinglotInout } from '@api/Inout';
 import { runInAction } from 'mobx';
 import { ColumnProps } from 'antd/lib/table';
 import { conversionDateTime, conversionEnumValue } from '@utils/conversion';
@@ -217,7 +217,7 @@ class UnRecognizeModal extends PureComponent<IProps, IState> {
     // console.log('handleDelete', key);
     const newData = this.state.list.filter((item) => item.inSn !== Number(key));
     if (newData == null) return;
-    deleteParkinglotInout(key)
+    deleteInout(key)
       .then((res: any) => {
         const { msg, data } = res;
         if (msg === 'success') {

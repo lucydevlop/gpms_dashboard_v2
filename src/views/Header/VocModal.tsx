@@ -264,7 +264,7 @@ class VocModal extends PureComponent<IProps, IState> {
               quantity: number;
               disabled: boolean;
             }[] = [];
-            this.state.selected?.aplyDiscountClasses?.map((item) => {
+            this.state.selected?.applyDiscountClasses?.map((item) => {
               discounts.push({
                 sn: item.discountClass.sn,
                 discountNm: item.discountClass.discountName,
